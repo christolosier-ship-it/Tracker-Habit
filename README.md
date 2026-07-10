@@ -10,6 +10,17 @@ npm run dev
 npm run build
 ```
 
+## Stack UI
+
+La V3 UI utilise maintenant :
+
+- composants locaux inspirés de `shadcn/ui` : `Button`, `Card`, `Badge`, helper `cn` ;
+- `@tremor/react` pour les graphiques dashboard : AreaChart, BarChart, DonutChart, BarList, ProgressCircle ;
+- effets ciblés type Magic UI / Aceternity : fond animé, orbes, cartes spotlight, bento shell ;
+- `lucide-react` pour les icônes ;
+- `date-fns` pour les dates ;
+- `localStorage` pour le stockage V1.
+
 ## Déploiement GitHub Pages
 
 Le projet est configuré pour GitHub Pages avec Vite :
@@ -23,15 +34,18 @@ Après merge sur `main`, GitHub Pages doit servir le build généré, pas les so
 ## Structure
 
 - `src/main.tsx` : application, navigation, pages et composants principaux.
+- `src/components/ui` : composants locaux inspirés de shadcn/ui.
+- `src/components/effects` : effets visuels premium ciblés.
 - `src/types.ts` : modèle de données typé.
 - `src/lib/stats.ts` : fonctions de calcul des scores, séries, catégories et anti-procrastination.
 - `src/lib/storage.ts` : persistance locale, export/import, reset.
 - `src/data/demoData.ts` : 30 habitudes quotidiennes, 15 hebdomadaires et journaux réalistes.
 - `src/styles.css` : thème premium sombre, crème, vert et orange brûlé.
+- `tailwind.config.ts` et `postcss.config.js` : configuration Tailwind utile à Tremor.
 
 ## Fonctionnalités
 
-- Dashboard annuel 12 mois avec heatmap, KPI et graphiques Recharts.
+- Dashboard annuel 12 mois avec heatmap, KPI, anneaux de progression et graphiques Tremor.
 - Page Aujourd’hui optimisée mobile avec cycle de statuts rapide.
 - Vue Mois desktop en matrice habitudes × jours.
 - Vue Mois mobile en cartes par jour sélectionné.
@@ -61,8 +75,9 @@ Règles de score :
 - Import JSON avec validation structurelle minimale.
 - Pas encore d’export Excel `.xlsx`.
 - Pas encore de notifications PWA.
+- La structure applicative reste encore concentrée dans `src/main.tsx`.
 
-## Pistes V2
+## Pistes V2/V4
 
 - Export Excel `.xlsx`.
 - IndexedDB.

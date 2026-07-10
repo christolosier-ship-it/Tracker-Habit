@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { motion } from 'framer-motion';
 import {
   BarChart3,
   CalendarDays,
@@ -21,30 +22,26 @@ import {
   X,
 } from 'lucide-react';
 import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+  AreaChart as TremorAreaChart,
+  BarChart as TremorBarChart,
+  BarList,
+  DonutChart,
+  ProgressCircle,
+} from '@tremor/react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import './styles.css';
+import { BentoShell, AmbientBackground, SpotlightCard } from './components/effects/premium-effects';
+import { Badge } from './components/ui/badge';
+import { Button } from './components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Habit, HabitStatus, UserSettings } from './types';
 import { categories, defaultSettings } from './data/demoData';
 import { AppData, demoData, loadData, resetData, saveData, validateImport } from './lib/storage';
 import * as S from './lib/stats';
 
 type Page = 'Dashboard' | 'Aujourd’hui' | 'Mois' | 'Habitudes' | 'Statistiques' | 'Paramètres';
+type FilterToday = 'Quotidiennes' | 'Hebdomadaires' | 'Toutes';
 
 type PageSpec = {
   name: Page;
@@ -53,7 +50,7 @@ type PageSpec = {
 
 const mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const moisLong = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-const chartColors = ['#0B3D2E', '#1F6B4E', '#B98A3B', '#C96A3A', '#D96C5F', '#6E8177', '#EADCC4'];
+const tremorColors = ['emerald', 'teal', 'amber', 'orange', 'rose', 'slate', 'stone'];
 const pageSpecs: PageSpec[] = [
   { name: 'Dashboard', icon: LayoutDashboard },
   { name: 'Aujourd’hui', icon: Check },
@@ -64,6 +61,7 @@ const pageSpecs: PageSpec[] = [
 ];
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
+const formatPercent = (value: number) => `${Math.round(value)}%`;
 
 function App() {
   const [data, setData] = useState<AppData>(() => loadData());
@@ -85,6 +83,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <AmbientBackground />
       <nav className="sidebar" aria-label="Navigation principale">
         <div className="brand">
           <Flame />
@@ -115,7 +114,7 @@ function App() {
 
 function Header({ data, setSettings, title = 'TRACKER D’HABITUDES' }: { data: AppData; setSettings: (patch: Partial<UserSettings>) => void; title?: string }) {
   return (
-    <section className="hero-card">
+    <motion.section className="hero-card" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
       <div className="hero-copy">
         <p className="eyebrow">Discipline & Productivité</p>
         <h1>{title}</h1>
@@ -130,54 +129,60 @@ function Header({ data, setSettings, title = 'TRACKER D’HABITUDES' }: { data: 
           Mois actif
           <select value={data.settings.moisActif} onChange={(event) => setSettings({ moisActif: Number(event.target.value) })}>
             {moisLong.map((label, index) => (
-              <option value={index} key={label}>
-                {label}
-              </option>
+              <option value={index} key={label}>{label}</option>
             ))}
           </select>
         </label>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
 function CommercialBadges() {
   return (
     <div className="marketing-badges" aria-label="Capacités du tracker">
-      <span>12 mois</span>
-      <span>30 habitudes quotidiennes</span>
-      <span>15 habitudes hebdomadaires</span>
-      <span>Suivi local</span>
+      <Badge variant="success">12 mois</Badge>
+      <Badge variant="warm">30 habitudes quotidiennes</Badge>
+      <Badge variant="default">15 habitudes hebdomadaires</Badge>
+      <Badge variant="muted">LocalStorage V1</Badge>
     </div>
   );
 }
 
 function Kpis({ data }: { data: AppData }) {
   const { habits, logs, settings } = data;
+  const scoreGlobal = S.calculateYearScore(habits, logs, settings.anneeActive, settings);
   const currentMonth = S.calculateMonthScore(habits, logs, settings.anneeActive, settings.moisActif, settings);
+  const success = S.calculateSuccessRate(habits, logs, settings);
+  const anti = S.calculateAntiProcrastinationIndex(habits, logs, settings);
   const doneLogs = logs.filter((log) => log.status === 'done').length;
   const kpis = [
-    { label: 'Score global', value: `${S.calculateYearScore(habits, logs, settings.anneeActive, settings)}%`, icon: TrendingUp, note: 'moyenne des mois suivis' },
-    { label: 'Score du mois', value: `${currentMonth}%`, icon: CalendarDays, note: moisLong[settings.moisActif] },
-    { label: 'Taux de réussite', value: `${S.calculateSuccessRate(habits, logs, settings)}%`, icon: Target, note: 'hors jours de repos' },
-    { label: 'Anti-procrastination', value: `${S.calculateAntiProcrastinationIndex(habits, logs, settings)}%`, icon: Flame, note: 'focus + tâches pénibles' },
-    { label: 'Jours disciplinés', value: S.calculateDisciplinedDays(habits, logs, settings.anneeActive, settings), icon: Check, note: 'jours à 70% ou plus' },
-    { label: 'Série actuelle', value: `${S.calculateCurrentStreak(habits, logs, settings)} j`, icon: Clock, note: `meilleure : ${S.calculateBestStreak(habits, logs, settings)} j` },
-    { label: 'Habitudes complétées', value: doneLogs, icon: Plus, note: 'actions accomplies' },
-    { label: 'Habitudes actives', value: habits.filter((habit) => habit.active).length, icon: Eye, note: 'quotidiennes + hebdo' },
+    { label: 'Score global', value: scoreGlobal, suffix: '%', icon: TrendingUp, note: 'moyenne des mois suivis', gauge: true },
+    { label: 'Score du mois', value: currentMonth, suffix: '%', icon: CalendarDays, note: moisLong[settings.moisActif], gauge: true },
+    { label: 'Taux de réussite', value: success, suffix: '%', icon: Target, note: 'hors jours de repos', gauge: true },
+    { label: 'Anti-procrastination', value: anti, suffix: '%', icon: Flame, note: 'focus + tâches pénibles', gauge: true },
+    { label: 'Jours disciplinés', value: S.calculateDisciplinedDays(habits, logs, settings.anneeActive, settings), suffix: '', icon: Check, note: 'jours à 70% ou plus' },
+    { label: 'Série actuelle', value: S.calculateCurrentStreak(habits, logs, settings), suffix: ' j', icon: Clock, note: `meilleure : ${S.calculateBestStreak(habits, logs, settings)} j` },
+    { label: 'Habitudes complétées', value: doneLogs, suffix: '', icon: Plus, note: 'actions accomplies' },
+    { label: 'Habitudes actives', value: habits.filter((habit) => habit.active).length, suffix: '', icon: Eye, note: 'quotidiennes + hebdo' },
   ];
 
   return (
     <section className="kpi-grid">
-      {kpis.map(({ label, value, icon: Icon, note }) => (
-        <article className="premium-card kpi-card" key={label}>
-          <div className="kpi-icon">
-            <Icon />
+      {kpis.map(({ label, value, suffix, icon: Icon, note, gauge }) => (
+        <SpotlightCard className="kpi-card" key={label}>
+          <div className="kpi-content">
+            <div className="kpi-icon"><Icon /></div>
+            <span>{label}</span>
+            <strong>{value}{suffix}</strong>
+            <small>{note}</small>
           </div>
-          <span>{label}</span>
-          <strong>{value}</strong>
-          <small>{note}</small>
-        </article>
+          {gauge && (
+            <ProgressCircle value={Number(value)} size="sm" color="emerald" className="kpi-progress">
+              <span className="progress-center">{value}%</span>
+            </ProgressCircle>
+          )}
+        </SpotlightCard>
       ))}
     </section>
   );
@@ -198,75 +203,45 @@ function Dashboard({ data, setSettings }: { data: AppData; setSettings: (patch: 
       <Header data={data} setSettings={setSettings} />
       <CommercialBadges />
       <Kpis data={data} />
-      <section className="dashboard-layout">
+      <BentoShell className="dashboard-layout">
         <AnnualMatrix data={data} />
         <div className="dashboard-side">
-          <ChartCard title="Progression mensuelle">
-            <AreaChart data={monthly}>
-              <defs>
-                <linearGradient id="scoreGradient" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#0B3D2E" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#0B3D2E" stopOpacity={0.02} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="#D9D6CE" strokeDasharray="3 3" />
-              <XAxis dataKey="mois" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Area type="monotone" dataKey="score" stroke="#0B3D2E" fill="url(#scoreGradient)" strokeWidth={3} />
-            </AreaChart>
-          </ChartCard>
-          <ChartCard title="Statuts">
-            <PieChart>
-              <Pie data={statusStats} dataKey="value" nameKey="label" innerRadius={55} outerRadius={85} paddingAngle={3}>
-                {statusStats.map((entry, index) => (
-                  <Cell key={entry.status} fill={chartColors[index % chartColors.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ChartCard>
+          <TremorPanel title="Progression mensuelle" description="Score global par mois">
+            <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
+          </TremorPanel>
+          <TremorPanel title="Statuts" description="Accompli, partiel, manqué, repos">
+            <DonutChart className="tremor-chart" data={statusStats} index="label" category="value" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+          </TremorPanel>
         </div>
-      </section>
+      </BentoShell>
       <section className="chart-grid">
-        <ChartCard title="Score par mois">
-          <BarChart data={monthly}>
-            <CartesianGrid stroke="#D9D6CE" strokeDasharray="3 3" />
-            <XAxis dataKey="mois" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Bar dataKey="score" fill="#C96A3A" radius={[8, 8, 0, 0]} />
-          </BarChart>
-        </ChartCard>
-        <ChartCard title="Répartition par catégorie">
-          <PieChart>
-            <Pie data={categoryStats} dataKey="total" nameKey="categorie" innerRadius={55} outerRadius={88} paddingAngle={3}>
-              {categoryStats.map((entry, index) => (
-                <Cell key={entry.categorie} fill={chartColors[index % chartColors.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ChartCard>
-        <ChartCard title="Top 10 habitudes">
-          <BarChart layout="vertical" data={topHabits} margin={{ left: 18, right: 20 }}>
-            <XAxis type="number" domain={[0, 100]} />
-            <YAxis dataKey="nom" type="category" width={132} />
-            <Tooltip />
-            <Bar dataKey="score" fill="#1F6B4E" radius={[0, 8, 8, 0]} />
-          </BarChart>
-        </ChartCard>
-        <ChartCard title="Habitudes fragiles">
-          <BarChart layout="vertical" data={fragileHabits} margin={{ left: 18, right: 20 }}>
-            <XAxis type="number" domain={[0, 100]} />
-            <YAxis dataKey="nom" type="category" width={132} />
-            <Tooltip />
-            <Bar dataKey="score" fill="#D96C5F" radius={[0, 8, 8, 0]} />
-          </BarChart>
-        </ChartCard>
+        <TremorPanel title="Score par mois" description="Vue histogramme">
+          <TremorBarChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['orange']} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
+        </TremorPanel>
+        <TremorPanel title="Répartition par catégorie" description="Volume de suivis enregistrés">
+          <DonutChart className="tremor-chart" data={categoryStats} index="categorie" category="total" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+        </TremorPanel>
+        <TremorPanel title="Top 10 habitudes" description="Les habitudes qui tiennent le mieux">
+          <BarList className="bar-list" data={topHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color="emerald" />
+        </TremorPanel>
+        <TremorPanel title="Habitudes fragiles" description="À reprendre sans drame, mais sans brouillard">
+          <BarList className="bar-list" data={fragileHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color="rose" />
+        </TremorPanel>
       </section>
       <AntiProcrastination data={data} />
     </>
+  );
+}
+
+function TremorPanel({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+  return (
+    <Card className="chart-card tremor-panel">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        {description && <CardDescription>{description}</CardDescription>}
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
   );
 }
 
@@ -274,34 +249,33 @@ function AnnualMatrix({ data }: { data: AppData }) {
   const rates = S.calculateHabitMonthlyRates(data.habits, data.logs, data.settings.anneeActive, data.settings);
 
   return (
-    <section className="premium-card annual-matrix-card">
-      <div className="section-heading">
+    <Card className="annual-matrix-card">
+      <CardHeader className="section-heading">
         <div>
           <p className="eyebrow compact">Vue annuelle</p>
-          <h2>Matrice annuelle des habitudes</h2>
+          <CardTitle>Matrice annuelle des habitudes</CardTitle>
+          <CardDescription>Une vraie carte météo de ta discipline : vert = solide, orange = fragile, gris = non suivi.</CardDescription>
         </div>
-        <span className="matrix-legend">Vert = solide · Orange = fragile · Gris = non suivi</span>
-      </div>
-      <div className="annual-matrix" style={{ gridTemplateColumns: `minmax(230px, 1.4fr) repeat(12, minmax(58px, 1fr))` }}>
-        <strong>Habitude</strong>
-        {mois.map((label) => (
-          <strong key={label}>{label}</strong>
-        ))}
-        {rates.map((habit) => (
-          <React.Fragment key={habit.id}>
-            <span>
-              {habit.nom}
-              <small>{habit.categorie}</small>
-            </span>
-            {habit.values.map((value, index) => (
-              <em className={`heat-cell ${heatClass(value)}`} key={`${habit.id}-${index}`}>
-                {value < 0 ? '—' : `${value}%`}
-              </em>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-    </section>
+        <Badge variant="warm">12 mois</Badge>
+      </CardHeader>
+      <CardContent>
+        <div className="annual-matrix" style={{ gridTemplateColumns: `minmax(230px, 1.4fr) repeat(12, minmax(58px, 1fr))` }}>
+          <strong>Habitude</strong>
+          {mois.map((label) => <strong key={label}>{label}</strong>)}
+          {rates.map((habit) => (
+            <React.Fragment key={habit.id}>
+              <span>
+                {habit.nom}
+                <small>{habit.categorie}</small>
+              </span>
+              {habit.values.map((value, index) => (
+                <em className={`heat-cell ${heatClass(value)}`} key={`${habit.id}-${index}`}>{value < 0 ? '—' : `${value}%`}</em>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -313,21 +287,11 @@ function heatClass(value: number) {
   return 'heat-great';
 }
 
-function ChartCard({ title, children }: { title: string; children: React.ReactElement }) {
-  return (
-    <section className="premium-card chart-card">
-      <h3>{title}</h3>
-      <ResponsiveContainer width="100%" height={245}>
-        {children}
-      </ResponsiveContainer>
-    </section>
-  );
-}
-
 function AntiProcrastination({ data }: { data: AppData }) {
   const top = S.calculateTopHabits(data.habits, data.logs, data.settings).find((habit) => /deep|prioritaire|projet|inbox|admin/i.test(habit.nom));
   const fragile = S.calculateFragileHabits(data.habits, data.logs, data.settings)[0];
   const priorityDays = data.logs.filter((log) => log.habitId === 'd4' && log.status === 'done').length;
+  const anti = S.calculateAntiProcrastinationIndex(data.habits, data.logs, data.settings);
 
   return (
     <section className="anti-panel">
@@ -336,7 +300,9 @@ function AntiProcrastination({ data }: { data: AppData }) {
         <h2>Indice anti-procrastination</h2>
         <p>Un score concentré sur la tâche prioritaire, le deep work, le zéro scrolling et les habitudes qui évitent le report chronique.</p>
       </div>
-      <strong>{S.calculateAntiProcrastinationIndex(data.habits, data.logs, data.settings)}%</strong>
+      <ProgressCircle value={anti} size="xl" color={anti >= 70 ? 'emerald' : anti >= 50 ? 'amber' : 'rose'}>
+        <span className="anti-score">{anti}%</span>
+      </ProgressCircle>
       <ul>
         <li>Meilleure habitude productivité : {top?.nom ?? 'à construire'}</li>
         <li>Habitude à reprendre : {fragile?.nom ?? 'aucune alerte'}</li>
@@ -349,15 +315,15 @@ function AntiProcrastination({ data }: { data: AppData }) {
 function StatusButton({ status, onClick }: { status: HabitStatus; onClick: () => void }) {
   const Icon = status === 'done' ? Check : status === 'partial' ? Clock : status === 'missed' ? X : status === 'rest' ? Pause : Clock;
   return (
-    <button className={`status-button ${status}`} onClick={onClick} type="button">
+    <Button className={`status-button ${status}`} onClick={onClick} type="button" variant="status">
       <Icon />
       {S.statusLabels[status]}
-    </button>
+    </Button>
   );
 }
 
 function Today({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: string, date: string) => void; setSettings: (patch: Partial<UserSettings>) => void }) {
-  const [filter, setFilter] = useState<'Toutes' | 'Quotidiennes' | 'Hebdomadaires'>('Quotidiennes');
+  const [filter, setFilter] = useState<FilterToday>('Quotidiennes');
   const date = todayIso();
   const dateFr = format(new Date(), 'EEEE d MMMM yyyy', { locale: fr });
   const habits = data.habits.filter((habit) => {
@@ -370,7 +336,7 @@ function Today({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: s
   return (
     <>
       <Header data={data} setSettings={setSettings} title="AUJOURD’HUI" />
-      <section className="today-summary premium-card">
+      <Card className="today-summary">
         <div>
           <p className="eyebrow compact">Saisie rapide</p>
           <h2>{dateFr}</h2>
@@ -380,18 +346,14 @@ function Today({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: s
           <span>Score du jour</span>
           <strong>{S.calculateDayScore(data.habits, data.logs, date, data.settings)}%</strong>
         </div>
-      </section>
+      </Card>
       <div className="filter-row">
         {(['Quotidiennes', 'Hebdomadaires', 'Toutes'] as const).map((label) => (
-          <button className={filter === label ? 'selected' : ''} onClick={() => setFilter(label)} key={label} type="button">
-            {label}
-          </button>
+          <Button variant={filter === label ? 'default' : 'secondary'} onClick={() => setFilter(label)} key={label} type="button">{label}</Button>
         ))}
       </div>
       <section className="habit-card-grid">
-        {habits.map((habit) => (
-          <HabitStatusCard habit={habit} date={date} data={data} cycle={cycle} key={habit.id} />
-        ))}
+        {habits.map((habit) => <HabitStatusCard habit={habit} date={date} data={data} cycle={cycle} key={habit.id} />)}
       </section>
     </>
   );
@@ -400,14 +362,14 @@ function Today({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: s
 function HabitStatusCard({ habit, date, data, cycle }: { habit: Habit; date: string; data: AppData; cycle: (habitId: string, date: string) => void }) {
   const status = S.logFor(data.logs, habit.id, date);
   return (
-    <article className="premium-card habit-card">
+    <Card className="habit-card">
       <div>
-        <span className="category-pill">{habit.categorie}</span>
+        <Badge variant={status === 'done' ? 'success' : status === 'missed' ? 'danger' : 'default'}>{habit.categorie}</Badge>
         <h3>{habit.nom}</h3>
         <p>{habit.objectif} · {habit.frequence} · priorité {habit.priorite}</p>
       </div>
       <StatusButton status={status} onClick={() => cycle(habit.id, date)} />
-    </article>
+    </Card>
   );
 }
 
@@ -425,25 +387,21 @@ function Month({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: s
   return (
     <>
       <Header data={data} setSettings={setSettings} title="VUE MENSUELLE" />
-      <section className="premium-card month-toolbar">
+      <Card className="month-toolbar">
         <label>
           Mois
           <select value={month} onChange={(event) => setSettings({ moisActif: Number(event.target.value) })}>
-            {moisLong.map((label, index) => (
-              <option value={index} key={label}>{label}</option>
-            ))}
+            {moisLong.map((label, index) => <option value={index} key={label}>{label}</option>)}
           </select>
         </label>
         <label>
           Jour mobile
           <select value={selectedDay} onChange={(event) => setSelectedDay(Number(event.target.value))}>
-            {Array.from({ length: days }, (_, index) => (
-              <option value={index + 1} key={index + 1}>{index + 1}</option>
-            ))}
+            {Array.from({ length: days }, (_, index) => <option value={index + 1} key={index + 1}>{index + 1}</option>)}
           </select>
         </label>
         <strong>{moisLong[month]} {year}</strong>
-      </section>
+      </Card>
 
       <section className="month-grid" style={{ gridTemplateColumns: `220px repeat(${days}, 38px) 70px` }}>
         <b>Habitude</b>
@@ -470,14 +428,12 @@ function Month({ data, cycle, setSettings }: { data: AppData; cycle: (habitId: s
       </section>
 
       <section className="mobile-month-list">
-        <div className="section-heading">
+        <div className="section-heading mobile-heading">
           <h2>{selectedDay} {moisLong[month]}</h2>
-          <span>{activeHabits.length} habitudes actives</span>
+          <Badge variant="warm">{activeHabits.length} habitudes actives</Badge>
         </div>
         <div className="habit-card-grid">
-          {activeHabits.map((habit) => (
-            <HabitStatusCard habit={habit} date={currentDate} data={data} cycle={cycle} key={habit.id} />
-          ))}
+          {activeHabits.map((habit) => <HabitStatusCard habit={habit} date={currentDate} data={data} cycle={cycle} key={habit.id} />)}
         </div>
       </section>
     </>
@@ -497,10 +453,7 @@ function Habits({ data, setData, setSettings }: { data: AppData; setData: React.
   const filteredHabits = data.habits.filter((habit) => filter === 'Toutes' || habit.categorie === filter);
 
   const updateHabit = (habitId: string, patch: Partial<Habit>) => {
-    setData((current) => ({
-      ...current,
-      habits: current.habits.map((habit) => (habit.id === habitId ? { ...habit, ...patch } : habit)),
-    }));
+    setData((current) => ({ ...current, habits: current.habits.map((habit) => (habit.id === habitId ? { ...habit, ...patch } : habit)) }));
   };
 
   const addHabit = () => {
@@ -521,8 +474,8 @@ function Habits({ data, setData, setSettings }: { data: AppData; setData: React.
   return (
     <>
       <Header data={data} setSettings={setSettings} title="HABITUDES" />
-      <section className="premium-card habit-toolbar">
-        <button className="primary-button" onClick={addHabit} type="button"><Plus /> Ajouter une habitude</button>
+      <Card className="habit-toolbar">
+        <Button onClick={addHabit} type="button"><Plus /> Ajouter une habitude</Button>
         <label>
           Filtrer
           <select value={filter} onChange={(event) => setFilter(event.target.value)}>
@@ -530,10 +483,10 @@ function Habits({ data, setData, setSettings }: { data: AppData; setData: React.
             {categories.map((category) => <option key={category}>{category}</option>)}
           </select>
         </label>
-      </section>
+      </Card>
       <section className="editor-grid">
         {filteredHabits.map((habit) => (
-          <article className={`premium-card habit-editor ${habit.active ? '' : 'disabled'}`} key={habit.id}>
+          <Card className={`habit-editor ${habit.active ? '' : 'disabled'}`} key={habit.id}>
             <div className="editor-title">
               <Edit3 />
               <input value={habit.nom} onChange={(event) => updateHabit(habit.id, { nom: event.target.value })} aria-label="Nom de l’habitude" />
@@ -544,11 +497,11 @@ function Habits({ data, setData, setSettings }: { data: AppData; setData: React.
               <label>Objectif<input value={habit.objectif} onChange={(event) => updateHabit(habit.id, { objectif: event.target.value })} /></label>
               <label>Priorité<select value={habit.priorite} onChange={(event) => updateHabit(habit.id, { priorite: event.target.value as Habit['priorite'] })}><option value="faible">Faible</option><option value="normale">Normale</option><option value="haute">Haute</option></select></label>
             </div>
-            <button className="ghost-button" onClick={() => updateHabit(habit.id, { active: !habit.active })} type="button">
+            <Button variant="secondary" onClick={() => updateHabit(habit.id, { active: !habit.active })} type="button">
               {habit.active ? <EyeOff /> : <Eye />}
               {habit.active ? 'Désactiver' : 'Réactiver'}
-            </button>
-          </article>
+            </Button>
+          </Card>
         ))}
       </section>
     </>
@@ -556,10 +509,7 @@ function Habits({ data, setData, setSettings }: { data: AppData; setData: React.
 }
 
 function Stats({ data, setSettings }: { data: AppData; setSettings: (patch: Partial<UserSettings>) => void }) {
-  const monthly = mois.map((label, index) => ({
-    mois: label,
-    score: S.calculateMonthScore(data.habits, data.logs, data.settings.anneeActive, index, data.settings),
-  }));
+  const monthly = mois.map((label, index) => ({ mois: label, score: S.calculateMonthScore(data.habits, data.logs, data.settings.anneeActive, index, data.settings) }));
   const antiMonthly = mois.map((label, index) => ({
     mois: label,
     anti: S.calculateAntiProcrastinationIndex(
@@ -573,40 +523,18 @@ function Stats({ data, setSettings }: { data: AppData; setSettings: (patch: Part
     <>
       <Header data={data} setSettings={setSettings} title="STATISTIQUES" />
       <section className="chart-grid stats-grid">
-        <ChartCard title="Évolution du score">
-          <LineChart data={monthly}>
-            <CartesianGrid stroke="#D9D6CE" strokeDasharray="3 3" />
-            <XAxis dataKey="mois" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Line type="monotone" dataKey="score" stroke="#0B3D2E" strokeWidth={3} />
-          </LineChart>
-        </ChartCard>
-        <ChartCard title="Évolution anti-procrastination">
-          <LineChart data={antiMonthly}>
-            <CartesianGrid stroke="#D9D6CE" strokeDasharray="3 3" />
-            <XAxis dataKey="mois" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Line type="monotone" dataKey="anti" stroke="#C96A3A" strokeWidth={3} />
-          </LineChart>
-        </ChartCard>
-        <ChartCard title="Catégories">
-          <BarChart data={S.calculateCategoryStats(data.habits, data.logs, data.settings)}>
-            <XAxis dataKey="categorie" hide />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Bar dataKey="score" fill="#1F6B4E" radius={[8, 8, 0, 0]} />
-          </BarChart>
-        </ChartCard>
-        <ChartCard title="Statuts enregistrés">
-          <PieChart>
-            <Pie data={S.calculateStatusStats(data.logs)} dataKey="value" nameKey="label" innerRadius={55} outerRadius={88}>
-              {S.calculateStatusStats(data.logs).map((entry, index) => <Cell key={entry.status} fill={chartColors[index % chartColors.length]} />)}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ChartCard>
+        <TremorPanel title="Évolution du score" description="Mois par mois">
+          <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} showLegend={false} />
+        </TremorPanel>
+        <TremorPanel title="Évolution anti-procrastination" description="Productivité + anti-report">
+          <TremorAreaChart className="tremor-chart" data={antiMonthly} index="mois" categories={['anti']} colors={['orange']} valueFormatter={formatPercent} showLegend={false} />
+        </TremorPanel>
+        <TremorPanel title="Catégories" description="Score par famille d’habitudes">
+          <TremorBarChart className="tremor-chart" data={S.calculateCategoryStats(data.habits, data.logs, data.settings)} index="categorie" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} showLegend={false} />
+        </TremorPanel>
+        <TremorPanel title="Statuts enregistrés" description="Volume global">
+          <DonutChart className="tremor-chart" data={S.calculateStatusStats(data.logs)} index="label" category="value" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+        </TremorPanel>
       </section>
       <AntiProcrastination data={data} />
     </>
@@ -627,18 +555,15 @@ function Params({ data, setData, setSettings }: { data: AppData; setData: React.
   const importJson = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    file
-      .text()
-      .then((text) => {
-        const imported = JSON.parse(text);
-        if (validateImport(imported)) {
-          setData(imported);
-          setMessage('Import réussi.');
-        } else {
-          setMessage('JSON invalide : structure non reconnue.');
-        }
-      })
-      .catch(() => setMessage('Import impossible.'));
+    file.text().then((text) => {
+      const imported = JSON.parse(text);
+      if (validateImport(imported)) {
+        setData(imported);
+        setMessage('Import réussi.');
+      } else {
+        setMessage('JSON invalide : structure non reconnue.');
+      }
+    }).catch(() => setMessage('Import impossible.'));
   };
 
   const hardReset = () => {
@@ -653,18 +578,18 @@ function Params({ data, setData, setSettings }: { data: AppData; setData: React.
   return (
     <>
       <Header data={data} setSettings={setSettings} title="PARAMÈTRES" />
-      <section className="premium-card settings-panel">
+      <Card className="settings-panel">
         <label>Année active<input type="number" value={data.settings.anneeActive} onChange={(event) => setSettings({ anneeActive: Number(event.target.value) })} /></label>
         <label>Mois actif<select value={data.settings.moisActif} onChange={(event) => setSettings({ moisActif: Number(event.target.value) })}>{moisLong.map((label, index) => <option value={index} key={label}>{label}</option>)}</select></label>
         <label className="checkbox-line"><input type="checkbox" checked={data.settings.compterNonSaisisCommeManques} onChange={(event) => setSettings({ compterNonSaisisCommeManques: event.target.checked })} /> Compter les non saisis passés comme manqués</label>
         <div className="settings-actions">
-          <button className="primary-button" onClick={exportJson} type="button"><Download /> Exporter JSON</button>
+          <Button onClick={exportJson} type="button"><Download /> Exporter JSON</Button>
           <label className="file-button"><Upload /> Importer JSON<input type="file" accept="application/json" onChange={importJson} /></label>
-          <button className="ghost-button" onClick={() => setData(demoData())} type="button"><RotateCcw /> Recharger la démo</button>
-          <button className="danger-button" onClick={hardReset} type="button"><X /> Reset complet</button>
+          <Button variant="secondary" onClick={() => setData(demoData())} type="button"><RotateCcw /> Recharger la démo</Button>
+          <Button variant="danger" onClick={hardReset} type="button"><X /> Reset complet</Button>
         </div>
         {message && <p className="settings-message">{message}</p>}
-      </section>
+      </Card>
     </>
   );
 }
