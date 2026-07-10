@@ -1,15 +1,19 @@
 {
+  "name": "habit-tracker-premium-fr",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "latest",
     "vite": "latest",
     "typescript": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "tailwindcss": "latest",
     "recharts": "latest",
     "lucide-react": "latest",
     "date-fns": "latest"
