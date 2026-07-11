@@ -60,6 +60,14 @@ import { StatsInsightCards } from "./components/stats/StatsInsightCards";
 import { ThemedMonthlyRibbon } from "./components/stats/ThemedMonthlyRibbon";
 import { ThemedCategoryScoreBars } from "./components/stats/ThemedCategoryScoreBars";
 import { ThemedStatusBreakdown } from "./components/stats/ThemedStatusBreakdown";
+import { ThemeIdentityLayer } from "./components/theme-identity/ThemeIdentityLayer";
+import { ThemeHero } from "./components/theme-identity/ThemeHero";
+import { ThemeNavigationStatus } from "./components/theme-identity/ThemeNavigationStatus";
+import { ThemeKpiFrame } from "./components/theme-identity/ThemeKpiFrame";
+import { ThemeCalendarCell } from "./components/theme-identity/ThemeCalendarCell";
+import { ThemeBadgeFrame } from "./components/theme-identity/ThemeBadgeFrame";
+import { ThemePreview } from "./components/theme-identity/ThemePreview";
+import { typographyClass } from "./components/theme-identity/identity-utils";
 import * as S from "./lib/stats";
 
 type Page =
@@ -146,13 +154,14 @@ function App() {
 
   return (
     <div
-      className="app-shell"
+      className={`app-shell ${typographyClass(activeTheme)}`}
       data-theme={activeTheme.id}
       data-theme-style={activeTheme.effects.backgroundStyle}
       style={applyThemeStyle(activeTheme)}
     >
       <AmbientBackground />
-      <nav className="sidebar" aria-label="Navigation principale">
+      <ThemeIdentityLayer theme={activeTheme} />
+      <nav className="sidebar" aria-label="Navigation principale" data-navigation-style={activeTheme.identity.navigation.variant}>
         <div className="brand">
           <Flame />
           <div>
@@ -160,6 +169,7 @@ function App() {
             <span>Dashboard</span>
           </div>
         </div>
+        <ThemeNavigationStatus theme={activeTheme} />
         {pageSpecs.map(({ name, icon: Icon }) => (
           <button
             className={page === name ? "active" : ""}
@@ -206,58 +216,40 @@ function Header({
   setSettings: (patch: Partial<UserSettings>) => void;
   title?: string;
 }) {
+  const theme = resolveTheme(data.settings.themeId);
+  const score = S.calculateYearScore(data.habits, data.logs, data.settings.anneeActive, data.settings);
+  const streak = S.calculateCurrentStreak(data.habits, data.logs, data.settings);
+  const activeHabits = data.habits.filter((habit) => habit.active).length;
+  const doneLogs = data.logs.filter((log) => log.status === "done").length;
+  const disciplinedDays = S.calculateDisciplinedDays(data.habits, data.logs, data.settings.anneeActive, data.settings);
+  const yearControls = (
+    <label>
+      Année
+      <input type="number" value={data.settings.anneeActive} onChange={(event) => setSettings({ anneeActive: Number(event.target.value) })} />
+    </label>
+  );
+  const monthControls = (
+    <label>
+      Mois actif
+      <select value={data.settings.moisActif} onChange={(event) => setSettings({ moisActif: Number(event.target.value) })}>
+        {moisLong.map((label, index) => <option value={index} key={label}>{label}</option>)}
+      </select>
+    </label>
+  );
   return (
-    <motion.section
-      className="hero-card"
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45 }}
-    >
-      <div className="hero-copy">
-        <p className="eyebrow">Discipline & Productivité</p>
-        <h1>{title}</h1>
-        <p className="quote">
-          Ce que tu répètes chaque jour façonne la personne que tu deviens.
-        </p>
-      </div>
-      <div className="hero-controls">
-        <label>
-          Année
-          <input
-            type="number"
-            value={data.settings.anneeActive}
-            onChange={(event) =>
-              setSettings({ anneeActive: Number(event.target.value) })
-            }
-          />
-        </label>
-        <label>
-          Mois actif
-          <select
-            value={data.settings.moisActif}
-            onChange={(event) =>
-              setSettings({ moisActif: Number(event.target.value) })
-            }
-          >
-            {moisLong.map((label, index) => (
-              <option value={index} key={label}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+    <motion.section className="hero-card" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+      <ThemeHero theme={theme} title={title} yearControls={yearControls} monthControls={monthControls} score={score} streak={streak} activeHabits={activeHabits} year={data.settings.anneeActive} doneLogs={doneLogs} disciplinedDays={disciplinedDays} />
     </motion.section>
   );
 }
 
-function CommercialBadges() {
+function CommercialBadges({ data }: { data: AppData }) {
   return (
     <div className="marketing-badges" aria-label="Capacités du tracker">
-      <Badge variant="success">12 mois</Badge>
-      <Badge variant="warm">30 habitudes quotidiennes</Badge>
-      <Badge variant="default">15 habitudes hebdomadaires</Badge>
-      <Badge variant="muted">LocalStorage V1</Badge>
+      <ThemeBadgeFrame theme={resolveTheme(data.settings.themeId)}><Badge variant="success">12 mois</Badge></ThemeBadgeFrame>
+      <ThemeBadgeFrame theme={resolveTheme(data.settings.themeId)}><Badge variant="warm">30 habitudes quotidiennes</Badge></ThemeBadgeFrame>
+      <ThemeBadgeFrame theme={resolveTheme(data.settings.themeId)}><Badge variant="default">15 habitudes hebdomadaires</Badge></ThemeBadgeFrame>
+      <ThemeBadgeFrame theme={resolveTheme(data.settings.themeId)}><Badge variant="muted">LocalStorage V1</Badge></ThemeBadgeFrame>
     </div>
   );
 }
@@ -350,8 +342,9 @@ function Kpis({ data }: { data: AppData }) {
 
   return (
     <section className="kpi-grid">
-      {kpis.map(({ label, value, suffix, icon: Icon, note, gauge }) => (
+      {kpis.map(({ label, value, suffix, icon: Icon, note, gauge }, index) => (
         <SpotlightCard className="kpi-card" key={label}>
+          <ThemeKpiFrame theme={resolveTheme(data.settings.themeId)} index={index} label={label} value={value}>
           <div className="kpi-content">
             <div className="kpi-icon">
               <Icon />
@@ -371,6 +364,7 @@ function Kpis({ data }: { data: AppData }) {
               label={label}
             />
           )}
+          </ThemeKpiFrame>
         </SpotlightCard>
       ))}
     </section>
@@ -418,7 +412,7 @@ function Dashboard({
   return (
     <>
       <Header data={data} setSettings={setSettings} />
-      <CommercialBadges />
+      <CommercialBadges data={data} />
       <Kpis data={data} />
       <BentoShell className="dashboard-layout">
         <AnnualMatrix data={data} />
@@ -564,12 +558,9 @@ function AnnualMatrix({ data }: { data: AppData }) {
                 <small>{habit.categorie}</small>
               </span>
               {habit.values.map((value, index) => (
-                <em
-                  className={`heat-cell themed-heat-cell ${heatClass(value)}`}
-                  key={`${habit.id}-${index}`}
-                >
+                <ThemeCalendarCell theme={resolveTheme(data.settings.themeId)} score={value} active={value >= 65} key={`${habit.id}-${index}`}>
                   {value < 0 ? "—" : `${value}%`}
-                </em>
+                </ThemeCalendarCell>
               ))}
             </React.Fragment>
           ))}
@@ -842,15 +833,9 @@ function Month({
                 const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(index + 1).padStart(2, "0")}`;
                 const status = S.logFor(data.logs, habit.id, date);
                 return (
-                  <button
-                    className={`status-dot ${status}`}
-                    title={`${habit.nom} · ${S.statusLabels[status]}`}
-                    onClick={() => cycle(habit.id, date)}
-                    type="button"
-                    key={date}
-                  >
+                  <ThemeCalendarCell theme={resolveTheme(data.settings.themeId)} status={status} title={`${habit.nom} · ${S.statusLabels[status]}`} onClick={() => cycle(habit.id, date)} key={date}>
                     {statusSymbol(status)}
-                  </button>
+                  </ThemeCalendarCell>
                 );
               })}
               <strong>
@@ -1232,19 +1217,7 @@ function Params({
                   } as React.CSSProperties
                 }
               >
-                <div className="theme-preview">
-                  <span className="preview-emoji">{theme.previewEmoji}</span>
-                  <div className="preview-kpi">
-                    <strong>87%</strong>
-                    <small>streak</small>
-                  </div>
-                  <div className="preview-grid">
-                    {Array.from({ length: 12 }, (_, index) => (
-                      <i key={index} />
-                    ))}
-                  </div>
-                  <div className="preview-badge">+12 j</div>
-                </div>
+                <ThemePreview theme={theme} active={active} />
                 <div className="theme-card-copy">
                   <strong>{theme.name}</strong>
                   <span>{theme.description}</span>

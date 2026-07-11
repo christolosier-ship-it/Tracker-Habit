@@ -12,6 +12,26 @@ export type ThemeId =
   | "comic-book-energy"
   | "liquid-gradient-future";
 
+
+export type ThemeIdentityVariant =
+  | "neon-hud" | "dopamine-candy" | "memphis-blocks" | "aurora-glass"
+  | "tropical-botanical" | "arcade-hud" | "cosmic-orbit" | "kawaii-party"
+  | "brutalist-control" | "editorial-luxury" | "comic-missions" | "liquid-future";
+
+export type ThemeTypographyVariant =
+  | "terminal" | "friendly-rounded" | "bold-geometric" | "soft-modern" | "organic" | "pixel"
+  | "cosmic-serif" | "kawaii-rounded" | "brutalist-condensed" | "editorial-serif"
+  | "comic-display" | "future-rounded";
+
+export type ThemeFrameVariant =
+  | "hud" | "candy" | "memphis" | "glass" | "botanical" | "pixel" | "orbit"
+  | "sticker" | "brutalist" | "editorial" | "comic" | "liquid";
+
+export type ThemeWidgetVariant =
+  | "system-status" | "mood-bubble" | "shape-score" | "aurora-focus" | "growth-bloom"
+  | "player-hud" | "orbit-score" | "reward-collection" | "control-manifesto"
+  | "editorial-quote" | "hero-mission" | "flow-score";
+
 export type ChartCategoryName =
   | "Routine"
   | "Santé"
@@ -101,6 +121,34 @@ export type AppTheme = {
     glow: string;
   };
   charts: ThemeCharts;
+
+  identity: {
+    variant: ThemeIdentityVariant;
+    typography: ThemeTypographyVariant;
+    frame: ThemeFrameVariant;
+    signatureWidget: ThemeWidgetVariant;
+    navigation: {
+      variant: "terminal" | "candy" | "color-block" | "glass" | "botanical" | "arcade" | "cosmic" | "kawaii" | "brutalist" | "editorial" | "comic" | "liquid";
+      compactLabels: boolean;
+      showDecorativeStatus: boolean;
+    };
+    hero: {
+      variant: "hud" | "welcome" | "poster" | "glass" | "festival" | "player" | "cosmic" | "party" | "control" | "editorial" | "comic" | "future";
+      eyebrow: string;
+      slogan: string;
+      decorativeLabel: string;
+    };
+    decoration: {
+      variant: "circuit" | "confetti" | "memphis" | "aurora" | "leaves" | "pixels" | "stars" | "stickers" | "color-clash" | "fine-lines" | "halftone" | "liquid-blobs";
+      density: "low" | "medium" | "high";
+    };
+    cells: {
+      variant: "neon-square" | "candy-dot" | "memphis-shape" | "glass-tile" | "tropical-seed" | "pixel-tile" | "star-orbit" | "kawaii-sticker" | "brutal-block" | "gold-dot" | "comic-token" | "liquid-bubble";
+    };
+    badges: {
+      variant: "terminal" | "pill" | "outlined" | "glass" | "leaf" | "pixel" | "cosmic" | "sticker" | "block" | "luxury" | "comic" | "liquid";
+    };
+  };
   radius: { card: string; button: string; pill: string };
   effects: {
     backgroundStyle:

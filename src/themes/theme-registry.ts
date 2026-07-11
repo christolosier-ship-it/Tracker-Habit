@@ -90,6 +90,7 @@ export const themes: AppTheme[] = [
       shadow: "0 24px 70px rgba(255,92,138,.22)",
       glow: "rgba(255, 92, 138, 0.35)",
     },
+    identity: { variant: "dopamine-candy", typography: "friendly-rounded", frame: "candy", signatureWidget: "mood-bubble", navigation: { variant: "candy", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "welcome", eyebrow: "BONJOUR CHAMPION", slogan: "Les petites habitudes font les grandes journées.", decorativeLabel: "BONNE ÉNERGIE" }, decoration: { variant: "confetti", density: "high" }, cells: { variant: "candy-dot" }, badges: { variant: "pill" } },
     charts: makeCharts({
       tremorPalette: ["rose", "amber", "sky", "emerald", "fuchsia"],
       hexPalette: [
@@ -156,6 +157,7 @@ export const themes: AppTheme[] = [
       shadow: "0 0 42px rgba(0,229,255,.18)",
       glow: "rgba(0,229,255,.45)",
     },
+    identity: { variant: "neon-hud", typography: "terminal", frame: "hud", signatureWidget: "system-status", navigation: { variant: "terminal", compactLabels: false, showDecorativeStatus: true }, hero: { variant: "hud", eyebrow: "SYSTÈME DE DISCIPLINE", slogan: "Discipline aujourd’hui. Liberté demain.", decorativeLabel: "SYSTÈME EN LIGNE" }, decoration: { variant: "circuit", density: "medium" }, cells: { variant: "neon-square" }, badges: { variant: "terminal" } },
     charts: makeCharts({
       tremorPalette: ["cyan", "fuchsia", "lime", "violet", "yellow"],
       hexPalette: ["#00E5FF", "#FF2BD6", "#B6FF00", "#7C3AED", "#FFD400"],
@@ -214,6 +216,7 @@ export const themes: AppTheme[] = [
       shadow: "8px 8px 0 #111111",
       glow: "rgba(255,59,48,.25)",
     },
+    identity: { variant: "memphis-blocks", typography: "bold-geometric", frame: "memphis", signatureWidget: "shape-score", navigation: { variant: "color-block", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "poster", eyebrow: "MODE PRODUCTIVITÉ", slogan: "Des formes fortes. Des habitudes solides.", decorativeLabel: "EN MOUVEMENT" }, decoration: { variant: "memphis", density: "high" }, cells: { variant: "memphis-shape" }, badges: { variant: "outlined" } },
     charts: makeCharts({
       tremorPalette: ["red", "yellow", "blue", "green", "orange"],
       hexPalette: ["#FF3B30", "#FFD60A", "#0A84FF", "#34C759", "#FF9F0A"],
@@ -272,6 +275,7 @@ export const themes: AppTheme[] = [
       shadow: "0 28px 80px rgba(103,232,249,.16)",
       glow: "rgba(249,168,212,.38)",
     },
+    identity: { variant: "aurora-glass", typography: "soft-modern", frame: "glass", signatureWidget: "aurora-focus", navigation: { variant: "glass", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "glass", eyebrow: "FOCUS AURORA", slogan: "Une progression calme, fluide et lumineuse.", decorativeLabel: "FOCUS DOUX" }, decoration: { variant: "aurora", density: "medium" }, cells: { variant: "glass-tile" }, badges: { variant: "glass" } },
     charts: makeCharts({
       tremorPalette: ["violet", "cyan", "pink", "indigo", "teal"],
       hexPalette: ["#A78BFA", "#67E8F9", "#F9A8D4", "#C4B5FD", "#5EEAD4"],
@@ -330,6 +334,7 @@ export const themes: AppTheme[] = [
       shadow: "0 22px 60px rgba(8,127,91,.18)",
       glow: "rgba(249,115,22,.32)",
     },
+    identity: { variant: "tropical-botanical", typography: "organic", frame: "botanical", signatureWidget: "growth-bloom", navigation: { variant: "botanical", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "festival", eyebrow: "BONNES ONDES", slogan: "La régularité fait fleurir les progrès.", decorativeLabel: "ÇA POUSSE" }, decoration: { variant: "leaves", density: "high" }, cells: { variant: "tropical-seed" }, badges: { variant: "leaf" } },
     charts: makeCharts({
       tremorPalette: ["emerald", "amber", "orange", "teal", "green"],
       hexPalette: ["#087F5B", "#FFB703", "#F97316", "#2EC4B6", "#7BC950"],
@@ -388,6 +393,7 @@ export const themes: AppTheme[] = [
       shadow: "0 0 0 2px #6D28D9, 0 0 30px rgba(255,43,214,.18)",
       glow: "rgba(255,43,214,.45)",
     },
+    identity: { variant: "arcade-hud", typography: "pixel", frame: "pixel", signatureWidget: "player-hud", navigation: { variant: "arcade", compactLabels: true, showDecorativeStatus: true }, hero: { variant: "player", eyebrow: "JOUEUR 1", slogan: "Monte de niveau. Une habitude à la fois.", decorativeLabel: "PARTIE EN COURS" }, decoration: { variant: "pixels", density: "medium" }, cells: { variant: "pixel-tile" }, badges: { variant: "pixel" } },
     charts: makeCharts({
       tremorPalette: ["fuchsia", "cyan", "yellow", "violet", "green"],
       hexPalette: ["#FF2BD6", "#00F5D4", "#FEE440", "#9B5DE5", "#00FF85"],
@@ -446,6 +452,7 @@ export const themes: AppTheme[] = [
       shadow: "0 24px 70px rgba(139,92,246,.24)",
       glow: "rgba(236,72,153,.4)",
     },
+    identity: { variant: "cosmic-orbit", typography: "cosmic-serif", frame: "orbit", signatureWidget: "orbit-score", navigation: { variant: "cosmic", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "cosmic", eyebrow: "CARTE STELLAIRE", slogan: "Tes habitudes écrivent ta trajectoire.", decorativeLabel: "EN ORBITE" }, decoration: { variant: "stars", density: "high" }, cells: { variant: "star-orbit" }, badges: { variant: "cosmic" } },
     charts: makeCharts({
       tremorPalette: ["violet", "pink", "cyan", "lime", "amber"],
       hexPalette: ["#8B5CF6", "#EC4899", "#22D3EE", "#A3E635", "#FBBF24"],
@@ -504,6 +511,7 @@ export const themes: AppTheme[] = [
       shadow: "0 24px 60px rgba(255,138,205,.22)",
       glow: "rgba(139,211,255,.28)",
     },
+    identity: { variant: "kawaii-party", typography: "kawaii-rounded", frame: "sticker", signatureWidget: "reward-collection", navigation: { variant: "kawaii", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "party", eyebrow: "HABIT PARTY", slogan: "Chaque petite victoire mérite une étoile.", decorativeLabel: "BRAVO" }, decoration: { variant: "stickers", density: "high" }, cells: { variant: "kawaii-sticker" }, badges: { variant: "sticker" } },
     charts: makeCharts({
       tremorPalette: ["pink", "sky", "yellow", "emerald", "rose"],
       hexPalette: ["#FF8ACD", "#8BD3FF", "#FFF176", "#A7F3D0", "#FDA4AF"],
@@ -562,6 +570,7 @@ export const themes: AppTheme[] = [
       shadow: "10px 10px 0 #F9FF00",
       glow: "rgba(255,10,122,.38)",
     },
+    identity: { variant: "brutalist-control", typography: "brutalist-condensed", frame: "brutalist", signatureWidget: "control-manifesto", navigation: { variant: "brutalist", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "control", eyebrow: "CENTRE DE CONTRÔLE", slogan: "Pas d’excuse. Seulement du progrès.", decorativeLabel: "VERROUILLÉ" }, decoration: { variant: "color-clash", density: "medium" }, cells: { variant: "brutal-block" }, badges: { variant: "block" } },
     charts: makeCharts({
       tremorPalette: ["pink", "blue", "yellow", "emerald", "red"],
       hexPalette: ["#FF0A7A", "#0057FF", "#F9FF00", "#00FF94", "#FF0A0A"],
@@ -620,6 +629,7 @@ export const themes: AppTheme[] = [
       shadow: "0 30px 90px rgba(0,0,0,.55)",
       glow: "rgba(245,215,110,.22)",
     },
+    identity: { variant: "editorial-luxury", typography: "editorial-serif", frame: "editorial", signatureWidget: "editorial-quote", navigation: { variant: "editorial", compactLabels: true, showDecorativeStatus: false }, hero: { variant: "editorial", eyebrow: "ÉDITION DISCIPLINE", slogan: "La discipline est le nouveau luxe.", decorativeLabel: "ÉDITION PRIVÉE" }, decoration: { variant: "fine-lines", density: "low" }, cells: { variant: "gold-dot" }, badges: { variant: "luxury" } },
     charts: makeCharts({
       tremorPalette: ["amber", "yellow", "stone", "red", "zinc"],
       hexPalette: ["#C9A227", "#F5D76E", "#846A2D", "#D6B85A", "#B23B3B"],
@@ -678,6 +688,7 @@ export const themes: AppTheme[] = [
       shadow: "7px 7px 0 #111111",
       glow: "rgba(239,35,60,.28)",
     },
+    identity: { variant: "comic-missions", typography: "comic-display", frame: "comic", signatureWidget: "hero-mission", navigation: { variant: "comic", compactLabels: false, showDecorativeStatus: false }, hero: { variant: "comic", eyebrow: "MISSION DU JOUR", slogan: "Fais monter ton niveau de vie.", decorativeLabel: "À L’ACTION" }, decoration: { variant: "halftone", density: "high" }, cells: { variant: "comic-token" }, badges: { variant: "comic" } },
     charts: makeCharts({
       tremorPalette: ["red", "yellow", "blue", "emerald", "orange"],
       hexPalette: ["#EF233C", "#FFD500", "#0077FF", "#06D6A0", "#FF7A00"],
@@ -736,6 +747,7 @@ export const themes: AppTheme[] = [
       shadow: "0 28px 90px rgba(56,189,248,.20)",
       glow: "rgba(244,114,182,.38)",
     },
+    identity: { variant: "liquid-future", typography: "future-rounded", frame: "liquid", signatureWidget: "flow-score", navigation: { variant: "liquid", compactLabels: true, showDecorativeStatus: false }, hero: { variant: "future", eyebrow: "FLUX PERSONNEL", slogan: "Continue d’avancer. Garde ton élan.", decorativeLabel: "FLUX ACTIF" }, decoration: { variant: "liquid-blobs", density: "medium" }, cells: { variant: "liquid-bubble" }, badges: { variant: "liquid" } },
     charts: makeCharts({
       tremorPalette: ["sky", "violet", "pink", "cyan", "emerald"],
       hexPalette: ["#38BDF8", "#A855F7", "#F472B6", "#22D3EE", "#34D399"],
