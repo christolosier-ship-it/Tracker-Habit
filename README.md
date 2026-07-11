@@ -139,3 +139,28 @@ Règles de score :
 - Sauvegarde cloud optionnelle.
 - Personnalisation fine des thèmes par utilisateur.
 - Découpage plus fin en composants/pages dédiés.
+
+## Identités visuelles des 12 thèmes
+
+Les thèmes ne se limitent plus aux tokens de palette : les couleurs restent la base, mais une couche d’identité visuelle définit maintenant le vocabulaire d’interface de chaque univers. `AppTheme.identity` décrit la typographie, le type de cadre, la navigation, le hero, les décorations, les cellules, les badges et le widget signature associés au thème actif.
+
+`ThemeIdentityLayer` ajoute des objets décoratifs globaux en CSS/SVG locaux, sans interaction et sans donnée métier. `ThemeHero` remplace la structure visuelle interne du header tout en conservant les titres français, les contrôles d’année et de mois, ainsi que les calculs existants. `ThemeSignatureWidget` sélectionne le widget purement visuel du thème actif à partir de valeurs déjà calculées : score, série et habitudes actives.
+
+Les 12 widgets signatures sont :
+
+- SystemStatusWidget
+- MoodBubbleWidget
+- MemphisShapeScore
+- AuroraFocusWidget
+- GrowthBloomWidget
+- ArcadePlayerHud
+- CosmicOrbitScore
+- KawaiiRewardCollection
+- BrutalistManifesto
+- EditorialQuoteWidget
+- ComicHeroMission
+- LiquidFlowScore
+
+Ces objets restent strictement présentatifs : aucune donnée de jeu, d’XP, de pièces, de mascotte, de récompense ou de collection n’est sauvegardée. Les calculs visuels de Retro Arcade et Kawaii Maximalist sont dérivés temporairement depuis les données existantes. La logique métier, le localStorage, l’import/export JSON, les habitudes, les catégories et les statuts restent inchangés.
+
+Retro Arcade dispose d’un HUD joueur avec niveau, XP segmentée, pièces et sprite pixel local. Kawaii Maximalist dispose d’une mascotte lapin originale, de compteurs étoiles/cœurs, d’un badge récompense et de stickers. Tous les visuels sont construits avec CSS ou SVG inline locaux, sans image distante et sans dépendance graphique externe.
