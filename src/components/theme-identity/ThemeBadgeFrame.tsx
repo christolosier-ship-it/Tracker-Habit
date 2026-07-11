@@ -1,2 +1,11 @@
-import React from "react";import { AppTheme } from "../../themes/theme-types";
-export function ThemeBadgeFrame({theme,children}:{theme:AppTheme;children:React.ReactNode}){return <span className="theme-badge-frame" data-badge={theme.identity.badges.variant}>{children}</span>}
+import React from "react";
+import { AppTheme } from "../../themes/theme-types";
+
+type Props = {
+  theme: AppTheme;
+  children: React.ReactNode;
+};
+
+export function ThemeBadgeFrame({ children }: Props) {
+  return <>{children}</>;
+}
