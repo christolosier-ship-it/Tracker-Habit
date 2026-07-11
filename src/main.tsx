@@ -56,6 +56,10 @@ import { ThemedBarChart } from "./components/charts/ThemedBarChart";
 import { ThemedDonutChart } from "./components/charts/ThemedDonutChart";
 import { ThemedBarList } from "./components/charts/ThemedBarList";
 import { ThemedProgressRing } from "./components/charts/ThemedProgressRing";
+import { StatsInsightCards } from "./components/stats/StatsInsightCards";
+import { ThemedMonthlyRibbon } from "./components/stats/ThemedMonthlyRibbon";
+import { ThemedCategoryScoreBars } from "./components/stats/ThemedCategoryScoreBars";
+import { ThemedStatusBreakdown } from "./components/stats/ThemedStatusBreakdown";
 import * as S from "./lib/stats";
 
 type Page =
@@ -1042,6 +1046,7 @@ function Stats({
   data: AppData;
   setSettings: (patch: Partial<UserSettings>) => void;
 }) {
+  const theme = resolveTheme(data.settings.themeId);
   const monthly = mois.map((label, index) => ({
     mois: label,
     score: S.calculateMonthScore(
@@ -1064,14 +1069,30 @@ function Stats({
       data.settings,
     ),
   }));
+  const categoryStats = S.calculateCategoryStats(
+    data.habits,
+    data.logs,
+    data.settings,
+  );
+  const statusStats = S.calculateStatusStats(data.logs);
 
   return (
     <>
       <Header data={data} setSettings={setSettings} title="STATISTIQUES" />
+
+      <StatsInsightCards
+        theme={theme}
+        monthly={monthly}
+        categoryStats={categoryStats}
+        statusStats={statusStats}
+      />
+
+      <ThemedMonthlyRibbon theme={theme} monthly={monthly} />
+
       <section className="chart-grid stats-grid">
         <TremorPanel title="Évolution du score" description="Mois par mois">
           <ThemedAreaChart
-            theme={resolveTheme(data.settings.themeId)}
+            theme={theme}
             data={monthly}
             index="mois"
             categories={["score"]}
@@ -1079,12 +1100,13 @@ function Stats({
             valueFormatter={formatPercent}
           />
         </TremorPanel>
+
         <TremorPanel
           title="Évolution anti-procrastination"
           description="Productivité + anti-report"
         >
           <ThemedAreaChart
-            theme={resolveTheme(data.settings.themeId)}
+            theme={theme}
             data={antiMonthly}
             index="mois"
             categories={["anti"]}
@@ -1092,32 +1114,22 @@ function Stats({
             valueFormatter={formatPercent}
           />
         </TremorPanel>
+
         <TremorPanel
-          title="Catégories"
-          description="Score par famille d’habitudes"
+          title="Score par catégorie"
+          description="Performance par famille d’habitudes"
         >
-          <ThemedBarChart
-            theme={resolveTheme(data.settings.themeId)}
-            data={S.calculateCategoryStats(
-              data.habits,
-              data.logs,
-              data.settings,
-            )}
-            index="categorie"
-            categories={["score"]}
-            variant="category"
-            valueFormatter={formatPercent}
-          />
+          <ThemedCategoryScoreBars theme={theme} data={categoryStats} />
         </TremorPanel>
-        <TremorPanel title="Statuts enregistrés" description="Volume global">
-          <ThemedDonutChart
-            theme={resolveTheme(data.settings.themeId)}
-            variant="status"
-            data={S.calculateStatusStats(data.logs)}
-            valueFormatter={(value: number) => `${value}`}
-          />
+
+        <TremorPanel
+          title="Statuts enregistrés"
+          description="Répartition des statuts saisis"
+        >
+          <ThemedStatusBreakdown theme={theme} data={statusStats} />
         </TremorPanel>
       </section>
+
       <AntiProcrastination data={data} />
     </>
   );

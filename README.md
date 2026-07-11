@@ -63,6 +63,17 @@ Les 12 thèmes ne se limitent plus à une palette décorative appliquée aux gra
 
 **Dopamine Pop** reste prioritaire : anneaux épais, pastilles candy, couleurs joyeuses et lisibles, cartes claires, rendu premium/fun sans casser la compatibilité mobile.
 
+## Page Statistiques verrouillée par thème
+
+La page **Statistiques** dispose d’une couche visuelle dédiée, strictement limitée à cette page, pour éviter un rendu générique des analyses :
+
+- `StatsInsightCards` affiche les 4 lectures rapides : meilleur mois, mois fragile, catégorie forte et catégorie à reprendre.
+- `ThemedMonthlyRibbon` ajoute un ruban de 12 tuiles mensuelles colorées selon le niveau de score.
+- `ThemedCategoryScoreBars` remplace le bar chart monochrome des catégories par des barres React/CSS custom, avec une couleur stable par catégorie issue de `theme.charts.category`.
+- `ThemedStatusBreakdown` combine le donut de statuts avec une légende claire en couleurs sémantiques (`done`, `partial`, `missed`, `rest`, `empty`).
+- **Dopamine Pop** reste prioritaire : rendu plus candy, lisible, fun et premium.
+- Les 12 thèmes possèdent chacun une section CSS dédiée pour que les statistiques changent réellement de personnalité : pop, neon, memphis, aurora, tropical, arcade, cosmic, kawaii, brutalist, editorial, comic et liquid.
+
 ## Déploiement GitHub Pages
 
 Le projet est configuré pour GitHub Pages avec Vite :

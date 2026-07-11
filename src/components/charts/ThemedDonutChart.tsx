@@ -12,12 +12,14 @@ type StatusProps = {
   variant: "status";
   data: StatusStats[];
   valueFormatter?: (value: number) => string;
+  compact?: boolean;
 };
 type CategoryProps = {
   theme: AppTheme;
   variant: "category";
   data: CategoryStats[];
   valueFormatter?: (value: number) => string;
+  compact?: boolean;
 };
 export function ThemedDonutChart(props: StatusProps | CategoryProps) {
   const data =
@@ -36,7 +38,7 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
   );
   return (
     <div
-      className={`themed-chart-panel themed-donut donut-${props.theme.charts.visual.donutVariant}`}
+      className={`themed-chart-panel themed-donut donut-${props.theme.charts.visual.donutVariant} ${props.compact ? "compact" : ""}`}
       style={chartCssVars(props.theme, props.variant)}
     >
       <DonutChart
