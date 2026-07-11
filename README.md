@@ -21,6 +21,36 @@ La V3 UI utilise maintenant :
 - `date-fns` pour les dates ;
 - `localStorage` pour le stockage V1.
 
+
+## Système de thèmes
+
+L’application inclut un moteur de thèmes visuels sélectionnable depuis **Paramètres > Apparence**. Le thème par défaut est **Dopamine Pop**, pensé comme l’expérience principale : joyeuse, colorée, tactile et motivante.
+
+Les 12 styles disponibles sont :
+
+1. Dopamine Pop
+2. Neon Cyberpunk Matrix
+3. Memphis Productivity
+4. Aurora Glassmorphism
+5. Tropical Festival
+6. Retro Arcade
+7. Cosmic Dreamscape
+8. Kawaii Maximalist
+9. Brutalist Color Clash
+10. Editorial Fashion Tech
+11. Comic Book Energy
+12. Liquid Gradient Future
+
+Architecture :
+
+- `src/themes/theme-types.ts` définit `ThemeId` et `AppTheme`.
+- `src/themes/theme-registry.ts` centralise le registre des 12 thèmes, le thème par défaut et les palettes de graphiques.
+- `src/themes/apply-theme.ts` transforme le thème actif en variables CSS (`--bg`, `--surface`, `--primary`, `--radius-card`, etc.).
+- `src/styles.css` applique ces variables aux fonds, cartes, badges, boutons, matrices, pages et variantes `data-theme-style`.
+- `src/lib/storage.ts` migre en douceur les anciennes données `localStorage` sans `themeId` vers `dopamine-pop`.
+
+Limite actuelle : les thèmes changent l’apparence globale, les palettes, les formes, les effets, les cartes et les graphiques, mais ce ne sont pas encore 12 layouts totalement différents.
+
 ## Déploiement GitHub Pages
 
 Le projet est configuré pour GitHub Pages avec Vite :
@@ -40,7 +70,7 @@ Après merge sur `main`, GitHub Pages doit servir le build généré, pas les so
 - `src/lib/stats.ts` : fonctions de calcul des scores, séries, catégories et anti-procrastination.
 - `src/lib/storage.ts` : persistance locale, export/import, reset.
 - `src/data/demoData.ts` : 30 habitudes quotidiennes, 15 hebdomadaires et journaux réalistes.
-- `src/styles.css` : thème premium sombre, crème, vert et orange brûlé.
+- `src/styles.css` : variables de thème, styles premium responsives et variantes visuelles des 12 ambiances.
 - `tailwind.config.ts` et `postcss.config.js` : configuration Tailwind utile à Tremor.
 
 ## Fonctionnalités
@@ -83,5 +113,5 @@ Règles de score :
 - IndexedDB.
 - Notifications PWA.
 - Sauvegarde cloud optionnelle.
-- Thèmes personnalisables.
+- Personnalisation fine des thèmes par utilisateur.
 - Découpage plus fin en composants/pages dédiés.
