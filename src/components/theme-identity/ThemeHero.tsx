@@ -1,3 +1,31 @@
-import React from "react";import { AppTheme } from "../../themes/theme-types";import { ThemeSignatureWidget } from "./ThemeSignatureWidget";
-type Props={theme:AppTheme;title:string;yearControls:React.ReactNode;monthControls:React.ReactNode;score:number;streak:number;activeHabits:number;year:number;doneLogs?:number;disciplinedDays?:number};
-export function ThemeHero({theme,title,yearControls,monthControls,score,streak,activeHabits,year,doneLogs,disciplinedDays}:Props){return <div className="theme-hero" data-hero={theme.identity.hero.variant}><div className="theme-hero-copy"><p className="theme-hero-label">{theme.identity.hero.eyebrow}</p><h1>{title}</h1><p>{theme.identity.hero.slogan}</p><span>{theme.identity.hero.decorativeLabel}</span></div><ThemeSignatureWidget theme={theme} score={score} streak={streak} activeHabits={activeHabits} year={year} doneLogs={doneLogs} disciplinedDays={disciplinedDays}/><div className="hero-controls">{yearControls}{monthControls}</div></div>}
+import React from "react";
+import { AppTheme } from "../../themes/theme-types";
+
+type Props = {
+  theme: AppTheme;
+  title: string;
+  yearControls: React.ReactNode;
+  monthControls: React.ReactNode;
+  score: number;
+  streak: number;
+  activeHabits: number;
+  year: number;
+  doneLogs?: number;
+  disciplinedDays?: number;
+};
+
+export function ThemeHero({ title, yearControls, monthControls }: Props) {
+  return (
+    <>
+      <div className="hero-copy">
+        <p className="eyebrow">Discipline & Productivité</p>
+        <h1>{title}</h1>
+        <p className="quote">Ce que tu répètes chaque jour façonne la personne que tu deviens.</p>
+      </div>
+      <div className="hero-controls">
+        {yearControls}
+        {monthControls}
+      </div>
+    </>
+  );
+}
