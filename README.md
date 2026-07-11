@@ -15,12 +15,11 @@ npm run build
 La V3 UI utilise maintenant :
 
 - composants locaux inspirés de `shadcn/ui` : `Button`, `Card`, `Badge`, helper `cn` ;
-- `@tremor/react` pour les graphiques dashboard : AreaChart, BarChart, DonutChart, BarList, ProgressCircle ;
+- `@tremor/react` comme base de rendu pour les graphiques, encapsulée par des composants `ThemedChart` locaux ;
 - effets ciblés type Magic UI / Aceternity : fond animé, orbes, cartes spotlight, bento shell ;
 - `lucide-react` pour les icônes ;
 - `date-fns` pour les dates ;
 - `localStorage` pour le stockage V1.
-
 
 ## Système de thèmes
 
@@ -44,12 +43,36 @@ Les 12 styles disponibles sont :
 Architecture :
 
 - `src/themes/theme-types.ts` définit `ThemeId` et `AppTheme`.
-- `src/themes/theme-registry.ts` centralise le registre des 12 thèmes, le thème par défaut et les palettes de graphiques.
+- `src/themes/theme-registry.ts` centralise le registre des 12 thèmes, le thème par défaut et les palettes sémantiques de graphiques.
 - `src/themes/apply-theme.ts` transforme le thème actif en variables CSS (`--bg`, `--surface`, `--primary`, `--radius-card`, etc.).
 - `src/styles.css` applique ces variables aux fonds, cartes, badges, boutons, matrices, pages et variantes `data-theme-style`.
 - `src/lib/storage.ts` migre en douceur les anciennes données `localStorage` sans `themeId` vers `dopamine-pop`.
 
 Limite actuelle : les thèmes changent l’apparence globale, les palettes, les formes, les effets, les cartes et les graphiques, mais ce ne sont pas encore 12 layouts totalement différents.
+
+## Graphiques thématiques
+
+Les 12 thèmes ne se limitent plus à une palette décorative appliquée aux graphiques. Une couche dédiée vit dans `src/components/charts/` et centralise les intentions visuelles :
+
+- `ThemedAreaChart`, `ThemedBarChart`, `ThemedDonutChart`, `ThemedBarList` et `ThemedProgressRing` reçoivent le thème actif, les données et un variant sémantique (`score`, `status`, `category`, `fragile`, `antiProcrastination`, etc.).
+- `chart-theme-utils.ts` sépare les helpers de couleur : statuts, catégories, scores, palettes Tremor et couleurs hex exactes pour CSS/SVG.
+- `AppTheme.charts` distingue désormais `tremorPalette` (noms compatibles Tremor) et `hexPalette` (couleurs exactes), plus des palettes sémantiques `status`, `score`, `category`, `gradients` et `visual`.
+- Les donuts de statuts utilisent toujours une sémantique stable : accompli = positif, partiel = intermédiaire, manqué = danger, repos = calme, non saisi = neutre. Les donuts de catégories utilisent une palette stable par famille d’habitude.
+- Les progress rings choisissent leur couleur par score : `low`, `mid`, `good`, `great`, sans modifier les calculs métier.
+- La heatmap annuelle conserve ses seuils fonctionnels mais change de personnalité via `heatmapVariant` : pastilles candy, néon, Memphis, glass pills, tropical seeds, pixel blocks, cosmic stars, stickers kawaii, blocs brutalistes, dots éditoriaux, badges comic ou bulles liquides.
+
+**Dopamine Pop** reste prioritaire : anneaux épais, pastilles candy, couleurs joyeuses et lisibles, cartes claires, rendu premium/fun sans casser la compatibilité mobile.
+
+## Page Statistiques verrouillée par thème
+
+La page **Statistiques** dispose d’une couche visuelle dédiée, strictement limitée à cette page, pour éviter un rendu générique des analyses :
+
+- `StatsInsightCards` affiche les 4 lectures rapides : meilleur mois, mois fragile, catégorie forte et catégorie à reprendre.
+- `ThemedMonthlyRibbon` ajoute un ruban de 12 tuiles mensuelles colorées selon le niveau de score.
+- `ThemedCategoryScoreBars` remplace le bar chart monochrome des catégories par des barres React/CSS custom, avec une couleur stable par catégorie issue de `theme.charts.category`.
+- `ThemedStatusBreakdown` combine le donut de statuts avec une légende claire en couleurs sémantiques (`done`, `partial`, `missed`, `rest`, `empty`).
+- **Dopamine Pop** reste prioritaire : rendu plus candy, lisible, fun et premium.
+- Les 12 thèmes possèdent chacun une section CSS dédiée pour que les statistiques changent réellement de personnalité : pop, neon, memphis, aurora, tropical, arcade, cosmic, kawaii, brutalist, editorial, comic et liquid.
 
 ## Déploiement GitHub Pages
 
@@ -63,9 +86,10 @@ Après merge sur `main`, GitHub Pages doit servir le build généré, pas les so
 
 ## Structure
 
-- `src/main.tsx` : application, navigation, pages et composants principaux.
+- `src/main.tsx` : application, navigation, pages et orchestration des composants principaux.
 - `src/components/ui` : composants locaux inspirés de shadcn/ui.
 - `src/components/effects` : effets visuels premium ciblés.
+- `src/components/charts` : composants graphiques thémés et helpers de palettes sémantiques.
 - `src/types.ts` : modèle de données typé.
 - `src/lib/stats.ts` : fonctions de calcul des scores, séries, catégories et anti-procrastination.
 - `src/lib/storage.ts` : persistance locale, export/import, reset.
@@ -105,7 +129,7 @@ Règles de score :
 - Import JSON avec validation structurelle minimale.
 - Pas encore d’export Excel `.xlsx`.
 - Pas encore de notifications PWA.
-- La structure applicative reste encore concentrée dans `src/main.tsx`.
+- La structure applicative reste partiellement concentrée dans `src/main.tsx`, même si la logique graphique est isolée dans `src/components/charts`.
 
 ## Pistes V2/V4
 
