@@ -130,6 +130,7 @@ export const defaultSettings: UserSettings = {
   anneeActive: demoYear,
   moisActif: now.getMonth(),
   compterNonSaisisCommeManques: false,
+  themeId: 'dopamine-pop',
 };
 
 function weightedDemoStatus(day: number, month: number, habitIndex: number) {

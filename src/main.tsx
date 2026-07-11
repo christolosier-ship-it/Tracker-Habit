@@ -37,7 +37,9 @@ import { Button } from './components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Habit, HabitStatus, UserSettings } from './types';
 import { categories, defaultSettings } from './data/demoData';
-import { AppData, demoData, loadData, resetData, saveData, validateImport } from './lib/storage';
+import { AppData, demoData, loadData, resetData, saveData, validateImport, migrateData } from './lib/storage';
+import { applyThemeStyle } from './themes/apply-theme';
+import { defaultThemeId, getThemeChartColors, resolveTheme, themes } from './themes/theme-registry';
 import * as S from './lib/stats';
 
 type Page = 'Dashboard' | 'Aujourd’hui' | 'Mois' | 'Habitudes' | 'Statistiques' | 'Paramètres';
@@ -50,7 +52,6 @@ type PageSpec = {
 
 const mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const moisLong = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-const tremorColors = ['emerald', 'teal', 'amber', 'orange', 'rose', 'slate', 'stone'];
 const pageSpecs: PageSpec[] = [
   { name: 'Dashboard', icon: LayoutDashboard },
   { name: 'Aujourd’hui', icon: Check },
@@ -66,6 +67,7 @@ const formatPercent = (value: number) => `${Math.round(value)}%`;
 function App() {
   const [data, setData] = useState<AppData>(() => loadData());
   const [page, setPage] = useState<Page>('Dashboard');
+  const activeTheme = resolveTheme(data.settings.themeId);
 
   useEffect(() => saveData(data), [data]);
 
@@ -82,7 +84,7 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={activeTheme.id} data-theme-style={activeTheme.effects.backgroundStyle} style={applyThemeStyle(activeTheme)}>
       <AmbientBackground />
       <nav className="sidebar" aria-label="Navigation principale">
         <div className="brand">
@@ -178,7 +180,7 @@ function Kpis({ data }: { data: AppData }) {
             <small>{note}</small>
           </div>
           {gauge && (
-            <ProgressCircle value={Number(value)} size="sm" color="emerald" className="kpi-progress">
+            <ProgressCircle value={Number(value)} size="sm" color={getThemeChartColors(resolveTheme(data.settings.themeId))[0]} className="kpi-progress">
               <span className="progress-center">{value}%</span>
             </ProgressCircle>
           )}
@@ -207,25 +209,25 @@ function Dashboard({ data, setSettings }: { data: AppData; setSettings: (patch: 
         <AnnualMatrix data={data} />
         <div className="dashboard-side">
           <TremorPanel title="Progression mensuelle" description="Score global par mois">
-            <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
+            <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={[getThemeChartColors(resolveTheme(data.settings.themeId))[0]]} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
           </TremorPanel>
           <TremorPanel title="Statuts" description="Accompli, partiel, manqué, repos">
-            <DonutChart className="tremor-chart" data={statusStats} index="label" category="value" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+            <DonutChart className="tremor-chart" data={statusStats} index="label" category="value" colors={getThemeChartColors(resolveTheme(data.settings.themeId))} valueFormatter={(value: number) => `${value}`} />
           </TremorPanel>
         </div>
       </BentoShell>
       <section className="chart-grid">
         <TremorPanel title="Score par mois" description="Vue histogramme">
-          <TremorBarChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['orange']} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
+          <TremorBarChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={[getThemeChartColors(resolveTheme(data.settings.themeId))[1]]} valueFormatter={formatPercent} yAxisWidth={42} showLegend={false} />
         </TremorPanel>
         <TremorPanel title="Répartition par catégorie" description="Volume de suivis enregistrés">
-          <DonutChart className="tremor-chart" data={categoryStats} index="categorie" category="total" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+          <DonutChart className="tremor-chart" data={categoryStats} index="categorie" category="total" colors={getThemeChartColors(resolveTheme(data.settings.themeId))} valueFormatter={(value: number) => `${value}`} />
         </TremorPanel>
         <TremorPanel title="Top 10 habitudes" description="Les habitudes qui tiennent le mieux">
-          <BarList className="bar-list" data={topHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color="emerald" />
+          <BarList className="bar-list" data={topHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color={getThemeChartColors(resolveTheme(data.settings.themeId))[0]} />
         </TremorPanel>
         <TremorPanel title="Habitudes fragiles" description="À reprendre sans drame, mais sans brouillard">
-          <BarList className="bar-list" data={fragileHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color="rose" />
+          <BarList className="bar-list" data={fragileHabits.map((habit) => ({ name: habit.nom, value: habit.score }))} valueFormatter={formatPercent} color={getThemeChartColors(resolveTheme(data.settings.themeId))[2]} />
         </TremorPanel>
       </section>
       <AntiProcrastination data={data} />
@@ -300,7 +302,7 @@ function AntiProcrastination({ data }: { data: AppData }) {
         <h2>Indice anti-procrastination</h2>
         <p>Un score concentré sur la tâche prioritaire, le deep work, le zéro scrolling et les habitudes qui évitent le report chronique.</p>
       </div>
-      <ProgressCircle value={anti} size="xl" color={anti >= 70 ? 'emerald' : anti >= 50 ? 'amber' : 'rose'}>
+      <ProgressCircle value={anti} size="xl" color={getThemeChartColors(resolveTheme(data.settings.themeId))[anti >= 70 ? 0 : anti >= 50 ? 1 : 2]}>
         <span className="anti-score">{anti}%</span>
       </ProgressCircle>
       <ul>
@@ -524,16 +526,16 @@ function Stats({ data, setSettings }: { data: AppData; setSettings: (patch: Part
       <Header data={data} setSettings={setSettings} title="STATISTIQUES" />
       <section className="chart-grid stats-grid">
         <TremorPanel title="Évolution du score" description="Mois par mois">
-          <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} showLegend={false} />
+          <TremorAreaChart className="tremor-chart" data={monthly} index="mois" categories={['score']} colors={[getThemeChartColors(resolveTheme(data.settings.themeId))[0]]} valueFormatter={formatPercent} showLegend={false} />
         </TremorPanel>
         <TremorPanel title="Évolution anti-procrastination" description="Productivité + anti-report">
-          <TremorAreaChart className="tremor-chart" data={antiMonthly} index="mois" categories={['anti']} colors={['orange']} valueFormatter={formatPercent} showLegend={false} />
+          <TremorAreaChart className="tremor-chart" data={antiMonthly} index="mois" categories={['anti']} colors={[getThemeChartColors(resolveTheme(data.settings.themeId))[1]]} valueFormatter={formatPercent} showLegend={false} />
         </TremorPanel>
         <TremorPanel title="Catégories" description="Score par famille d’habitudes">
-          <TremorBarChart className="tremor-chart" data={S.calculateCategoryStats(data.habits, data.logs, data.settings)} index="categorie" categories={['score']} colors={['emerald']} valueFormatter={formatPercent} showLegend={false} />
+          <TremorBarChart className="tremor-chart" data={S.calculateCategoryStats(data.habits, data.logs, data.settings)} index="categorie" categories={['score']} colors={[getThemeChartColors(resolveTheme(data.settings.themeId))[0]]} valueFormatter={formatPercent} showLegend={false} />
         </TremorPanel>
         <TremorPanel title="Statuts enregistrés" description="Volume global">
-          <DonutChart className="tremor-chart" data={S.calculateStatusStats(data.logs)} index="label" category="value" colors={tremorColors} valueFormatter={(value) => `${value}`} />
+          <DonutChart className="tremor-chart" data={S.calculateStatusStats(data.logs)} index="label" category="value" colors={getThemeChartColors(resolveTheme(data.settings.themeId))} valueFormatter={(value: number) => `${value}`} />
         </TremorPanel>
       </section>
       <AntiProcrastination data={data} />
@@ -558,7 +560,7 @@ function Params({ data, setData, setSettings }: { data: AppData; setData: React.
     file.text().then((text) => {
       const imported = JSON.parse(text);
       if (validateImport(imported)) {
-        setData(imported);
+        setData(migrateData(imported));
         setMessage('Import réussi.');
       } else {
         setMessage('JSON invalide : structure non reconnue.');
@@ -578,6 +580,55 @@ function Params({ data, setData, setSettings }: { data: AppData; setData: React.
   return (
     <>
       <Header data={data} setSettings={setSettings} title="PARAMÈTRES" />
+
+      <Card className="appearance-panel">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow compact">Apparence</p>
+            <h2>Choisir un style</h2>
+            <p>Change l’ambiance de ton tracker selon ton humeur.</p>
+          </div>
+          <Button variant="secondary" onClick={() => setSettings({ themeId: defaultThemeId })} type="button"><RotateCcw /> Réinitialiser le thème</Button>
+        </div>
+        <div className="theme-gallery">
+          {themes.map((theme) => {
+            const active = data.settings.themeId === theme.id;
+            const colors = [theme.tokens.primary, theme.tokens.secondary, theme.tokens.accent, theme.tokens.accent2, theme.tokens.success];
+            return (
+              <button
+                className={`theme-card ${active ? 'active' : ''}`}
+                data-preview-style={theme.effects.backgroundStyle}
+                onClick={() => setSettings({ themeId: theme.id })}
+                type="button"
+                key={theme.id}
+                style={{
+                  '--preview-bg': theme.tokens.background,
+                  '--preview-surface': theme.tokens.surface,
+                  '--preview-text': theme.tokens.text,
+                  '--preview-primary': theme.tokens.primary,
+                  '--preview-secondary': theme.tokens.secondary,
+                  '--preview-accent': theme.tokens.accent,
+                  '--preview-border': theme.tokens.border,
+                } as React.CSSProperties}
+              >
+                <div className="theme-preview">
+                  <span className="preview-emoji">{theme.previewEmoji}</span>
+                  <div className="preview-kpi"><strong>87%</strong><small>streak</small></div>
+                  <div className="preview-grid">{Array.from({ length: 12 }, (_, index) => <i key={index} />)}</div>
+                  <div className="preview-badge">+12 j</div>
+                </div>
+                <div className="theme-card-copy">
+                  <strong>{theme.name}</strong>
+                  <span>{theme.description}</span>
+                  <small>{theme.personality}</small>
+                </div>
+                <div className="theme-swatches">{colors.map((color) => <i style={{ background: color }} key={color} />)}</div>
+                <span className="theme-action">{active ? 'Actif' : 'Appliquer'}</span>
+              </button>
+            );
+          })}
+        </div>
+      </Card>
       <Card className="settings-panel">
         <label>Année active<input type="number" value={data.settings.anneeActive} onChange={(event) => setSettings({ anneeActive: Number(event.target.value) })} /></label>
         <label>Mois actif<select value={data.settings.moisActif} onChange={(event) => setSettings({ moisActif: Number(event.target.value) })}>{moisLong.map((label, index) => <option value={index} key={label}>{label}</option>)}</select></label>
