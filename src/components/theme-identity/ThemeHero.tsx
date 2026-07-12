@@ -16,6 +16,14 @@ type Props = {
   disciplinedDays?: number;
 };
 
+const importedHeroLayout: React.CSSProperties = {
+  width: "100%",
+  display: "grid",
+  gridTemplateColumns: "minmax(220px, 0.9fr) minmax(340px, 1.4fr) minmax(220px, 0.65fr)",
+  alignItems: "center",
+  gap: 24,
+};
+
 export function ThemeHero({
   theme,
   title,
@@ -30,7 +38,7 @@ export function ThemeHero({
 
   if (theme.id === "kawaii-maximalist") {
     return (
-      <div className="theme-hero-imported theme-hero-imported-kawaii">
+      <div className="theme-hero-imported theme-hero-imported-kawaii" style={importedHeroLayout}>
         <div className="hero-copy">
           <p className="eyebrow">Habit Party</p>
           <h1>{title}</h1>
@@ -43,7 +51,7 @@ export function ThemeHero({
 
   if (theme.id === "retro-arcade") {
     return (
-      <div className="theme-hero-imported theme-hero-imported-arcade">
+      <div className="theme-hero-imported theme-hero-imported-arcade" style={importedHeroLayout}>
         <div className="hero-copy">
           <p className="eyebrow">Player one ready</p>
           <h1>{title}</h1>
