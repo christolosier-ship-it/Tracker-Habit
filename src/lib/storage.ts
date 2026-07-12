@@ -42,20 +42,22 @@ function isLog(value: unknown): value is HabitLog {
   if (!isRecord(value)) return false;
   return (
     typeof value.habitId === "string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(String(value.date)) &&
-    ["empty", "done", "partial", "missed", "rest"].includes(
-      String(value.status),
-    )
+    typeof value.date === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value.date) &&
+    typeof value.status === "string" &&
+    ["empty", "done", "partial", "missed", "rest"].includes(value.status)
   );
 }
 
 function isSettings(value: unknown): value is UserSettings {
   if (!isRecord(value)) return false;
   return (
+    typeof value.anneeActive === "number" &&
     Number.isFinite(value.anneeActive) &&
+    typeof value.moisActif === "number" &&
     Number.isInteger(value.moisActif) &&
-    Number(value.moisActif) >= 0 &&
-    Number(value.moisActif) <= 11 &&
+    value.moisActif >= 0 &&
+    value.moisActif <= 11 &&
     typeof value.compterNonSaisisCommeManques === "boolean"
   );
 }
