@@ -41,7 +41,7 @@ export function ThemedAreaChart<T extends Record<string, unknown>>({
   return (
     <div
       className={`themed-chart-panel themed-area-chart area-${variant} grid-${theme.charts.visual.grid}`}
-      data-chart-theme={theme.style}
+      data-chart-theme={theme.effects.backgroundStyle}
       style={
         {
           ...chartCssVars(theme, variant),
@@ -72,9 +72,10 @@ export function ThemedAreaChart<T extends Record<string, unknown>>({
             }
           />
           <Tooltip
-            formatter={(value: number) =>
-              valueFormatter ? valueFormatter(value) : `${value}`
-            }
+            formatter={(value) => {
+              const numericValue = Number(value);
+              return valueFormatter ? valueFormatter(numericValue) : `${numericValue}`;
+            }}
             contentStyle={{
               background: theme.tokens.surface,
               border: `1px solid ${theme.tokens.border}`,
