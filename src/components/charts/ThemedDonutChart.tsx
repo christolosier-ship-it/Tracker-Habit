@@ -71,7 +71,7 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
   return (
     <div
       className={`themed-chart-panel themed-donut donut-${props.theme.charts.visual.donutVariant} ${props.compact ? "compact" : ""}`}
-      data-chart-theme={props.theme.style}
+      data-chart-theme={props.theme.effects.backgroundStyle}
       style={chartCssVars(props.theme, props.variant)}
     >
       <div className="themed-donut-chart" aria-label={`Répartition de ${total} éléments`}>
