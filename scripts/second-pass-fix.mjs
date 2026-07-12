@@ -16,7 +16,7 @@ edit("src/app/pages.tsx", (source) =>
     )
     .replace('  statusSymbol,\n  TremorPanel,', '  TremorPanel,')
     .replace('<Badge variant="muted">LocalStorage V1</Badge>', '<Badge variant="muted">LocalStorage V3</Badge>')
-    .replace('<AntiProcrastination data={data} theme={theme} stats={stats} />', '<AntiProcrastination theme={theme} stats={stats} />'),
+    .replaceAll('<AntiProcrastination data={data} theme={theme} stats={stats} />', '<AntiProcrastination theme={theme} stats={stats} />'),
 );
 
 edit("src/app/constants.ts", (source) =>
