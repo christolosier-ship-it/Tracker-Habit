@@ -19,7 +19,7 @@ export function ChartPanel({
   children,
 }: ChartPanelProps) {
   return (
-    <Card className="chart-card chart-panel tremor-panel">
+    <Card className="chart-card chart-panel">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
