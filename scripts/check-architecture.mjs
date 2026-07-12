@@ -4,10 +4,23 @@ import { join } from "node:path";
 const root = process.cwd();
 const failures = [];
 
-for (const forbiddenPath of ["src/app/pages.tsx", "src/app/shared.tsx"]) {
+const forbiddenPaths = [
+  "src/app/pages.tsx",
+  "src/app/shared.tsx",
+  "src/styles.css",
+  "src/styles-cleanup.css",
+  "src/responsive-layout-charts.css",
+  "src/styles-density-pass.css",
+];
+
+for (const forbiddenPath of forbiddenPaths) {
   if (existsSync(join(root, forbiddenPath))) {
-    failures.push(`Fichier monolithique interdit : ${forbiddenPath}`);
+    failures.push(`Fichier historique interdit : ${forbiddenPath}`);
   }
+}
+
+if (!existsSync(join(root, "src/styles/index.css"))) {
+  failures.push("Feuille consolidée absente : src/styles/index.css");
 }
 
 const presetDirectory = join(root, "src/themes/presets");
@@ -39,6 +52,8 @@ const forbiddenFragments = [
   "signatureWidget",
   "identity.hero",
   "identity.decoration",
+  "TremorPanel",
+  "tremor-panel",
 ];
 
 for (const file of sourceFiles) {
@@ -50,9 +65,25 @@ for (const file of sourceFiles) {
   }
 }
 
+const packageJson = JSON.parse(
+  readFileSync(join(root, "package.json"), "utf8"),
+);
+for (const dependency of ["@tremor/react", "framer-motion"]) {
+  if (packageJson.dependencies?.[dependency] || packageJson.devDependencies?.[dependency]) {
+    failures.push(`Dépendance inutilisée encore déclarée : ${dependency}`);
+  }
+}
+
+const main = readFileSync(join(root, "src/main.tsx"), "utf8");
+if (!main.includes('import "./styles/index.css";')) {
+  failures.push("main.tsx doit charger uniquement src/styles/index.css");
+}
+
 if (failures.length) {
   console.error("Architecture non conforme :\n- " + failures.join("\n- "));
   process.exit(1);
 }
 
-console.log("Architecture conforme : presets réels, monolithes retirés, reliquats supprimés.");
+console.log(
+  "Architecture conforme : presets réels, pages modulaires, CSS consolidé et reliquats supprimés.",
+);
