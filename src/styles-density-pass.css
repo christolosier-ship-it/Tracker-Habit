@@ -1,0 +1,168 @@
+/* Passe de dégraissage UI : contrôles compacts, rail KPI et matrice resserrée. */
+
+/* Le hero ne conserve que les contrôles Année / Mois actif. */
+.hero-card {
+  min-height: auto !important;
+  padding: 16px 20px !important;
+}
+
+.hero-card > .hero-copy,
+.theme-hero-imported > :not(.hero-controls) {
+  display: none !important;
+}
+
+.theme-hero-imported {
+  width: 100% !important;
+  display: block !important;
+}
+
+.hero-controls {
+  width: 100%;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: end;
+  gap: 12px 16px;
+}
+
+.hero-controls label {
+  min-width: 0;
+}
+
+.hero-controls input,
+.hero-controls select {
+  min-width: 0;
+}
+
+/* Les huit KPI deviennent un rail horizontal unique. */
+.kpi-grid {
+  width: 100%;
+  max-width: 100%;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 2px 2px 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kpi-card {
+  flex: 0 0 clamp(205px, 22vw, 236px);
+  min-width: 205px;
+  min-height: 138px !important;
+  scroll-snap-align: start;
+}
+
+.kpi-card .theme-kpi-frame {
+  min-height: 100%;
+}
+
+/* Les KPI sans anneau gardent leur valeur, centrée dans le pavé. */
+.kpi-card:not(:has(.themed-progress-ring)) .theme-kpi-frame {
+  grid-template-columns: minmax(0, 1fr) !important;
+  place-items: center;
+  text-align: center;
+}
+
+.kpi-card:not(:has(.themed-progress-ring)) .kpi-content {
+  width: 100%;
+}
+
+.kpi-card:not(:has(.themed-progress-ring)) .kpi-content > strong {
+  width: 100%;
+  justify-self: stretch;
+  text-align: center;
+  margin: 10px 0 0 !important;
+}
+
+/* La matrice annuelle garde la colonne Habitude fixe et compacte les mois. */
+.annual-matrix-card .ui-card-content {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.annual-matrix {
+  width: max-content;
+  min-width: max-content;
+  max-width: none !important;
+  grid-template-columns: 180px repeat(12, 42px) !important;
+  gap: 6px !important;
+  overflow: visible !important;
+}
+
+.annual-matrix > strong:first-child,
+.annual-matrix > span {
+  min-width: 180px;
+  width: 180px;
+  position: sticky !important;
+  left: 0;
+  z-index: 8 !important;
+  background: var(--surface, #fffaf1) !important;
+  box-shadow: 12px 0 18px -16px rgba(0, 0, 0, 0.72);
+}
+
+.annual-matrix > strong:not(:first-child),
+.annual-matrix .theme-calendar-cell {
+  min-width: 42px !important;
+  width: 42px !important;
+  padding-inline: 2px !important;
+  font-size: 12px !important;
+}
+
+@media (max-width: 900px) {
+  .hero-card {
+    padding: 14px 16px !important;
+  }
+
+  .hero-controls {
+    gap: 10px;
+  }
+
+  .kpi-card {
+    flex-basis: 210px;
+  }
+
+  .annual-matrix {
+    grid-template-columns: 164px repeat(12, 40px) !important;
+  }
+
+  .annual-matrix > strong:first-child,
+  .annual-matrix > span {
+    min-width: 164px;
+    width: 164px;
+  }
+
+  .annual-matrix > strong:not(:first-child),
+  .annual-matrix .theme-calendar-cell {
+    min-width: 40px !important;
+    width: 40px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-controls {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .hero-controls label {
+    font-size: 11px;
+  }
+
+  .hero-controls input,
+  .hero-controls select {
+    min-height: 40px;
+    padding-inline: 9px;
+  }
+
+  .kpi-card {
+    flex-basis: 196px;
+    min-width: 196px;
+  }
+}
