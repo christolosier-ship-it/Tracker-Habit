@@ -53,7 +53,7 @@
 .kpi-card {
   flex: 0 0 clamp(205px, 22vw, 236px);
   min-width: 205px;
-  min-height: 138px !important;
+  min-height: 168px !important;
   scroll-snap-align: start;
 }
 
@@ -61,22 +61,75 @@
   min-height: 100%;
 }
 
-/* Les KPI sans anneau gardent leur valeur, centrée dans le pavé. */
+/* Tous les KPI partagent la même composition : en-tête en haut, valeur au centre. */
+.kpi-card .theme-kpi-frame,
+.kpi-card:has(.themed-progress-ring) .theme-kpi-frame,
 .kpi-card:not(:has(.themed-progress-ring)) .theme-kpi-frame {
+  display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
-  place-items: center;
-  text-align: center;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-items: start !important;
+  justify-items: stretch;
+  gap: 8px !important;
+  text-align: left;
 }
 
-.kpi-card:not(:has(.themed-progress-ring)) .kpi-content {
+.kpi-content {
   width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.kpi-icon {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+}
+
+.kpi-content > span {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  min-width: 0;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  overflow-wrap: anywhere;
+  line-height: 1.08 !important;
+}
+
+/* La valeur extérieure des KPI à anneau reste masquée. */
+.kpi-card:has(.themed-progress-ring) .kpi-content > strong {
+  display: none !important;
+}
+
+/* Les anneaux sont centrés sous l'icône et le titre. */
+.kpi-card:has(.themed-progress-ring) .themed-progress-ring {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: center !important;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto;
+}
+
+/* Les KPI sans anneau gardent leur valeur, centrée dans le pavé. */
+.kpi-card:not(:has(.themed-progress-ring)) .kpi-content {
+  min-height: 132px;
 }
 
 .kpi-card:not(:has(.themed-progress-ring)) .kpi-content > strong {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
   width: 100%;
+  align-self: center;
   justify-self: stretch;
   text-align: center;
-  margin: 10px 0 0 !important;
+  margin: 4px 0 0 !important;
 }
 
 /* La matrice annuelle garde la colonne Habitude fixe et compacte les mois. */
@@ -114,6 +167,153 @@
   width: 42px !important;
   padding-inline: 2px !important;
   font-size: 12px !important;
+}
+
+/* Graphiques finaux : géométrie stable et palette réellement pilotée par le thème. */
+.themed-area-chart,
+.themed-bar-chart,
+.themed-donut {
+  min-height: 280px;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--chart-primary) 18%, transparent), transparent 34%),
+    color-mix(in srgb, var(--surface) 88%, transparent) !important;
+  border: 1px solid var(--border);
+}
+
+.themed-area-chart .recharts-surface,
+.themed-bar-chart .recharts-surface,
+.themed-donut .recharts-surface {
+  overflow: visible;
+}
+
+.themed-chart-panel .recharts-cartesian-axis-tick text,
+.themed-chart-panel .recharts-text,
+.themed-chart-panel text {
+  fill: var(--text-muted) !important;
+  font-family: inherit;
+}
+
+.themed-chart-panel .recharts-cartesian-grid line {
+  stroke: color-mix(in srgb, var(--border) 66%, transparent) !important;
+}
+
+.themed-area-chart .recharts-area-curve {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--chart-primary) 42%, transparent));
+}
+
+.themed-bar-chart .recharts-rectangle {
+  filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--chart-primary) 22%, transparent));
+}
+
+.themed-donut {
+  display: grid !important;
+  grid-template-rows: 248px auto;
+  place-items: center;
+  padding: 4px 8px 12px;
+}
+
+.themed-donut-chart {
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  height: 248px;
+}
+
+.themed-donut-center {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative !important;
+  z-index: 2;
+  width: 92px;
+  height: 92px;
+  pointer-events: none;
+}
+
+.themed-donut .recharts-sector {
+  stroke: var(--surface) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--chart-primary) 24%, transparent));
+}
+
+.themed-donut-legend {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px 12px;
+  padding: 2px 8px 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.themed-donut-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.themed-donut-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Morphologie des graphiques par thème. */
+[data-theme-style="neon"] .themed-chart-panel {
+  border-color: var(--chart-primary);
+  box-shadow: inset 0 0 0 1px var(--chart-secondary), 0 0 22px var(--glow);
+}
+
+[data-theme-style="pop"] .themed-chart-panel,
+[data-theme-style="kawaii"] .themed-chart-panel {
+  border-radius: 28px;
+  background: linear-gradient(135deg, #fff, var(--primary-soft)) !important;
+}
+
+[data-theme-style="memphis"] .themed-chart-panel,
+[data-theme-style="comic"] .themed-chart-panel {
+  border: 3px solid #111;
+  box-shadow: 7px 7px 0 #111;
+}
+
+[data-theme-style="aurora"] .themed-chart-panel,
+[data-theme-style="liquid"] .themed-chart-panel {
+  backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--chart-primary) 20%, transparent), color-mix(in srgb, var(--surface) 58%, transparent)) !important;
+  border-color: color-mix(in srgb, white 34%, var(--border));
+}
+
+[data-theme-style="tropical"] .themed-chart-panel {
+  border-radius: 28px 42px 28px 42px;
+  background: linear-gradient(155deg, var(--surface), color-mix(in srgb, var(--success) 14%, var(--surface))) !important;
+}
+
+[data-theme-style="arcade"] .themed-chart-panel {
+  border-radius: 0;
+  border: 4px double var(--chart-primary);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--secondary) 50%, #000);
+}
+
+[data-theme-style="cosmic"] .themed-chart-panel {
+  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--chart-primary) 32%, transparent), var(--surface) 66%) !important;
+  box-shadow: inset 0 0 44px color-mix(in srgb, var(--chart-secondary) 18%, transparent);
+}
+
+[data-theme-style="brutalist"] .themed-chart-panel {
+  border-radius: 0;
+  border: 3px solid var(--text);
+  box-shadow: 10px 10px 0 var(--accent);
+}
+
+[data-theme-style="editorial"] .themed-chart-panel {
+  border-radius: 2px;
+  border: 1px solid var(--secondary);
+  background: var(--surface) !important;
 }
 
 @media (max-width: 900px) {
@@ -164,5 +364,13 @@
   .kpi-card {
     flex-basis: 196px;
     min-width: 196px;
+  }
+
+  .themed-donut {
+    grid-template-rows: 220px auto;
+  }
+
+  .themed-donut-chart {
+    height: 220px;
   }
 }

@@ -1,4 +1,4 @@
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { AppTheme, ChartCategoryName } from "../../themes/theme-types";
 import { CategoryStats, StatusStats } from "../../types";
 import {
@@ -64,25 +64,46 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
             color: props.theme.charts.status.empty,
           },
         ];
+  const chartHeight = props.compact ? 190 : 248;
+  const outerRadius = props.compact ? 70 : 92;
+  const innerRadius = props.compact ? 46 : 62;
 
   return (
     <div
       className={`themed-chart-panel themed-donut donut-${props.theme.charts.visual.donutVariant} ${props.compact ? "compact" : ""}`}
+      data-chart-theme={props.theme.effects.backgroundStyle}
       style={chartCssVars(props.theme, props.variant)}
     >
       <div className="themed-donut-chart" aria-label={`Répartition de ${total} éléments`}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <PieChart>
+            <Tooltip
+              formatter={(value) => {
+                const numericValue = Number(value);
+                return props.valueFormatter
+                  ? props.valueFormatter(numericValue)
+                  : `${numericValue}`;
+              }}
+              contentStyle={{
+                background: props.theme.tokens.surface,
+                border: `1px solid ${props.theme.tokens.border}`,
+                borderRadius: props.theme.charts.visual.cornerRadius,
+                color: props.theme.tokens.text,
+              }}
+              labelStyle={{ color: props.theme.tokens.text }}
+            />
             <Pie
               data={chartData}
               dataKey="value"
               nameKey="label"
               cx="50%"
               cy="50%"
-              innerRadius="58%"
-              outerRadius="86%"
-              paddingAngle={visibleSlices.length > 1 ? 2 : 0}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              paddingAngle={visibleSlices.length > 1 ? 3 : 0}
               cornerRadius={props.theme.charts.visual.cornerRadius}
+              stroke={props.theme.tokens.surface}
+              strokeWidth={3}
               isAnimationActive
             >
               {chartData.map((item) => (
@@ -96,6 +117,16 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
         <strong>{total}</strong>
         <span>{props.variant === "status" ? "statuts" : "suivis"}</span>
       </div>
+      {!props.compact && (
+        <div className="themed-donut-legend" aria-label="Légende du graphique">
+          {slices.map((item) => (
+            <span key={item.key} title={`${item.label}: ${item.value}`}>
+              <i style={{ background: item.color }} />
+              {item.label}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
