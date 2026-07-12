@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -22,36 +22,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: fix/second-pass-quality
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Apply second-pass cleanup
-        run: node scripts/second-pass-fix.mjs
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Quality checks
-        shell: bash
-        run: |
-          set +e
-          npm run check > second-pass-check.log 2>&1
-          status=$?
-          tail -n 120 second-pass-check.log
-          exit $status
-      - name: Upload diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
+        run: npm run check
+      - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: second-pass-diagnostics
-          path: |
-            second-pass-check.log
-            package-lock.json
-      - name: Commit validated cleanup
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Finaliser la seconde passe de qualité"
-          git push origin HEAD:fix/second-pass-quality
+          path: dist
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
