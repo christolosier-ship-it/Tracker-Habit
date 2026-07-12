@@ -12,7 +12,7 @@ import {
   SettingsPage,
   StatsPage,
   TodayPage,
-} from "./pages";
+} from "../pages";
 import { useTrackerController } from "./useTrackerController";
 
 export function App() {
