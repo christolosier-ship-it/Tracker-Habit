@@ -1,11 +1,8 @@
-import React from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { CycleStatus, SetSettings } from "../app/tracker-actions";
 import { DashboardStats } from "../lib/dashboard-selectors";
 import { AppData } from "../lib/storage";
 import { AppTheme } from "../themes/theme-types";
-import { UserSettings } from "../types";
-import { CycleStatus } from "../features/tracking/HabitStatusCard";
-
-export type SetSettings = (patch: Partial<UserSettings>) => void;
 
 export type DashboardPageProps = {
   data: AppData;
@@ -29,7 +26,7 @@ export type MonthPageProps = {
 
 export type HabitsPageProps = {
   data: AppData;
-  setData: React.Dispatch<React.SetStateAction<AppData>>;
+  setData: Dispatch<SetStateAction<AppData>>;
   setSettings: SetSettings;
 };
 
@@ -42,6 +39,6 @@ export type StatsPageProps = {
 
 export type SettingsPageProps = {
   data: AppData;
-  setData: React.Dispatch<React.SetStateAction<AppData>>;
+  setData: Dispatch<SetStateAction<AppData>>;
   setSettings: SetSettings;
 };
