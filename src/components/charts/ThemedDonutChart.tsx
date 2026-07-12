@@ -1,11 +1,5 @@
-import {
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
-import { AppTheme } from "../../themes/theme-types";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { AppTheme, ChartCategoryName } from "../../themes/theme-types";
 import { CategoryStats, StatusStats } from "../../types";
 import {
   chartCssVars,
@@ -53,7 +47,7 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
           label: item.categorie,
           value: item.total,
           color:
-            props.theme.charts.category[item.categorie] ??
+            props.theme.charts.category[item.categorie as ChartCategoryName] ??
             props.theme.charts.hexPalette[index % props.theme.charts.hexPalette.length],
         }));
 
@@ -95,21 +89,6 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
                 <Cell key={item.key} fill={item.color} />
               ))}
             </Pie>
-            <Tooltip
-              formatter={(value: number | string) => {
-                const numericValue = Number(value);
-                return props.valueFormatter
-                  ? props.valueFormatter(numericValue)
-                  : `${numericValue}`;
-              }}
-              contentStyle={{
-                background: props.theme.tokens.surface,
-                border: `1px solid ${props.theme.tokens.border}`,
-                borderRadius: props.theme.charts.visual.cornerRadius,
-                color: props.theme.tokens.text,
-              }}
-              itemStyle={{ color: props.theme.tokens.text }}
-            />
           </PieChart>
         </ResponsiveContainer>
       </div>
