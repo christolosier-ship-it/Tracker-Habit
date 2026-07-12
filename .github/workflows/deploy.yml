@@ -33,7 +33,21 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Quality checks
-        run: npm run check
+        shell: bash
+        run: |
+          set +e
+          npm run check > second-pass-check.log 2>&1
+          status=$?
+          tail -n 120 second-pass-check.log
+          exit $status
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-pass-diagnostics
+          path: |
+            second-pass-check.log
+            package-lock.json
       - name: Commit validated cleanup
         run: |
           git config user.name "github-actions[bot]"
