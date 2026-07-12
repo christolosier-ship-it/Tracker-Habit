@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Check, Clock, Pause, X } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -11,7 +10,6 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { ThemedProgressRing } from "../components/charts/ThemedProgressRing";
-import { ThemeHero } from "../components/theme-identity/ThemeHero";
 import { AppTheme } from "../themes/theme-types";
 import { AppData } from "../lib/storage";
 import { DashboardStats } from "../lib/dashboard-selectors";
@@ -22,67 +20,46 @@ import * as S from "../lib/stats";
 export type SetSettings = (patch: Partial<UserSettings>) => void;
 export type CycleStatus = (habitId: string, date: string) => void;
 
-export function AppHeader({
-  data,
-  theme,
-  stats,
-  setSettings,
-  title = "TRACKER D’HABITUDES",
-}: {
+type AppHeaderProps = {
   data: AppData;
-  theme: AppTheme;
-  stats: DashboardStats;
   setSettings: SetSettings;
+  /** Conservées temporairement pour ne pas imposer une migration brutale des pages. */
+  theme?: AppTheme;
+  stats?: DashboardStats;
   title?: string;
-}) {
-  const yearControls = (
-    <label>
-      Année
-      <input
-        type="number"
-        value={data.settings.anneeActive}
-        onChange={(event) =>
-          setSettings({ anneeActive: Number(event.target.value) })
-        }
-      />
-    </label>
-  );
-  const monthControls = (
-    <label>
-      Mois actif
-      <select
-        value={data.settings.moisActif}
-        onChange={(event) =>
-          setSettings({ moisActif: Number(event.target.value) })
-        }
-      >
-        {monthLongLabels.map((label, index) => (
-          <option value={index} key={label}>
-            {label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
+};
 
+export function AppHeader({ data, setSettings }: AppHeaderProps) {
   return (
-    <motion.section
-      className="hero-card"
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45 }}
-    >
-      <ThemeHero
-        theme={theme}
-        title={title}
-        yearControls={yearControls}
-        monthControls={monthControls}
-        score={stats.scoreGlobal}
-        streak={stats.currentStreak}
-        activeHabits={stats.activeHabits}
-        doneLogs={stats.doneLogs}
-      />
-    </motion.section>
+    <section className="hero-card period-controls" aria-label="Période active">
+      <div className="hero-controls">
+        <label>
+          Année
+          <input
+            type="number"
+            value={data.settings.anneeActive}
+            onChange={(event) =>
+              setSettings({ anneeActive: Number(event.target.value) })
+            }
+          />
+        </label>
+        <label>
+          Mois actif
+          <select
+            value={data.settings.moisActif}
+            onChange={(event) =>
+              setSettings({ moisActif: Number(event.target.value) })
+            }
+          >
+            {monthLongLabels.map((label, index) => (
+              <option value={index} key={label}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </section>
   );
 }
 
@@ -123,6 +100,7 @@ export function StatusButton({
           : status === "rest"
             ? Pause
             : Clock;
+
   return (
     <Button
       className={`status-button ${status}`}
@@ -148,6 +126,7 @@ export function HabitStatusCard({
   cycle: CycleStatus;
 }) {
   const status = S.logFor(data.logs, habit.id, date);
+
   return (
     <Card className="habit-card">
       <div>
@@ -209,4 +188,3 @@ export function AntiProcrastination({
     </section>
   );
 }
-
