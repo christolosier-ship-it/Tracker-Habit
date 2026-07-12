@@ -1,0 +1,40 @@
+
+> habit-tracker-premium-fr@0.4.0 check
+> npm run lint && npm run test && npm run build
+
+
+> habit-tracker-premium-fr@0.4.0 lint
+> eslint .
+
+
+> habit-tracker-premium-fr@0.4.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/Tracker-Habit/Tracker-Habit[39m
+
+ [32m✓[39m src/lib/stats.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 12:59:53
+[2m   Duration [22m 246ms[2m (transform 55ms, setup 0ms, import 72ms, tests 13ms, environment 0ms)[22m
+
+
+> habit-tracker-premium-fr@0.4.0 build
+> tsc -b && vite build
+
+[36mvite v8.1.4 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 3936 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.50 kB │ gzip:   0.32 kB
+dist/assets/index-BnvZaTPe.css     60.00 kB │ gzip:  11.78 kB
+dist/assets/index-B3CGklM-.js   1,194.51 kB │ gzip: 336.29 kB
+
+[32m✓ built in 779ms[39m
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

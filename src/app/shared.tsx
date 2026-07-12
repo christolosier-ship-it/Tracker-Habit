@@ -173,11 +173,9 @@ export function HabitStatusCard({
 }
 
 export function AntiProcrastination({
-  data: _data,
   theme,
   stats,
 }: {
-  data?: AppData;
   theme: AppTheme;
   stats: DashboardStats;
 }) {
@@ -212,10 +210,3 @@ export function AntiProcrastination({
   );
 }
 
-export function statusSymbol(status: HabitStatus) {
-  if (status === "done") return "✓";
-  if (status === "partial") return "◐";
-  if (status === "missed") return "×";
-  if (status === "rest") return "Ⅱ";
-  return "·";
-}
