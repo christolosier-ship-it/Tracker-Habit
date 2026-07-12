@@ -1,55 +1,62 @@
 import { AppTheme } from "../../themes/theme-types";
 import { CategoryStats, StatusStats } from "../../types";
+import { getScoreBand, getScoreColor } from "../charts/chart-theme-utils";
 
 export type MonthlyScore = { mois: string; score: number };
 
 export function strongestMonth(monthly: MonthlyScore[]) {
-  return monthly.reduce<MonthlyScore | undefined>(
-    (best, item) => (!best || item.score > best.score ? item : best),
-    undefined,
-  );
+  return monthly
+    .filter((item) => item.score > 0)
+    .reduce<MonthlyScore | undefined>(
+      (best, item) => (!best || item.score > best.score ? item : best),
+      undefined,
+    );
 }
 
 export function fragileMonth(monthly: MonthlyScore[]) {
   return monthly
     .filter((item) => item.score > 0)
-    .reduce<
-      MonthlyScore | undefined
-    >((fragile, item) => (!fragile || item.score < fragile.score ? item : fragile), undefined);
+    .reduce<MonthlyScore | undefined>(
+      (fragile, item) => (!fragile || item.score < fragile.score ? item : fragile),
+      undefined,
+    );
 }
 
 export function strongestCategory(categoryStats: CategoryStats[]) {
-  return categoryStats.reduce<CategoryStats | undefined>(
-    (best, item) => (!best || item.score > best.score ? item : best),
-    undefined,
-  );
+  return categoryStats
+    .filter((item) => item.total > 0)
+    .reduce<CategoryStats | undefined>(
+      (best, item) => (!best || item.score > best.score ? item : best),
+      undefined,
+    );
 }
 
 export function fragileCategory(categoryStats: CategoryStats[]) {
   return categoryStats
-    .filter((item) => item.score > 0)
-    .reduce<
-      CategoryStats | undefined
-    >((fragile, item) => (!fragile || item.score < fragile.score ? item : fragile), undefined);
+    .filter((item) => item.total > 0)
+    .reduce<CategoryStats | undefined>(
+      (fragile, item) => (!fragile || item.score < fragile.score ? item : fragile),
+      undefined,
+    );
 }
 
 export function scoreColor(theme: AppTheme, score: number) {
-  if (score === 0) return theme.charts.status.empty;
-  if (score < 45) return theme.charts.score.low;
-  if (score < 65) return theme.charts.score.mid;
-  if (score < 85) return theme.charts.score.good;
-  return theme.charts.score.great;
+  return score === 0 ? theme.charts.status.empty : getScoreColor(theme, score);
 }
 
 export function scoreBadge(theme: AppTheme, score: number) {
   if (score === 0)
     return { label: "À lancer", color: theme.charts.status.empty };
-  if (score >= 85)
-    return { label: "Excellent", color: theme.charts.score.great };
-  if (score >= 65) return { label: "Solide", color: theme.charts.score.good };
-  if (score >= 45)
-    return { label: "À stabiliser", color: theme.charts.score.mid };
-  return { label: "Fragile", color: theme.charts.score.low };
+  const band = getScoreBand(score);
+  const label =
+    band === "great"
+      ? "Excellent"
+      : band === "good"
+        ? "Solide"
+        : band === "mid"
+          ? "À stabiliser"
+          : "Fragile";
+  return { label, color: theme.charts.score[band] };
 }
 
 export const statusLegendOrder: Array<{
