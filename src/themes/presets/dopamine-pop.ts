@@ -1,1 +1,44 @@
-export {};
+import { createCharts, defineTheme } from "../define-theme";
+
+export const dopaminePopTheme = defineTheme({
+  id: "dopamine-pop",
+  name: "Dopamine Pop",
+  shortName: "Dopamine",
+  description: "Bright. Happy. Feel-good progress.",
+  personality: "Candy premium, joyeux, tactile et ultra motivant.",
+  previewEmoji: "🌈",
+  tokens: {
+    background: "#FFF4E8",
+    backgroundAlt: "#FFE3F1",
+    surface: "#FFFFFF",
+    surfaceSoft: "#FFF0F6",
+    surfaceStrong: "#FFD166",
+    text: "#2D2230",
+    textMuted: "#806C7D",
+    primary: "#FF5C8A",
+    primarySoft: "#FFD1DF",
+    secondary: "#FFD166",
+    accent: "#6EC5FF",
+    accent2: "#9BDE7E",
+    success: "#57CC99",
+    warning: "#F9C74F",
+    danger: "#F94144",
+    border: "#FFC2D8",
+    shadow: "0 24px 70px rgba(255,92,138,.22)",
+    glow: "rgba(255, 92, 138, 0.35)",
+  },
+  identity: {
+    typography: "friendly-rounded",
+    frame: "candy",
+    navigation: { variant: "candy", compactLabels: false, showDecorativeStatus: false },
+    cells: { variant: "candy-dot" },
+  },
+  charts: createCharts({
+    hexPalette: ["#FF5C8A", "#FFD166", "#6EC5FF", "#57CC99", "#B967FF", "#FF8FAB"],
+    status: { done: "#57CC99", partial: "#FFD166", missed: "#F94144", rest: "#6EC5FF", empty: "#D8C7DA" },
+    score: { great: "#FF5C8A", good: "#57CC99" },
+    visual: { strokeWidth: 16, cornerRadius: 18, grid: "soft", donutVariant: "soft", barVariant: "rounded", heatmapVariant: "candy-dots" },
+  }),
+  radius: { card: "34px", button: "999px", pill: "999px" },
+  effects: { backgroundStyle: "pop", glass: false, glow: true, pattern: true, stickers: true, highContrast: false, pixel: false, comic: false },
+});

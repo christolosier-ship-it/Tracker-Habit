@@ -48,26 +48,20 @@ export function getScoreColor(theme: AppTheme, score: number) {
 
 export function getChartPalette(theme: AppTheme, variant: ChartVariant) {
   if (variant === "status") return getStatusChartColors(theme);
-  if (variant === "fragile")
+  if (variant === "fragile") {
     return [theme.charts.status.missed, theme.charts.gradients.dangerTo];
-  if (variant === "antiProcrastination")
+  }
+  if (variant === "antiProcrastination") {
     return [
       theme.charts.hexPalette[1],
       theme.charts.hexPalette[2],
       theme.charts.status.done,
     ];
-  if (variant === "topHabits" || variant === "streak")
+  }
+  if (variant === "topHabits" || variant === "streak") {
     return [theme.charts.status.done, theme.charts.gradients.progressTo];
+  }
   return theme.charts.hexPalette;
-}
-
-export function getTremorColors(theme: AppTheme, variant: ChartVariant) {
-  if (variant === "fragile")
-    return [theme.charts.tremorPalette[2] ?? theme.charts.tremorPalette[0]];
-  if (variant === "antiProcrastination")
-    return [theme.charts.tremorPalette[1] ?? theme.charts.tremorPalette[0]];
-  if (variant === "category") return theme.charts.tremorPalette;
-  return [theme.charts.tremorPalette[0]];
 }
 
 export function chartCssVars(theme: AppTheme, variant: ChartVariant) {

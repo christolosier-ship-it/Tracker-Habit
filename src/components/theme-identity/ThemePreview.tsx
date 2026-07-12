@@ -5,12 +5,6 @@ type ThemePreviewProps = {
   active: boolean;
 };
 
-function signatureFor(theme: AppTheme) {
-  if (theme.identity.signatureWidget === "player-hud") return "XP▮▮▮";
-  if (theme.identity.signatureWidget === "reward-collection") return "兔 ★ ♥";
-  return theme.previewEmoji;
-}
-
 export function ThemePreview({ theme, active }: ThemePreviewProps) {
   const colors = [
     theme.tokens.primary,
@@ -26,7 +20,7 @@ export function ThemePreview({ theme, active }: ThemePreviewProps) {
       data-preview-style={theme.effects.backgroundStyle}
     >
       <div className="preview-bg">
-        <span className="theme-preview-signature">{signatureFor(theme)}</span>
+        <span className="theme-preview-signature">{theme.previewEmoji}</span>
         <i className="preview-frame" />
         <i
           className="preview-cell"

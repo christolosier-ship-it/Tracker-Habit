@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Fondations, composants et thèmes
+   ========================================================================== */
+
 :root {
   font-family:
     Inter,
@@ -2303,3 +2307,1047 @@ select:focus {
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.decor,.cosmic-ring,.liquid-blob{transform:none!important}}
 /* Theme identity responsive */
 @media (max-width:1180px){.theme-hero{grid-template-columns:1fr}.theme-signature-widget{min-height:110px}.theme-decorations .decor:nth-child(n+9){display:none}}@media (max-width:900px){.theme-identity-layer{opacity:.45}.theme-decorations .decor:nth-child(n+6){display:none}.theme-signature-widget{font-size:.85rem}.theme-hero{gap:.75rem}}@media (max-width:560px){.theme-decorations .decor:nth-child(n+5){display:none}.theme-calendar-cell{min-width:34px;min-height:34px}.brutalist-vertical{display:none}.kawaii-mascot{width:52px}.arcade-player-line{font-size:.7rem}.theme-hero-copy span{display:none}}
+
+/* ==========================================================================
+   Correctifs de composants validés
+   ========================================================================== */
+
+/* Les SVG décoratifs et illustrés conservent leurs dimensions intrinsèques. */
+svg[width][height] {
+  width: auto;
+  height: auto;
+}
+
+.brand > svg,
+.sidebar button > svg,
+.kpi-icon > svg,
+.status-button > svg,
+button > svg:not([width]),
+.file-button > svg:not([width]) {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+/* Un seul nom de cellule pour les calendriers et les heatmaps. */
+.themed-heatmap .theme-calendar-cell {
+  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.themed-heatmap .theme-calendar-cell:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.heatmap-candy-dots .theme-calendar-cell,
+.heatmap-kawaii-stickers .theme-calendar-cell,
+.heatmap-liquid-bubbles .theme-calendar-cell {
+  border-radius: 999px;
+}
+
+.heatmap-neon-squares .theme-calendar-cell,
+.heatmap-cosmic-stars .theme-calendar-cell {
+  box-shadow: 0 0 16px color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.heatmap-memphis-shapes .theme-calendar-cell:nth-child(2n),
+.heatmap-tropical-seeds .theme-calendar-cell:nth-child(2n) {
+  border-radius: 999px 14px 999px 14px;
+}
+
+.heatmap-pixel-blocks .theme-calendar-cell,
+.heatmap-brutalist-blocks .theme-calendar-cell {
+  border-radius: 0;
+  border: 2px solid var(--text);
+}
+
+.heatmap-editorial-dots .theme-calendar-cell {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  font-family: Georgia, serif;
+}
+
+.heatmap-comic-badges .theme-calendar-cell {
+  border: 2px solid #111;
+  box-shadow: 4px 4px 0 #111;
+}
+
+/* Densité typographique : les titres restent présents sans monopoliser l’écran. */
+h1 {
+  font-size: clamp(32px, 4.6vw, 64px) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.055em !important;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font-size: clamp(21px, 2.4vw, 30px);
+  line-height: 1.08;
+}
+
+.ui-card-title {
+  font-size: clamp(17px, 1.75vw, 22px) !important;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.quote {
+  font-size: clamp(15px, 1.5vw, 18px);
+}
+
+/* La bande marketing n’apporte aucune information d’usage. */
+.marketing-badges {
+  display: none !important;
+}
+
+/* KPI compacts : suppression de la numérotation et des explications redondantes. */
+.kpi-frame-mark,
+.kpi-card small {
+  display: none !important;
+}
+
+.kpi-card,
+.theme-kpi-frame {
+  min-width: 0;
+}
+
+.theme-kpi-frame {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.kpi-content {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.kpi-icon {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0 !important;
+}
+
+.kpi-content > span {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-size: clamp(10px, 1.05vw, 13px) !important;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpi-content > strong {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+
+/* Pour les quatre KPI avec anneau, la valeur n’est affichée qu’au centre de l’anneau. */
+.kpi-card:has(.themed-progress-ring) .kpi-content > strong {
+  display: none;
+}
+
+.kpi-card:has(.themed-progress-ring) .theme-kpi-frame {
+  grid-template-columns: minmax(0, 1fr) 92px;
+}
+
+.kpi-card .themed-progress-ring {
+  justify-self: end;
+}
+
+/* Vue annuelle : la colonne Habitude forme un volet fixe, les mois glissent derrière. */
+.annual-matrix {
+  isolation: isolate;
+  max-width: 100%;
+  overscroll-behavior-x: contain;
+}
+
+.annual-matrix > strong:first-child,
+.annual-matrix > span {
+  position: sticky !important;
+  left: 0;
+  z-index: 5 !important;
+  background: var(--surface, #fffaf1) !important;
+  box-shadow: 10px 0 14px -14px rgba(0, 0, 0, 0.58);
+}
+
+.annual-matrix > strong:first-child {
+  z-index: 7 !important;
+}
+
+/* Aujourd’hui : aucun libellé ne doit sortir de sa carte. */
+.habit-card {
+  min-width: 0;
+}
+
+.habit-card > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.habit-card h3,
+.habit-card p,
+.habit-card .ui-badge {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.habit-card .ui-badge {
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.habit-card .status-button {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 46%;
+  white-space: normal;
+  line-height: 1.15;
+  padding-inline: 12px;
+}
+
+/* Statistiques : ruban mensuel horizontal, tactile et confiné à sa zone. */
+.monthly-ribbon {
+  width: 100%;
+  max-width: 100%;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 4px 2px 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.monthly-ribbon-cell {
+  flex: 0 0 clamp(96px, 11vw, 124px);
+  min-width: 96px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 1180px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  h1 {
+    font-size: clamp(30px, 8vw, 48px) !important;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .habit-card .status-button {
+    max-width: 44%;
+  }
+}
+
+@media (max-width: 560px) {
+  .kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kpi-card:has(.themed-progress-ring) .theme-kpi-frame {
+    grid-template-columns: minmax(0, 1fr) 84px;
+  }
+
+  .habit-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .habit-card .status-button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Layout responsive et graphiques
+   ========================================================================== */
+
+:root {
+  --sidebar-width: 212px;
+  --page-gutter: clamp(14px, 2vw, 28px);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: block;
+}
+
+/* Sidebar fixe et géométrie identique pour tous les thèmes. */
+.app-shell .sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  width: var(--sidebar-width) !important;
+  min-width: var(--sidebar-width) !important;
+  max-width: var(--sidebar-width) !important;
+  height: 100dvh;
+  padding: 20px 14px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.app-shell .sidebar .brand {
+  max-width: 100%;
+  gap: 9px;
+  margin-bottom: 24px;
+  font-size: clamp(19px, 2vw, 23px);
+}
+
+.app-shell .sidebar .brand span {
+  font-size: 16px;
+}
+
+.app-shell .sidebar button {
+  max-width: 100%;
+  gap: 9px;
+  padding: 11px 12px;
+  margin: 6px 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Le contenu occupe uniquement la largeur restante. */
+.app-shell > main {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - var(--sidebar-width));
+  max-width: none;
+  min-width: 0;
+  margin: 0 0 0 var(--sidebar-width);
+  padding: var(--page-gutter);
+  overflow-x: clip;
+}
+
+.app-shell > main > *,
+.app-shell section,
+.app-shell article,
+.app-shell .ui-card,
+.app-shell .spotlight-card,
+.app-shell .chart-card,
+.app-shell .themed-chart-panel,
+.app-shell .dashboard-side,
+.app-shell .bento-shell,
+.app-shell .stats-grid,
+.app-shell .chart-grid,
+.app-shell .kpi-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Hero flexible : titre, widget et contrôles ne poussent plus hors écran. */
+.app-shell .hero-card,
+.app-shell .theme-hero {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 460px) minmax(150px, 190px);
+  align-items: center;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.app-shell .hero-copy,
+.app-shell .theme-hero-copy,
+.app-shell .hero-controls,
+.app-shell .theme-signature-widget {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-shell .hero-controls {
+  width: 100%;
+  min-width: 0;
+}
+
+.app-shell h1,
+.app-shell h2,
+.app-shell h3,
+.app-shell .ui-card-title,
+.app-shell .stats-insight-value {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Grilles souples. */
+.app-shell .kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+
+.app-shell .chart-grid,
+.app-shell .stats-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-shell .dashboard-layout {
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.75fr);
+}
+
+.app-shell .editor-grid,
+.app-shell .habit-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+
+.app-shell .anti-panel {
+  grid-template-columns: minmax(0, 1fr) auto minmax(220px, 0.7fr);
+}
+
+/* Les grandes matrices défilent dans leur propre carte, jamais dans la page. */
+.app-shell .annual-matrix-card,
+.app-shell .month-grid {
+  width: 100%;
+  max-width: 100%;
+}
+
+.app-shell .annual-matrix-card .ui-card-content,
+.app-shell .month-grid {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-shell .annual-matrix {
+  min-width: 920px;
+  width: max-content;
+  max-width: none;
+}
+
+.app-shell .month-grid {
+  min-width: 0;
+}
+
+.app-shell .month-grid > * {
+  min-width: 34px;
+}
+
+/* Les panneaux et graphiques restent dans leur carte. */
+.themed-chart-panel {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text);
+}
+
+.themed-chart-panel .tremor-chart,
+.themed-chart-panel .recharts-responsive-container,
+.themed-chart-panel .recharts-wrapper,
+.themed-chart-panel svg {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Axes, grilles et labels lisibles sur tous les thèmes. */
+.themed-chart-panel .recharts-cartesian-axis-tick-value,
+.themed-chart-panel .recharts-cartesian-axis-tick text,
+.themed-chart-panel .recharts-text,
+.themed-chart-panel text {
+  fill: var(--text-muted) !important;
+  color: var(--text-muted) !important;
+}
+
+.themed-chart-panel .recharts-cartesian-grid line,
+.themed-chart-panel .recharts-cartesian-grid-horizontal line,
+.themed-chart-panel .recharts-cartesian-grid-vertical line {
+  stroke: color-mix(in srgb, var(--border) 72%, transparent) !important;
+  stroke-opacity: 0.7 !important;
+}
+
+.themed-chart-panel .recharts-cartesian-axis-line,
+.themed-chart-panel .recharts-cartesian-axis-tick-line {
+  stroke: color-mix(in srgb, var(--text-muted) 55%, transparent) !important;
+}
+
+/* Tremor peut ignorer les hex personnalisés : les variables du thème pilotent directement le SVG. */
+.themed-area-chart .recharts-area-area {
+  fill: var(--chart-primary) !important;
+  fill-opacity: 0.28 !important;
+}
+
+.themed-area-chart .recharts-area-curve,
+.themed-area-chart .recharts-line-curve {
+  stroke: var(--chart-primary) !important;
+  stroke-width: var(--chart-stroke, 3px) !important;
+}
+
+.themed-area-chart .recharts-dot circle,
+.themed-area-chart .recharts-active-dot circle {
+  fill: var(--chart-secondary) !important;
+  stroke: var(--surface) !important;
+}
+
+.themed-bar-chart .recharts-bar-rectangle path,
+.themed-bar-chart .recharts-rectangle,
+.themed-bar-chart path.recharts-rectangle {
+  fill: var(--chart-primary) !important;
+  stroke: color-mix(in srgb, var(--chart-primary) 75%, var(--text)) !important;
+  stroke-width: 1px;
+}
+
+.themed-chart-panel .recharts-default-tooltip {
+  color: var(--text) !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: max(8px, var(--chart-radius)) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Donut Recharts : segments colorés par le thème, trou central transparent. */
+.themed-donut .recharts-sector {
+  stroke: var(--surface);
+  stroke-width: 3px;
+}
+
+.themed-donut-chart {
+  width: 100%;
+  height: 248px;
+}
+
+.themed-donut.compact .themed-donut-chart {
+  height: 190px;
+}
+
+/* Tablette paysage. */
+@media (max-width: 1180px) {
+  :root {
+    --sidebar-width: 176px;
+    --page-gutter: 16px;
+  }
+
+  .app-shell .sidebar {
+    padding: 16px 10px;
+  }
+
+  .app-shell .sidebar .brand {
+    font-size: 18px;
+  }
+
+  .app-shell .sidebar .brand span {
+    font-size: 14px;
+  }
+
+  .app-shell .sidebar button {
+    padding: 10px 9px;
+    font-size: 13px;
+  }
+
+  .app-shell .hero-card,
+  .app-shell .theme-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 430px);
+  }
+
+  .app-shell .hero-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell .dashboard-layout,
+  .app-shell .chart-grid,
+  .app-shell .stats-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .anti-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .app-shell .anti-panel > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablettes portrait et téléphones : retour à la navigation mobile existante. */
+@media (max-width: 819px) {
+  :root {
+    --sidebar-width: 0px;
+    --page-gutter: 14px;
+  }
+
+  .app-shell .sidebar {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  .app-shell > main {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 96px;
+  }
+
+  .app-shell .hero-card,
+  .app-shell .theme-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .hero-controls {
+    grid-column: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell .chart-grid,
+  .app-shell .stats-grid,
+  .app-shell .dashboard-layout,
+  .app-shell .anti-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .annual-matrix {
+    min-width: 860px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell .hero-controls,
+  .app-shell .editor-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .today-summary,
+  .app-shell .habit-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-shell .today-score,
+  .app-shell .status-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ==========================================================================
+   Densité finale de l’interface
+   ========================================================================== */
+
+/* Le hero ne conserve que les contrôles Année / Mois actif. */
+.hero-card {
+  min-height: auto !important;
+  padding: 16px 20px !important;
+}
+
+.hero-card > .hero-copy,
+.theme-hero-imported > :not(.hero-controls) {
+  display: none !important;
+}
+
+.theme-hero-imported {
+  width: 100% !important;
+  display: block !important;
+}
+
+.hero-controls {
+  width: 100%;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: end;
+  gap: 12px 16px;
+}
+
+.hero-controls label {
+  min-width: 0;
+}
+
+.hero-controls input,
+.hero-controls select {
+  min-width: 0;
+}
+
+/* Les huit KPI deviennent un rail horizontal unique. */
+.kpi-grid {
+  width: 100%;
+  max-width: 100%;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 2px 2px 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kpi-card {
+  flex: 0 0 clamp(205px, 22vw, 236px);
+  min-width: 205px;
+  min-height: 168px !important;
+  scroll-snap-align: start;
+}
+
+.kpi-card .theme-kpi-frame {
+  min-height: 100%;
+}
+
+/* Tous les KPI partagent la même composition : en-tête en haut, valeur au centre. */
+.kpi-card .theme-kpi-frame,
+.kpi-card:has(.themed-progress-ring) .theme-kpi-frame,
+.kpi-card:not(:has(.themed-progress-ring)) .theme-kpi-frame {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-items: start !important;
+  justify-items: stretch;
+  gap: 8px !important;
+  text-align: left;
+}
+
+.kpi-content {
+  width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.kpi-icon {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+}
+
+.kpi-content > span {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  min-width: 0;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  overflow-wrap: anywhere;
+  line-height: 1.08 !important;
+}
+
+/* La valeur extérieure des KPI à anneau reste masquée. */
+.kpi-card:has(.themed-progress-ring) .kpi-content > strong {
+  display: none !important;
+}
+
+/* Les anneaux sont centrés sous l'icône et le titre. */
+.kpi-card:has(.themed-progress-ring) .themed-progress-ring {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: center !important;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto;
+}
+
+/* Les KPI sans anneau gardent leur valeur, centrée dans le pavé. */
+.kpi-card:not(:has(.themed-progress-ring)) .kpi-content {
+  min-height: 132px;
+}
+
+.kpi-card:not(:has(.themed-progress-ring)) .kpi-content > strong {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  width: 100%;
+  align-self: center;
+  justify-self: stretch;
+  text-align: center;
+  margin: 4px 0 0 !important;
+}
+
+/* La matrice annuelle garde la colonne Habitude fixe et compacte les mois. */
+.annual-matrix-card .ui-card-content {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.annual-matrix {
+  width: max-content;
+  min-width: max-content;
+  max-width: none !important;
+  grid-template-columns: 180px repeat(12, 42px) !important;
+  gap: 6px !important;
+  overflow: visible !important;
+}
+
+.annual-matrix > strong:first-child,
+.annual-matrix > span {
+  min-width: 180px;
+  width: 180px;
+  position: sticky !important;
+  left: 0;
+  z-index: 8 !important;
+  background: var(--surface, #fffaf1) !important;
+  box-shadow: 12px 0 18px -16px rgba(0, 0, 0, 0.72);
+}
+
+.annual-matrix > strong:not(:first-child),
+.annual-matrix .theme-calendar-cell {
+  min-width: 42px !important;
+  width: 42px !important;
+  padding-inline: 2px !important;
+  font-size: 12px !important;
+}
+
+/* Graphiques finaux : géométrie stable et palette réellement pilotée par le thème. */
+.themed-area-chart,
+.themed-bar-chart,
+.themed-donut {
+  min-height: 280px;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--chart-primary) 18%, transparent), transparent 34%),
+    color-mix(in srgb, var(--surface) 88%, transparent) !important;
+  border: 1px solid var(--border);
+}
+
+.themed-area-chart .recharts-surface,
+.themed-bar-chart .recharts-surface,
+.themed-donut .recharts-surface {
+  overflow: visible;
+}
+
+.themed-chart-panel .recharts-cartesian-axis-tick text,
+.themed-chart-panel .recharts-text,
+.themed-chart-panel text {
+  fill: var(--text-muted) !important;
+  font-family: inherit;
+}
+
+.themed-chart-panel .recharts-cartesian-grid line {
+  stroke: color-mix(in srgb, var(--border) 66%, transparent) !important;
+}
+
+.themed-area-chart .recharts-area-curve {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--chart-primary) 42%, transparent));
+}
+
+.themed-bar-chart .recharts-rectangle {
+  filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--chart-primary) 22%, transparent));
+}
+
+.themed-donut {
+  display: grid !important;
+  grid-template-rows: 248px auto;
+  place-items: center;
+  padding: 4px 8px 12px;
+}
+
+.themed-donut-chart {
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  height: 248px;
+}
+
+.themed-donut-center {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative !important;
+  z-index: 2;
+  width: 92px;
+  height: 92px;
+  pointer-events: none;
+}
+
+.themed-donut .recharts-sector {
+  stroke: var(--surface) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--chart-primary) 24%, transparent));
+}
+
+.themed-donut-legend {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px 12px;
+  padding: 2px 8px 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.themed-donut-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.themed-donut-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Morphologie des graphiques par thème. */
+[data-theme-style="neon"] .themed-chart-panel {
+  border-color: var(--chart-primary);
+  box-shadow: inset 0 0 0 1px var(--chart-secondary), 0 0 22px var(--glow);
+}
+
+[data-theme-style="pop"] .themed-chart-panel,
+[data-theme-style="kawaii"] .themed-chart-panel {
+  border-radius: 28px;
+  background: linear-gradient(135deg, #fff, var(--primary-soft)) !important;
+}
+
+[data-theme-style="memphis"] .themed-chart-panel,
+[data-theme-style="comic"] .themed-chart-panel {
+  border: 3px solid #111;
+  box-shadow: 7px 7px 0 #111;
+}
+
+[data-theme-style="aurora"] .themed-chart-panel,
+[data-theme-style="liquid"] .themed-chart-panel {
+  backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--chart-primary) 20%, transparent), color-mix(in srgb, var(--surface) 58%, transparent)) !important;
+  border-color: color-mix(in srgb, white 34%, var(--border));
+}
+
+[data-theme-style="tropical"] .themed-chart-panel {
+  border-radius: 28px 42px 28px 42px;
+  background: linear-gradient(155deg, var(--surface), color-mix(in srgb, var(--success) 14%, var(--surface))) !important;
+}
+
+[data-theme-style="arcade"] .themed-chart-panel {
+  border-radius: 0;
+  border: 4px double var(--chart-primary);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--secondary) 50%, #000);
+}
+
+[data-theme-style="cosmic"] .themed-chart-panel {
+  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--chart-primary) 32%, transparent), var(--surface) 66%) !important;
+  box-shadow: inset 0 0 44px color-mix(in srgb, var(--chart-secondary) 18%, transparent);
+}
+
+[data-theme-style="brutalist"] .themed-chart-panel {
+  border-radius: 0;
+  border: 3px solid var(--text);
+  box-shadow: 10px 10px 0 var(--accent);
+}
+
+[data-theme-style="editorial"] .themed-chart-panel {
+  border-radius: 2px;
+  border: 1px solid var(--secondary);
+  background: var(--surface) !important;
+}
+
+@media (max-width: 900px) {
+  .hero-card {
+    padding: 14px 16px !important;
+  }
+
+  .hero-controls {
+    gap: 10px;
+  }
+
+  .kpi-card {
+    flex-basis: 210px;
+  }
+
+  .annual-matrix {
+    grid-template-columns: 164px repeat(12, 40px) !important;
+  }
+
+  .annual-matrix > strong:first-child,
+  .annual-matrix > span {
+    min-width: 164px;
+    width: 164px;
+  }
+
+  .annual-matrix > strong:not(:first-child),
+  .annual-matrix .theme-calendar-cell {
+    min-width: 40px !important;
+    width: 40px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-controls {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .hero-controls label {
+    font-size: 11px;
+  }
+
+  .hero-controls input,
+  .hero-controls select {
+    min-height: 40px;
+    padding-inline: 9px;
+  }
+
+  .kpi-card {
+    flex-basis: 196px;
+    min-width: 196px;
+  }
+
+  .themed-donut {
+    grid-template-rows: 220px auto;
+  }
+
+  .themed-donut-chart {
+    height: 220px;
+  }
+}
