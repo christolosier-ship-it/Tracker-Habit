@@ -74,7 +74,7 @@ export function MonthPage({
 
       <section
         className="month-grid"
-        style={{ "--day-count": dayCount } as React.CSSProperties}
+        style={{ gridTemplateColumns: `220px repeat(${dayCount}, 38px) 70px` }}
       >
         <b>Habitude</b>
         {Array.from({ length: dayCount }, (_, index) => (
