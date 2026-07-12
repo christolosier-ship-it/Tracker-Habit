@@ -173,11 +173,9 @@ export function HabitStatusCard({
 }
 
 export function AntiProcrastination({
-  data,
   theme,
   stats,
 }: {
-  data: AppData;
   theme: AppTheme;
   stats: DashboardStats;
 }) {
