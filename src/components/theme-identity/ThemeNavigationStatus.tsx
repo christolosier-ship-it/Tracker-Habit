@@ -1,2 +1,35 @@
 import { AppTheme } from "../../themes/theme-types";
-export function ThemeNavigationStatus({theme}:{theme:AppTheme}){if(!theme.identity.navigation.showDecorativeStatus)return null;if(theme.identity.navigation.variant==="terminal")return <div className="theme-navigation-status terminal"><span/>SYS ONLINE<i/></div>;if(theme.identity.navigation.variant==="arcade")return <div className="theme-navigation-status arcade"><b>PLAYER 1</b><i/><i/><i/><span>READY</span></div>;return null}
+
+type ThemeNavigationStatusProps = {
+  theme: AppTheme;
+};
+
+export function ThemeNavigationStatus({
+  theme,
+}: ThemeNavigationStatusProps) {
+  if (!theme.identity.navigation.showDecorativeStatus) return null;
+
+  if (theme.identity.navigation.variant === "terminal") {
+    return (
+      <div className="theme-navigation-status terminal">
+        <span />
+        SYS ONLINE
+        <i />
+      </div>
+    );
+  }
+
+  if (theme.identity.navigation.variant === "arcade") {
+    return (
+      <div className="theme-navigation-status arcade">
+        <b>PLAYER 1</b>
+        <i />
+        <i />
+        <i />
+        <span>READY</span>
+      </div>
+    );
+  }
+
+  return null;
+}
