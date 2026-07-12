@@ -60,6 +60,223 @@ button > svg:not([width]),
   box-shadow: 4px 4px 0 #111;
 }
 
+/* Densité typographique : les titres restent présents sans monopoliser l’écran. */
+h1 {
+  font-size: clamp(32px, 4.6vw, 64px) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.055em !important;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font-size: clamp(21px, 2.4vw, 30px);
+  line-height: 1.08;
+}
+
+.ui-card-title {
+  font-size: clamp(17px, 1.75vw, 22px) !important;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.quote {
+  font-size: clamp(15px, 1.5vw, 18px);
+}
+
+/* La bande marketing n’apporte aucune information d’usage. */
+.marketing-badges {
+  display: none !important;
+}
+
+/* KPI compacts : suppression de la numérotation et des explications redondantes. */
+.kpi-frame-mark,
+.kpi-card small {
+  display: none !important;
+}
+
+.kpi-card,
+.theme-kpi-frame {
+  min-width: 0;
+}
+
+.theme-kpi-frame {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.kpi-content {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.kpi-icon {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0 !important;
+}
+
+.kpi-content > span {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-size: clamp(10px, 1.05vw, 13px) !important;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpi-content > strong {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+
+/* Pour les quatre KPI avec anneau, la valeur n’est affichée qu’au centre de l’anneau. */
+.kpi-card:has(.themed-progress-ring) .kpi-content > strong {
+  display: none;
+}
+
+.kpi-card:has(.themed-progress-ring) .theme-kpi-frame {
+  grid-template-columns: minmax(0, 1fr) 92px;
+}
+
+.kpi-card .themed-progress-ring {
+  justify-self: end;
+}
+
+/* Vue annuelle : la colonne Habitude forme un volet fixe, les mois glissent derrière. */
+.annual-matrix {
+  isolation: isolate;
+  max-width: 100%;
+  overscroll-behavior-x: contain;
+}
+
+.annual-matrix > strong:first-child,
+.annual-matrix > span {
+  position: sticky !important;
+  left: 0;
+  z-index: 5 !important;
+  background: var(--surface, #fffaf1) !important;
+  box-shadow: 10px 0 14px -14px rgba(0, 0, 0, 0.58);
+}
+
+.annual-matrix > strong:first-child {
+  z-index: 7 !important;
+}
+
+/* Aujourd’hui : aucun libellé ne doit sortir de sa carte. */
+.habit-card {
+  min-width: 0;
+}
+
+.habit-card > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.habit-card h3,
+.habit-card p,
+.habit-card .ui-badge {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.habit-card .ui-badge {
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.habit-card .status-button {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 46%;
+  white-space: normal;
+  line-height: 1.15;
+  padding-inline: 12px;
+}
+
+/* Statistiques : ruban mensuel horizontal, tactile et confiné à sa zone. */
+.monthly-ribbon {
+  width: 100%;
+  max-width: 100%;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 4px 2px 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.monthly-ribbon-cell {
+  flex: 0 0 clamp(96px, 11vw, 124px);
+  min-width: 96px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 1180px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  h1 {
+    font-size: clamp(30px, 8vw, 48px) !important;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .habit-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .habit-card .status-button {
+    max-width: 44%;
+  }
+}
+
+@media (max-width: 560px) {
+  .kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kpi-card:has(.themed-progress-ring) .theme-kpi-frame {
+    grid-template-columns: minmax(0, 1fr) 84px;
+  }
+
+  .habit-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .habit-card .status-button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
