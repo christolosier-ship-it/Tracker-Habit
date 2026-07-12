@@ -1,0 +1,28 @@
+name: Consolidate CSS
+
+on:
+  push:
+    branches: [refactor/global-architecture-rationalization]
+    paths: [scripts/consolidate-css.mjs]
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/global-architecture-rationalization
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/consolidate-css.mjs
+      - name: Commit consolidated styles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A src/main.tsx src/styles src/styles.css src/styles-cleanup.css src/responsive-layout-charts.css src/styles-density-pass.css
+          git diff --cached --quiet || git commit -m "Consolider les feuilles CSS historiques"
+          git push origin HEAD:refactor/global-architecture-rationalization
