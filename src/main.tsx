@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 import "./styles-cleanup.css";
+import "./responsive-layout-charts.css";
 import { App } from "./app/App";
 
 const root = document.getElementById("root");
