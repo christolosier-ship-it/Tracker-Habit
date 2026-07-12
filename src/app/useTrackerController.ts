@@ -16,10 +16,7 @@ export function useTrackerController() {
     [data.settings.themeId],
   );
 
-  const stats = useMemo(
-    () => selectDashboardStats(data),
-    [data.habits, data.logs, data.settings],
-  );
+  const stats = useMemo(() => selectDashboardStats(data), [data]);
 
   const updateSettings = useCallback((patch: Partial<UserSettings>) => {
     setData((current) => ({
