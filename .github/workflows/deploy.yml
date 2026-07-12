@@ -28,8 +28,22 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Build
-        run: npm run build
+      - name: Quality checks
+        shell: bash
+        run: |
+          set +e
+          npm run check > quality-check.log 2>&1
+          status=$?
+          tail -n 80 quality-check.log
+          exit $status
+      - name: Upload quality diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-diagnostics
+          path: |
+            quality-check.log
+            package-lock.json
       - name: Upload Pages artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

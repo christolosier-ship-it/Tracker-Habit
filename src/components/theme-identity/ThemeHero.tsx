@@ -11,15 +11,14 @@ type Props = {
   score: number;
   streak: number;
   activeHabits: number;
-  year: number;
   doneLogs?: number;
-  disciplinedDays?: number;
 };
 
 const importedHeroLayout: React.CSSProperties = {
   width: "100%",
   display: "grid",
-  gridTemplateColumns: "minmax(220px, 0.9fr) minmax(340px, 1.4fr) minmax(220px, 0.65fr)",
+  gridTemplateColumns:
+    "minmax(220px, 0.9fr) minmax(340px, 1.4fr) minmax(220px, 0.65fr)",
   alignItems: "center",
   gap: 24,
 };
@@ -34,11 +33,19 @@ export function ThemeHero({
   activeHabits,
   doneLogs,
 }: Props) {
-  const controls = <div className="hero-controls">{yearControls}{monthControls}</div>;
+  const controls = (
+    <div className="hero-controls">
+      {yearControls}
+      {monthControls}
+    </div>
+  );
 
   if (theme.id === "kawaii-maximalist") {
     return (
-      <div className="theme-hero-imported theme-hero-imported-kawaii" style={importedHeroLayout}>
+      <div
+        className="theme-hero-imported theme-hero-imported-kawaii"
+        style={importedHeroLayout}
+      >
         <div className="hero-copy">
           <p className="eyebrow">Habit Party</p>
           <h1>{title}</h1>
@@ -51,12 +58,20 @@ export function ThemeHero({
 
   if (theme.id === "retro-arcade") {
     return (
-      <div className="theme-hero-imported theme-hero-imported-arcade" style={importedHeroLayout}>
+      <div
+        className="theme-hero-imported theme-hero-imported-arcade"
+        style={importedHeroLayout}
+      >
         <div className="hero-copy">
           <p className="eyebrow">Player one ready</p>
           <h1>{title}</h1>
         </div>
-        <ArcadePlayerHud score={score} streak={streak} activeHabits={activeHabits} doneLogs={doneLogs} />
+        <ArcadePlayerHud
+          score={score}
+          streak={streak}
+          activeHabits={activeHabits}
+          doneLogs={doneLogs}
+        />
         {controls}
       </div>
     );
@@ -67,7 +82,9 @@ export function ThemeHero({
       <div className="hero-copy">
         <p className="eyebrow">Discipline & Productivité</p>
         <h1>{title}</h1>
-        <p className="quote">Ce que tu répètes chaque jour façonne la personne que tu deviens.</p>
+        <p className="quote">
+          Ce que tu répètes chaque jour façonne la personne que tu deviens.
+        </p>
       </div>
       {controls}
     </>

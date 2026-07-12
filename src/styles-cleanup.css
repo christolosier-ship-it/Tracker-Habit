@@ -1,0 +1,72 @@
+/* Correctifs structurels chargés après styles.css. */
+
+/* Les SVG décoratifs et illustrés conservent leurs dimensions intrinsèques. */
+svg[width][height] {
+  width: auto;
+  height: auto;
+}
+
+.brand > svg,
+.sidebar button > svg,
+.kpi-icon > svg,
+.status-button > svg,
+button > svg:not([width]),
+.file-button > svg:not([width]) {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+/* Un seul nom de cellule pour les calendriers et les heatmaps. */
+.themed-heatmap .theme-calendar-cell {
+  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.themed-heatmap .theme-calendar-cell:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.heatmap-candy-dots .theme-calendar-cell,
+.heatmap-kawaii-stickers .theme-calendar-cell,
+.heatmap-liquid-bubbles .theme-calendar-cell {
+  border-radius: 999px;
+}
+
+.heatmap-neon-squares .theme-calendar-cell,
+.heatmap-cosmic-stars .theme-calendar-cell {
+  box-shadow: 0 0 16px color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.heatmap-memphis-shapes .theme-calendar-cell:nth-child(2n),
+.heatmap-tropical-seeds .theme-calendar-cell:nth-child(2n) {
+  border-radius: 999px 14px 999px 14px;
+}
+
+.heatmap-pixel-blocks .theme-calendar-cell,
+.heatmap-brutalist-blocks .theme-calendar-cell {
+  border-radius: 0;
+  border: 2px solid var(--text);
+}
+
+.heatmap-editorial-dots .theme-calendar-cell {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  font-family: Georgia, serif;
+}
+
+.heatmap-comic-badges .theme-calendar-cell {
+  border: 2px solid #111;
+  box-shadow: 4px 4px 0 #111;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
