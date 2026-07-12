@@ -26,10 +26,7 @@ export function App() {
     () => resolveTheme(data.settings.themeId),
     [data.settings.themeId],
   );
-  const stats = useMemo(
-    () => selectDashboardStats(data),
-    [data.habits, data.logs, data.settings.anneeActive, data.settings.moisActif, data.settings.compterNonSaisisCommeManques],
-  );
+  const stats = useMemo(() => selectDashboardStats(data), [data]);
 
   useDebouncedSave(data);
 

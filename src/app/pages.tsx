@@ -52,12 +52,13 @@ import {
 import { DashboardStats } from "../lib/dashboard-selectors";
 import { buildLogIndex, readIndexedLog } from "../lib/log-index";
 import { daysInMonth, formatLocalIso } from "../lib/date-utils";
-import { Habit, UserSettings } from "../types";
+import { Habit } from "../types";
 import {
   FilterToday,
   formatPercent,
   monthLongLabels,
   monthShortLabels,
+  statusSymbol,
 } from "./constants";
 import {
   AntiProcrastination,
@@ -65,7 +66,6 @@ import {
   CycleStatus,
   HabitStatusCard,
   SetSettings,
-  statusSymbol,
   TremorPanel,
 } from "./shared";
 import * as S from "../lib/stats";
@@ -85,7 +85,7 @@ function CommercialBadges() {
       <Badge variant="success">12 mois</Badge>
       <Badge variant="warm">30 habitudes quotidiennes</Badge>
       <Badge variant="default">15 habitudes hebdomadaires</Badge>
-      <Badge variant="muted">LocalStorage V1</Badge>
+      <Badge variant="muted">LocalStorage V3</Badge>
     </div>
   );
 }
@@ -341,7 +341,7 @@ export function DashboardPage({
           />
         </TremorPanel>
       </section>
-      <AntiProcrastination data={data} theme={theme} stats={stats} />
+      <AntiProcrastination theme={theme} stats={stats} />
     </>
   );
 }
@@ -751,7 +751,7 @@ export function StatsPage({
           <ThemedStatusBreakdown theme={theme} data={stats.statusStats} />
         </TremorPanel>
       </section>
-      <AntiProcrastination data={data} theme={theme} stats={stats} />
+      <AntiProcrastination theme={theme} stats={stats} />
     </>
   );
 }
