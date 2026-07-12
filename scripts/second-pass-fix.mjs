@@ -34,5 +34,10 @@ edit("src/app/shared.tsx", (source) =>
     .replace(/\nexport function statusSymbol\(status: HabitStatus\) \{[\s\S]*?\n\}\n?$/, "\n"),
 );
 
+fs.writeFileSync(
+  ".github/workflows/deploy.yml",
+  `name: Deploy GitHub Pages\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n  workflow_dispatch:\n\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\nconcurrency:\n  group: pages\n  cancel-in-progress: false\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v4\n      - name: Setup Node\n        uses: actions/setup-node@v4\n        with:\n          node-version: 22\n          cache: npm\n      - name: Install dependencies\n        run: npm ci\n      - name: Quality checks\n        run: npm run check\n      - name: Upload Pages artifact\n        if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n        uses: actions/upload-pages-artifact@v3\n        with:\n          path: dist\n\n  deploy:\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: build\n    runs-on: ubuntu-latest\n    environment:\n      name: github-pages\n      url: \\${{ steps.deployment.outputs.page_url }}\n    steps:\n      - name: Deploy to GitHub Pages\n        id: deployment\n        uses: actions/deploy-pages@v4\n`,
+);
+
 fs.rmSync("scripts/second-pass-fix.mjs");
 fs.rmSync(".github/workflows/second-pass-fix.yml");
