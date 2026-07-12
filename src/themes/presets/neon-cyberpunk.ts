@@ -1,1 +1,43 @@
-export {};
+import { createCharts, defineTheme } from "../define-theme";
+
+export const neonCyberpunkTheme = defineTheme({
+  id: "neon-cyberpunk-matrix",
+  name: "Neon Cyberpunk Matrix",
+  shortName: "Neon",
+  description: "Dark. Electric. Relentless.",
+  personality: "Matrice sombre, néons cyan, rose, violet et lime.",
+  previewEmoji: "⚡",
+  tokens: {
+    background: "#060914",
+    backgroundAlt: "#10142A",
+    surface: "#0B1020",
+    surfaceSoft: "#121A33",
+    surfaceStrong: "#182044",
+    text: "#E9FBFF",
+    textMuted: "#8AB8C4",
+    primary: "#00E5FF",
+    primarySoft: "rgba(0,229,255,.16)",
+    secondary: "#FF2BD6",
+    accent: "#B6FF00",
+    accent2: "#7C3AED",
+    success: "#00FFB3",
+    warning: "#FFD400",
+    danger: "#FF3B6B",
+    border: "rgba(0,229,255,0.35)",
+    shadow: "0 0 42px rgba(0,229,255,.18)",
+    glow: "rgba(0,229,255,.45)",
+  },
+  identity: {
+    typography: "terminal",
+    frame: "hud",
+    navigation: { variant: "terminal", compactLabels: false, showDecorativeStatus: true },
+    cells: { variant: "neon-square" },
+  },
+  charts: createCharts({
+    hexPalette: ["#00E5FF", "#FF2BD6", "#B6FF00", "#7C3AED", "#FFD400"],
+    status: { done: "#00FFB3", partial: "#FFD400", missed: "#FF3B6B", rest: "#7C3AED", empty: "#26304F" },
+    visual: { strokeWidth: 12, cornerRadius: 8, grid: "visible", donutVariant: "neon", barVariant: "rounded", heatmapVariant: "neon-squares" },
+  }),
+  radius: { card: "22px", button: "12px", pill: "999px" },
+  effects: { backgroundStyle: "neon", glass: false, glow: true, pattern: true, stickers: false, highContrast: false, pixel: false, comic: false },
+});
