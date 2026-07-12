@@ -12,11 +12,9 @@
     "check": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {
-    "@tremor/react": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
     "date-fns": "latest",
-    "framer-motion": "latest",
     "lucide-react": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
