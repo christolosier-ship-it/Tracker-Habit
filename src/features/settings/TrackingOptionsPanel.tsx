@@ -1,5 +1,5 @@
+import { SetSettings } from "../../app/tracker-actions";
 import { Card } from "../../components/ui/card";
-import { SetSettings } from "../../pages/page-types";
 
 type TrackingOptionsPanelProps = {
   countMissingAsMissed: boolean;
