@@ -1,2 +1,15 @@
-import React from "react";import { AppTheme } from "../../themes/theme-types";
-export function ThemeKpiFrame({theme,index,label,value,children}:{theme:AppTheme;index:number;label:string;value:number|string;children:React.ReactNode}){return <div className="theme-kpi-frame" data-frame={theme.identity.frame} data-kpi-index={index} data-label={label} data-value={value}><span className="kpi-frame-mark">{theme.identity.frame==="pixel"?"SCORE":theme.identity.frame==="hud"?"DATA":String(index+1).padStart(2,"0")}</span>{children}</div>}
+import type { ReactNode } from "react";
+import { AppTheme } from "../../themes/theme-types";
+
+type ThemeKpiFrameProps = {
+  theme: AppTheme;
+  children: ReactNode;
+};
+
+export function ThemeKpiFrame({ theme, children }: ThemeKpiFrameProps) {
+  return (
+    <div className="theme-kpi-frame" data-frame={theme.identity.frame}>
+      {children}
+    </div>
+  );
+}
