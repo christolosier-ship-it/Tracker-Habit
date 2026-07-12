@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from "react";
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { Download, RotateCcw, Upload, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
@@ -12,7 +13,7 @@ import {
 
 type DataTransferPanelProps = {
   data: AppData;
-  setData: React.Dispatch<React.SetStateAction<AppData>>;
+  setData: Dispatch<SetStateAction<AppData>>;
 };
 
 export function DataTransferPanel({ data, setData }: DataTransferPanelProps) {
