@@ -39,7 +39,7 @@ export function ThemedBarChart<T extends Record<string, unknown>>({
   return (
     <div
       className={`themed-chart-panel themed-bar-chart bar-${theme.charts.visual.barVariant} grid-${theme.charts.visual.grid}`}
-      data-chart-theme={theme.style}
+      data-chart-theme={theme.effects.backgroundStyle}
       style={chartCssVars(theme, variant)}
     >
       <ResponsiveContainer width="100%" height={280}>
