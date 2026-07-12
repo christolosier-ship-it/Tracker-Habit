@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
+// Conserve strictement l’ordre de cascade validé avant de supprimer les fichiers historiques.
 const root = process.cwd();
 const sources = [
   ["Fondations, composants et thèmes", "src/styles.css"],
