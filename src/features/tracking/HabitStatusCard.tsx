@@ -1,11 +1,10 @@
+import { CycleStatus } from "../../app/tracker-actions";
 import { Badge } from "../../components/ui/badge";
 import { Card } from "../../components/ui/card";
 import { AppData } from "../../lib/storage";
 import { Habit } from "../../types";
 import * as S from "../../lib/stats";
 import { StatusButton } from "./StatusButton";
-
-export type CycleStatus = (habitId: string, date: string) => void;
 
 type HabitStatusCardProps = {
   habit: Habit;
