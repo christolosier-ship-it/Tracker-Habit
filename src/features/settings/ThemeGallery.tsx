@@ -1,10 +1,10 @@
 import React from "react";
 import { RotateCcw } from "lucide-react";
+import { SetSettings } from "../../app/tracker-actions";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { ThemePreview } from "../../components/theme-identity/ThemePreview";
 import { defaultThemeId, themes } from "../../themes/theme-registry";
-import { SetSettings } from "../../pages/page-types";
 
 type ThemeGalleryProps = {
   activeThemeId: string;
