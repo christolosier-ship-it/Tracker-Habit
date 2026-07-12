@@ -1,5 +1,5 @@
 import { AppTheme } from "../../themes/theme-types";
-import { CategoryStats, StatusStats } from "../../types";
+import { CategoryStats } from "../../types";
 import {
   fragileCategory,
   fragileMonth,
@@ -13,7 +13,6 @@ type StatsInsightCardsProps = {
   theme: AppTheme;
   monthly: MonthlyScore[];
   categoryStats: CategoryStats[];
-  statusStats: StatusStats[];
 };
 
 export function StatsInsightCards({
