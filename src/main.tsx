@@ -1,8 +1,5 @@
 import { createRoot } from "react-dom/client";
-import "./styles.css";
-import "./styles-cleanup.css";
-import "./responsive-layout-charts.css";
-import "./styles-density-pass.css";
+import "./styles/index.css";
 import { App } from "./app/App";
 import { AppErrorBoundary } from "./app/AppErrorBoundary";
 
