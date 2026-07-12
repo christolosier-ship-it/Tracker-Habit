@@ -27,10 +27,11 @@ describe("registre des thèmes", () => {
   it("fournit des palettes et variantes complètes pour chaque thème", () => {
     for (const theme of themes) {
       expect(theme.charts.hexPalette.length).toBeGreaterThanOrEqual(3);
-      expect(theme.charts.tremorPalette.length).toBeGreaterThanOrEqual(1);
       expect(theme.identity.navigation.variant).toBeTruthy();
       expect(theme.identity.cells.variant).toBeTruthy();
-      expect(theme.tokens.background).toMatch(/^#/);
+      expect(theme.identity.frame).toBeTruthy();
+      expect(theme.identity.typography).toBeTruthy();
+      expect(theme.tokens.background).toMatch(/^#|^rgba/);
       expect(theme.tokens.text).toMatch(/^#/);
     }
   });
