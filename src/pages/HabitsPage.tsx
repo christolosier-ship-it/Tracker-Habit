@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, Eye, EyeOff, Plus } from "lucide-react";
+import { Edit3, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { PeriodControls } from "../features/period/PeriodControls";
@@ -43,6 +43,19 @@ export function HabitsPage({
     setData((current) => ({
       ...current,
       habits: [...current.habits, newHabit],
+    }));
+  };
+
+  const deleteHabit = (habit: Habit) => {
+    const confirmed = window.confirm(
+      `Supprimer définitivement l’habitude « ${habit.nom} » et tout son historique ?`,
+    );
+    if (!confirmed) return;
+
+    setData((current) => ({
+      ...current,
+      habits: current.habits.filter((candidate) => candidate.id !== habit.id),
+      logs: current.logs.filter((log) => log.habitId !== habit.id),
     }));
   };
 
@@ -139,14 +152,26 @@ export function HabitsPage({
                 </select>
               </label>
             </div>
-            <Button
-              variant="secondary"
-              onClick={() => updateHabit(habit.id, { active: !habit.active })}
-              type="button"
-            >
-              {habit.active ? <EyeOff /> : <Eye />}
-              {habit.active ? "Désactiver" : "Réactiver"}
-            </Button>
+            <div className="habit-editor-actions">
+              <Button
+                variant="secondary"
+                onClick={() => updateHabit(habit.id, { active: !habit.active })}
+                type="button"
+              >
+                {habit.active ? <EyeOff /> : <Eye />}
+                {habit.active ? "Désactiver" : "Réactiver"}
+              </Button>
+              <Button
+                className="habit-delete-button"
+                variant="danger"
+                onClick={() => deleteHabit(habit)}
+                type="button"
+                aria-label={`Supprimer l’habitude ${habit.nom}`}
+                title="Supprimer l’habitude et son historique"
+              >
+                <Trash2 /> Supprimer
+              </Button>
+            </div>
           </Card>
         ))}
       </section>
