@@ -10,13 +10,15 @@ on:
       - 'vite.config.ts'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   runtime:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: fix/blank-page-runtime
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -49,10 +51,14 @@ jobs:
             > dom.html 2>> runtime.log || true
           cat runtime.log
           test -s dom.html
-      - uses: actions/upload-artifact@v4
-        with:
-          name: runtime-diagnostic
-          path: |
-            runtime.log
-            dom.html
-            preview.log
+      - name: Commit diagnostic report
+        run: |
+          mkdir -p diagnostics
+          cp runtime.log diagnostics/runtime.log
+          cp dom.html diagnostics/dom.html
+          cp preview.log diagnostics/preview.log
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add diagnostics
+          git diff --cached --quiet || git commit -m "Ajouter le diagnostic navigateur temporaire"
+          git push origin HEAD:fix/blank-page-runtime
