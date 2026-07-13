@@ -37,9 +37,8 @@ jobs:
         run: npm run test
       - name: Build
         run: npm run build
-      - name: Browser runtime diagnostic
+      - name: Browser smoke test
         run: |
-          npm install --no-save chrome-remote-interface
           npm run preview -- --port 4173 > preview.log 2>&1 &
           PREVIEW_PID=$!
           for i in {1..30}; do
@@ -51,25 +50,12 @@ jobs:
             --headless \
             --no-sandbox \
             --disable-gpu \
-            --remote-debugging-port=9222 \
-            about:blank \
-            > chrome.log 2>&1 &
-          for i in {1..30}; do
-            curl -fsS http://127.0.0.1:9222/json/version >/dev/null && break
-            sleep 1
-          done
-          node scripts/runtime-browser-diagnostic.mjs
+            --virtual-time-budget=8000 \
+            --dump-dom \
+            http://127.0.0.1:4173/Tracker-Habit/ \
+            > dom.html 2> chrome.log
           kill "$PREVIEW_PID" || true
-      - name: Upload runtime diagnostic
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: runtime-diagnostic
-          path: |
-            runtime-report.json
-            dom.html
-            preview.log
-            chrome.log
+          grep -q 'class="app-shell' dom.html
       - name: Upload Pages artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
