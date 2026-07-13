@@ -169,7 +169,7 @@ export function HabitsPage({
                 aria-label={`Supprimer l’habitude ${habit.nom}`}
                 title="Supprimer l’habitude et son historique"
               >
-                <Trash2 /> Supprimer
+                <Trash2 />
               </Button>
             </div>
           </Card>
