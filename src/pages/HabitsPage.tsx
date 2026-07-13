@@ -152,7 +152,7 @@ export function HabitsPage({
                 </select>
               </label>
             </div>
-            <div className="habit-editor-actions">
+            <div className="settings-actions habit-editor-actions">
               <Button
                 variant="secondary"
                 onClick={() => updateHabit(habit.id, { active: !habit.active })}
