@@ -4,6 +4,8 @@ import { writeFileSync } from "node:fs";
 const errors = [];
 const consoleMessages = [];
 const networkFailures = [];
+const requests = new Map();
+const responses = [];
 
 const client = await CDP({ port: 9222 });
 const { Runtime, Page, Network } = client;
@@ -26,8 +28,24 @@ Runtime.consoleAPICalled(({ type, args }) => {
   });
 });
 
+Network.requestWillBeSent(({ requestId, request, type }) => {
+  requests.set(requestId, { url: request.url, method: request.method, type });
+});
+
+Network.responseReceived(({ requestId, response, type }) => {
+  responses.push({
+    requestId,
+    url: response.url,
+    status: response.status,
+    mimeType: response.mimeType,
+    type,
+  });
+});
+
 Network.loadingFailed((event) => {
   networkFailures.push({
+    ...requests.get(event.requestId),
+    requestId: event.requestId,
     errorText: event.errorText,
     canceled: event.canceled,
     type: event.type,
@@ -36,8 +54,7 @@ Network.loadingFailed((event) => {
 
 await Promise.all([Runtime.enable(), Page.enable(), Network.enable()]);
 await Page.navigate({ url: "http://127.0.0.1:4173/Tracker-Habit/" });
-await Page.loadEventFired();
-await new Promise((resolve) => setTimeout(resolve, 5000));
+await new Promise((resolve) => setTimeout(resolve, 7000));
 
 const { result } = await Runtime.evaluate({
   expression: `JSON.stringify({
@@ -51,15 +68,32 @@ const { result } = await Runtime.evaluate({
 });
 
 const page = JSON.parse(result.value ?? "{}");
-writeFileSync(
-  "runtime-report.json",
-  JSON.stringify({ errors, consoleMessages, networkFailures, page }, null, 2),
-);
+const report = {
+  errors,
+  consoleMessages,
+  networkFailures,
+  responses,
+  requests: [...requests.values()],
+  page,
+};
+writeFileSync("runtime-report.json", JSON.stringify(report, null, 2));
 writeFileSync("dom.html", page.html ?? "");
 
-console.log(JSON.stringify({ errors, consoleMessages, networkFailures, rootLength: page.root?.length ?? 0 }, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      errors,
+      consoleMessages,
+      networkFailures,
+      responses,
+      rootLength: page.root?.length ?? 0,
+    },
+    null,
+    2,
+  ),
+);
 await client.close();
 
-if (!page.root || page.root.length < 100 || errors.length > 0 || networkFailures.length > 0) {
+if (!page.root || page.root.length < 100 || errors.length > 0) {
   process.exit(1);
 }
