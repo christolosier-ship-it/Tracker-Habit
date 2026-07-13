@@ -14,6 +14,7 @@ const settings: UserSettings = {
   moisActif: 0,
   compterNonSaisisCommeManques: false,
   themeId: "dopamine-pop",
+  mascotEnabled: true,
 };
 
 function habit(

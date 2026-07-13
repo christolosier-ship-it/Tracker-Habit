@@ -3,12 +3,15 @@ import { CycleStatus, SetSettings } from "../app/tracker-actions";
 import { DashboardStats } from "../lib/dashboard-selectors";
 import { AppData } from "../lib/storage";
 import { AppTheme } from "../themes/theme-types";
+import { MascotReactionEvent } from "../features/mascot/mascot.types";
 
 export type DashboardPageProps = {
   data: AppData;
   theme: AppTheme;
   stats: DashboardStats;
   setSettings: SetSettings;
+  mascotReaction?: MascotReactionEvent | null;
+  clearMascotReaction?: (reactionId: number) => void;
 };
 
 export type TodayPageProps = {

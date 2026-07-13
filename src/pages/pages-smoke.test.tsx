@@ -51,4 +51,51 @@ describe("montage des pages", () => {
       expect(html.length).toBeGreaterThan(100);
     },
   );
+
+
+  it("rend le Dashboard avec les douze mascottes et sans SVG quand elles sont désactivées", () => {
+    for (const candidateTheme of [
+      "dopamine-pop",
+      "neon-cyberpunk-matrix",
+      "memphis-productivity",
+      "aurora-glassmorphism",
+      "tropical-festival",
+      "retro-arcade",
+      "cosmic-dreamscape",
+      "kawaii-maximalist",
+      "brutalist-color-clash",
+      "editorial-fashion-tech",
+      "comic-book-energy",
+      "liquid-gradient-future",
+    ] as const) {
+      const themedData = {
+        ...data,
+        settings: { ...data.settings, themeId: candidateTheme, mascotEnabled: true },
+      };
+      const html = renderToStaticMarkup(
+        <DashboardPage
+          data={themedData}
+          theme={resolveTheme(candidateTheme)}
+          stats={stats}
+          setSettings={setSettings}
+        />,
+      );
+      expect(html).toContain("Compagnon animé du Dashboard");
+      expect(html).toContain('data-theme="' + candidateTheme + '"');
+    }
+
+    const disabledData = {
+      ...data,
+      settings: { ...data.settings, mascotEnabled: false },
+    };
+    const disabledHtml = renderToStaticMarkup(
+      <DashboardPage
+        data={disabledData}
+        theme={theme}
+        stats={stats}
+        setSettings={setSettings}
+      />,
+    );
+    expect(disabledHtml).not.toContain("Compagnon animé du Dashboard");
+  });
 });

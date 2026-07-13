@@ -1,11 +1,18 @@
 import { AppData } from "./storage";
 import { monthShortLabels } from "../app/constants";
 import * as S from "./stats";
+import { formatLocalIso } from "./date-utils";
 
 export function selectDashboardStats(data: AppData) {
   const { habits, logs, settings } = data;
   const themeIndependent = {
     scoreGlobal: S.calculateYearScore(habits, logs, settings.anneeActive, settings),
+    todayScore: S.calculateDayScore(
+      habits,
+      logs,
+      formatLocalIso(new Date()),
+      settings,
+    ),
     currentMonth: S.calculateMonthScore(
       habits,
       logs,

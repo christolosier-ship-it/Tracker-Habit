@@ -23,6 +23,7 @@ export function SettingsPage({
       />
       <TrackingOptionsPanel
         countMissingAsMissed={data.settings.compterNonSaisisCommeManques}
+        mascotEnabled={data.settings.mascotEnabled}
         setSettings={setSettings}
       />
       <DataTransferPanel data={data} setData={setData} />
