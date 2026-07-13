@@ -3,11 +3,13 @@ import { Card } from "../../components/ui/card";
 
 type TrackingOptionsPanelProps = {
   countMissingAsMissed: boolean;
+  mascotEnabled: boolean;
   setSettings: SetSettings;
 };
 
 export function TrackingOptionsPanel({
   countMissingAsMissed,
+  mascotEnabled,
   setSettings,
 }: TrackingOptionsPanelProps) {
   return (
@@ -23,6 +25,18 @@ export function TrackingOptionsPanel({
           }
         />{" "}
         Compter les non saisis passés comme manqués
+      </label>
+      <label className="checkbox-line">
+        <input
+          type="checkbox"
+          checked={mascotEnabled}
+          onChange={(event) =>
+            setSettings({
+              mascotEnabled: event.target.checked,
+            })
+          }
+        />{" "}
+        Afficher le compagnon animé du Dashboard
       </label>
     </Card>
   );

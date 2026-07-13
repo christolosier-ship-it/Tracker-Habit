@@ -2,7 +2,7 @@ import { Habit, HabitLog, UserSettings } from "../types";
 import { createDemoLogs, defaultSettings, demoHabits } from "../data/demoData";
 import { defaultThemeId, resolveTheme } from "../themes/theme-registry";
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 const KEY = "discipline-dashboard-v2";
 const BACKUP_KEY = `${KEY}-backup`;
 
@@ -58,7 +58,9 @@ function isSettings(value: unknown): value is UserSettings {
     Number.isInteger(value.moisActif) &&
     value.moisActif >= 0 &&
     value.moisActif <= 11 &&
-    typeof value.compterNonSaisisCommeManques === "boolean"
+    typeof value.compterNonSaisisCommeManques === "boolean" &&
+    (value.mascotEnabled === undefined ||
+      typeof value.mascotEnabled === "boolean")
   );
 }
 
@@ -85,7 +87,7 @@ export function migrateData(data: AppData): AppData {
     schemaVersion: SCHEMA_VERSION,
     habits: data.habits,
     logs: [...deduplicatedLogs.values()],
-    settings: { ...defaultSettings, ...data.settings, themeId },
+    settings: { ...defaultSettings, ...data.settings, themeId, mascotEnabled: data.settings.mascotEnabled ?? true },
   };
 }
 

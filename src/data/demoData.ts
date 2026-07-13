@@ -131,6 +131,7 @@ export const defaultSettings: UserSettings = {
   moisActif: now.getMonth(),
   compterNonSaisisCommeManques: false,
   themeId: 'dopamine-pop',
+  mascotEnabled: true,
 };
 
 function weightedDemoStatus(day: number, month: number, habitIndex: number) {

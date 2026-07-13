@@ -24,6 +24,8 @@ export function App() {
     stats,
     updateSettings,
     cycleHabitStatus,
+    mascotReaction,
+    clearMascotReaction,
   } = useTrackerController();
 
   const pageProps = {
@@ -70,7 +72,16 @@ export function App() {
       </nav>
 
       <main>
-        {page === "Dashboard" && <DashboardPage {...pageProps} />}
+        {page === "Dashboard" && (
+          <DashboardPage
+            data={data}
+            theme={theme}
+            stats={stats}
+            setSettings={updateSettings}
+            mascotReaction={mascotReaction}
+            clearMascotReaction={clearMascotReaction}
+          />
+        )}
         {page === "Aujourd’hui" && <TodayPage {...pageProps} />}
         {page === "Mois" && <MonthPage {...pageProps} />}
         {page === "Habitudes" && <HabitsPage {...pageProps} />}
