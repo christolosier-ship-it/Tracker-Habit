@@ -22,6 +22,12 @@ jobs:
         with:
           ref: refactor/mascot-engine-performance
           fetch-depth: 0
+      - name: Snapshot migration fragments
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr35-migration-fragments
+          path: scripts/pr35-parts
+          retention-days: 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
