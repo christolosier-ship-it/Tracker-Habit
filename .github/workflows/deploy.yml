@@ -22,12 +22,6 @@ jobs:
         with:
           ref: refactor/mascot-engine-performance
           fetch-depth: 0
-      - name: Snapshot migration fragments
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr35-migration-fragments
-          path: scripts/pr35-parts
-          retention-days: 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -39,12 +33,73 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+
           root = Path('scripts/pr35-parts')
           parts = [root / f'{index:02d}.part' for index in range(7)]
           missing = [path.name for path in parts if not path.exists()]
           if missing:
               raise SystemExit('Fragments manquants : ' + ', '.join(missing))
-          content = ''.join(path.read_text().rstrip('\n') for path in parts[:-1]) + parts[-1].read_text()
+
+          raw = ''.join(path.read_text().rstrip('\n') for path in parts[:-1]) + parts[-1].read_text()
+
+          def restore_external_newlines(text: str) -> str:
+              output: list[str] = []
+              quote: str | None = None
+              triple = False
+              escaped = False
+              index = 0
+              while index < len(text):
+                  character = text[index]
+                  if quote is not None:
+                      if escaped:
+                          output.append(character)
+                          escaped = False
+                          index += 1
+                          continue
+                      if character == '\\':
+                          output.append(character)
+                          escaped = True
+                          index += 1
+                          continue
+                      if triple and text.startswith(quote * 3, index):
+                          output.append(quote * 3)
+                          index += 3
+                          quote = None
+                          triple = False
+                          continue
+                      if not triple and character == quote:
+                          output.append(character)
+                          index += 1
+                          quote = None
+                          continue
+                      output.append(character)
+                      index += 1
+                      continue
+
+                  if character in {"'", '"'}:
+                      if text.startswith(character * 3, index):
+                          quote = character
+                          triple = True
+                          output.append(character * 3)
+                          index += 3
+                      else:
+                          quote = character
+                          triple = False
+                          output.append(character)
+                          index += 1
+                      continue
+
+                  if character == '\\' and index + 1 < len(text) and text[index + 1] == 'n':
+                      output.append('\n')
+                      index += 2
+                      continue
+
+                  output.append(character)
+                  index += 1
+
+              return ''.join(output)
+
+          content = restore_external_newlines(raw)
           Path('scripts/apply-pr35-refactor.py').write_text(content)
           print('Fragments assemblés :', ', '.join(path.name for path in parts))
           PY
