@@ -30,12 +30,36 @@ declare global {
   }
 }
 
+const transformTargetSelector = [
+  ".cyber-body-motion",
+  ".cyber-arm-motion-left",
+  ".cyber-arm-motion-right",
+  ".cyber-rotor-motion-left",
+  ".cyber-rotor-motion-right",
+  ".cyber-propeller",
+  ".cyber-reactor-motion",
+  ".cyber-face",
+  ".cyber-status-ring",
+].join(",");
+
 function prefersReducedMotion() {
   return (
     typeof window !== "undefined" &&
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
+}
+
+function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
+  const transformTargets = root.querySelectorAll<SVGElement>(
+    transformTargetSelector,
+  );
+  const particles = root.querySelectorAll<SVGElement>(".cyber-particle");
+  const ring = root.querySelector<SVGElement>(".cyber-status-ring");
+
+  gsap.set(transformTargets, { clearProps: "transform" });
+  gsap.set(ring, { clearProps: "opacity" });
+  gsap.set(particles, { opacity: 0, clearProps: "transform" });
 }
 
 function playReaction(
@@ -58,7 +82,7 @@ function playReaction(
   const animatedParts = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animatedParts);
-  gsap.set(animatedParts, { clearProps: "transform" });
+  resetAnimatedParts(gsap, root);
   gsap.set(body, { transformOrigin: "50% 50%" });
   gsap.set([leftArm, rightArm], { transformOrigin: "50% 14%" });
   gsap.set([leftRotor, rightRotor], { transformOrigin: "50% 70%" });
@@ -72,7 +96,10 @@ function playReaction(
     transformOrigin: "50% 50%",
   });
 
-  const timeline = gsap.timeline({ defaults: { overwrite: "auto" } });
+  const timeline = gsap.timeline({
+    defaults: { overwrite: "auto" },
+    onComplete: () => resetAnimatedParts(gsap, root),
+  });
 
   if (reaction === "habit-done") {
     return timeline
@@ -233,6 +260,10 @@ export function useCyberpunkReaction(
       cancelled = true;
       if (frameId) window.cancelAnimationFrame(frameId);
       timeline?.kill();
+
+      const gsap = window.gsap;
+      const root = svgRef.current;
+      if (gsap && root) resetAnimatedParts(gsap, root);
     };
   }, [reaction, svgRef]);
 }
