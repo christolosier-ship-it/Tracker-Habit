@@ -34,13 +34,11 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           root = Path('scripts/pr35-parts')
-          parts = sorted(
-              path for path in root.glob('[0-9][0-9].part')
-              if path.stem.isdigit()
-          )
-          if not parts:
-              raise SystemExit('Aucun fragment numérique de migration trouvé')
-          content = ''.join(path.read_text() for path in parts)
+          parts = [root / f'{index:02d}.part' for index in range(7)]
+          missing = [path.name for path in parts if not path.exists()]
+          if missing:
+              raise SystemExit('Fragments manquants : ' + ', '.join(missing))
+          content = ''.join(path.read_text().rstrip('\n') for path in parts[:-1]) + parts[-1].read_text()
           Path('scripts/apply-pr35-refactor.py').write_text(content)
           print('Fragments assemblés :', ', '.join(path.name for path in parts))
           PY
