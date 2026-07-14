@@ -1,10 +1,16 @@
-.dashboard-mascot {
+.app-mascot {
   width: clamp(64px, 8vw, 108px);
   aspect-ratio: 1;
   color: var(--primary);
   filter: drop-shadow(0 14px 24px color-mix(in srgb, var(--glow) 55%, transparent));
   pointer-events: none;
   user-select: none;
+}
+
+.app-mascot-loading {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .mascot-svg { width: 100%; height: 100%; overflow: visible; }
@@ -23,32 +29,28 @@
 .pixel { shape-rendering: crispEdges; rx: 0; }
 .brutal { rx: 0; }
 
-.dashboard-mascot[data-mood="happy"] .mascot-creature { animation: mascot-float 2.8s ease-in-out infinite; transform: translateY(-2px); }
-.dashboard-mascot[data-mood="celebrate"] .mascot-sparkle,
-.dashboard-mascot[data-mood="celebrate"] .mascot-pixel { animation: mascot-celebrate 1.6s ease both infinite; }
-.dashboard-mascot[data-mood="sleepy"] .mascot-creature { animation: mascot-sleep 5.4s ease-in-out infinite; }
-.dashboard-mascot[data-mood="worried"] .mascot-creature { animation: mascot-worry 1.8s ease-in-out infinite; }
-.dashboard-mascot[data-mood="worried"] .mascot-mouth { transform: translateY(5px) scaleY(-1); transform-box: fill-box; transform-origin: center; }
+.app-mascot[data-mood="happy"] .mascot-creature { animation-duration: 2.8s; transform: translateY(-2px); }
+.app-mascot[data-mood="celebrate"] .mascot-sparkle,
+.app-mascot[data-mood="celebrate"] .mascot-pixel { animation: mascot-celebrate 1.6s ease both infinite; }
+.app-mascot[data-mood="sleepy"] .mascot-creature { animation: mascot-sleep 5.4s ease-in-out infinite; }
+.app-mascot[data-mood="worried"] .mascot-creature { animation: mascot-worry 1.8s ease-in-out infinite; }
+.app-mascot[data-mood="worried"] .mascot-mouth { transform: translateY(5px) scaleY(-1); transform-box: fill-box; transform-origin: center; }
 
-.dashboard-mascot[data-reaction="habit-done"] .mascot-body { animation: mascot-hop 720ms ease; }
-.dashboard-mascot[data-reaction="habit-done"] .mascot-cheek,
-.dashboard-mascot[data-reaction="habit-done"] .mascot-sparkle,
-.dashboard-mascot[data-reaction="habit-done"] .mascot-wing { animation: mascot-celebrate 720ms ease; }
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-body,
-.dashboard-mascot[data-reaction="streak-record"] .mascot-body { animation: mascot-celebrate 1400ms ease; }
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-sparkle,
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-pow,
-.dashboard-mascot[data-reaction="streak-record"] .mascot-sparkle { opacity: 1; animation: mascot-celebrate 1400ms ease; }
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-scan { opacity: 1; animation: mascot-scan 900ms ease; }
-.dashboard-mascot[data-theme="retro-arcade"] { image-rendering: pixelated; }
-.dashboard-mascot[data-theme="editorial-fashion-tech"] { color: #111; }
-.dashboard-mascot[data-theme="brutalist-color-clash"] .mascot-fill { stroke-width: 4; }
-.dashboard-mascot[data-theme="aurora-glassmorphism"] .mascot-fill,
-.dashboard-mascot[data-theme="liquid-gradient-future"] .mascot-fill { fill: color-mix(in srgb, var(--primary) 55%, transparent); }
-
-.annual-matrix-card { position: relative; overflow: clip; }
-.annual-matrix-mascot-slot { position: absolute; right: clamp(14px, 3vw, 28px); top: 62px; z-index: 3; pointer-events: none; }
-.annual-matrix-card .ui-card-content { padding-right: clamp(18px, 11vw, 132px); }
+.app-mascot[data-reaction="habit-done"] .mascot-body { animation: mascot-hop 720ms ease; }
+.app-mascot[data-reaction="habit-done"] .mascot-cheek,
+.app-mascot[data-reaction="habit-done"] .mascot-sparkle,
+.app-mascot[data-reaction="habit-done"] .mascot-wing { animation: mascot-celebrate 720ms ease; }
+.app-mascot[data-reaction="perfect-day"] .mascot-body,
+.app-mascot[data-reaction="streak-record"] .mascot-body { animation: mascot-celebrate 1400ms ease; }
+.app-mascot[data-reaction="perfect-day"] .mascot-sparkle,
+.app-mascot[data-reaction="perfect-day"] .mascot-pow,
+.app-mascot[data-reaction="streak-record"] .mascot-sparkle { opacity: 1; animation: mascot-celebrate 1400ms ease; }
+.app-mascot[data-reaction="perfect-day"] .mascot-scan { opacity: 1; animation: mascot-scan 900ms ease; }
+.app-mascot[data-theme="retro-arcade"] { image-rendering: pixelated; }
+.app-mascot[data-theme="editorial-fashion-tech"] { color: #111; }
+.app-mascot[data-theme="brutalist-color-clash"] .mascot-fill { stroke-width: 4; }
+.app-mascot[data-theme="aurora-glassmorphism"] .mascot-fill,
+.app-mascot[data-theme="liquid-gradient-future"] .mascot-fill { fill: color-mix(in srgb, var(--primary) 55%, transparent); }
 
 @keyframes mascot-breathe { 0%,100%{ transform: scaleY(1) scaleX(1);} 50%{ transform: scaleY(1.035) scaleX(.985);} }
 @keyframes mascot-float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-4px);} }
@@ -59,19 +61,15 @@
 @keyframes mascot-sleep { 0%,100%{ transform: translateY(0) rotate(-2deg);} 50%{ transform: translateY(3px) rotate(2deg);} }
 @keyframes mascot-scan { from{ transform: translateY(-14px); opacity: .1;} 50%{ opacity: 1;} to{ transform: translateY(14px); opacity: 0;} }
 
-@media (max-width: 900px) {
-  .annual-matrix-mascot-slot { top: 70px; right: 12px; }
-  .annual-matrix-card .ui-card-content { padding-right: 20px; }
-}
 @media (max-width: 560px) {
-  .annual-matrix-mascot-slot { top: auto; bottom: 10px; right: 8px; opacity: .92; }
-  .dashboard-mascot { width: 64px; }
+  .app-mascot { width: 64px; }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .dashboard-mascot,
-  .dashboard-mascot *,
-  .dashboard-mascot *::before,
-  .dashboard-mascot *::after {
+  .app-mascot,
+  .app-mascot *,
+  .app-mascot *::before,
+  .app-mascot *::after {
     animation: none !important;
     transition: none !important;
   }
