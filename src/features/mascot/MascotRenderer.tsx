@@ -32,10 +32,6 @@ function getMascot(themeId: ThemeId) {
   return component;
 }
 
-export function preloadMascot(themeId: ThemeId) {
-  void loaders[themeId]();
-}
-
 export function MascotRenderer({ themeId, mood, reaction, onReactionComplete }: DashboardMascotProps) {
   const activeReaction = useMascotReaction(reaction, onReactionComplete);
   if (mood === "hidden") return null;
