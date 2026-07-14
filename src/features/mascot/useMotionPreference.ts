@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export type MotionPreference = "full" | "reduced";
 
-function readPreference(): MotionPreference {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return "full";
+function subscribe(onChange: () => void) {
+  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function getSnapshot(): MotionPreference {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduced" : "full";
 }
 
+function getServerSnapshot(): MotionPreference {
+  return "full";
+}
+
 export function useMotionPreference(): MotionPreference {
-  const [preference, setPreference] = useState<MotionPreference>(readPreference);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPreference(query.matches ? "reduced" : "full");
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  return preference;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
