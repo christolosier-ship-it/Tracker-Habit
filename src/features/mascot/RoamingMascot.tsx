@@ -137,7 +137,9 @@ export function RoamingMascot({
     }, duration + 500 + Math.random() * 1200);
   }, [updatePosition]);
 
-  scheduleRoamRef.current = scheduleRoam;
+  useEffect(() => {
+    scheduleRoamRef.current = scheduleRoam;
+  }, [scheduleRoam]);
 
   useLayoutEffect(() => {
     const handle = handleRef.current;
