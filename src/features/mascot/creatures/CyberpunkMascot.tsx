@@ -1,241 +1,20 @@
-import { useEffect, useRef } from "react";
-import { MascotCreatureProps, MascotReaction } from "../mascot.types";
+import { useRef } from "react";
+import type { MascotCreatureProps } from "../mascot.types";
+import { useCyberpunkReaction } from "./useCyberpunkReaction";
 import "./cyberpunk-mascot.css";
 
-type GsapTarget =
-  | Element
-  | Element[]
-  | NodeListOf<Element>
-  | string
-  | null;
-
-type GsapVars = Record<string, unknown>;
-
-type GsapTimeline = {
-  to: (
-    target: GsapTarget,
-    vars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  fromTo: (
-    target: GsapTarget,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  set: (
-    target: GsapTarget,
-    vars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: GsapTarget, vars: GsapVars) => void;
-  killTweensOf: (target: GsapTarget) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function playReaction(
-  gsap: GsapApi,
-  root: SVGSVGElement,
-  reaction: MascotReaction,
-) {
-  const body = root.querySelector<SVGElement>(".cyber-body-motion");
-  const leftArm = root.querySelector<SVGElement>(".cyber-arm-motion-left");
-  const rightArm = root.querySelector<SVGElement>(".cyber-arm-motion-right");
-  const leftRotor = root.querySelector<SVGElement>(".cyber-rotor-motion-left");
-  const rightRotor = root.querySelector<SVGElement>(".cyber-rotor-motion-right");
-  const propellers = root.querySelectorAll<SVGElement>(".cyber-propeller");
-  const reactor = root.querySelector<SVGElement>(".cyber-reactor-motion");
-  const face = root.querySelector<SVGElement>(".cyber-face");
-  const ring = root.querySelector<SVGElement>(".cyber-status-ring");
-  const particles = Array.from(
-    root.querySelectorAll<SVGElement>(".cyber-particle"),
-  );
-  const animatedParts = root.querySelectorAll<SVGElement>("[data-gsap]");
-
-  gsap.killTweensOf(animatedParts);
-  gsap.set(animatedParts, { clearProps: "transform" });
-  gsap.set(particles, { opacity: 0, scale: 0.45 });
-
-  const timeline = gsap.timeline({ defaults: { overwrite: "auto" } });
-
-  if (reaction === "habit-done") {
-    return timeline
-      .to(body, {
-        y: -12,
-        scaleX: 1.06,
-        scaleY: 0.93,
-        duration: 0.17,
-        ease: "power2.out",
-      })
-      .to(leftArm, { rotation: -18, duration: 0.2, ease: "power2.out" }, "<")
-      .to(rightArm, { rotation: 18, duration: 0.2, ease: "power2.out" }, "<")
-      .to(reactor, { scaleY: 1.35, duration: 0.18, ease: "power2.out" }, "<")
-      .fromTo(
-        particles,
-        { opacity: 0, scale: 0.35, y: 4 },
-        {
-          opacity: 1,
-          scale: 1.15,
-          y: -5,
-          duration: 0.26,
-          stagger: 0.025,
-          ease: "back.out(2.4)",
-        },
-        "<0.04",
-      )
-      .to(body, {
-        y: 2,
-        scaleX: 0.97,
-        scaleY: 1.04,
-        duration: 0.18,
-        ease: "power2.in",
-      })
-      .to(
-        [body, leftArm, rightArm, reactor],
-        {
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.25,
-          ease: "back.out(2)",
-        },
-        "<",
-      )
-      .to(particles, { opacity: 0, scale: 0.55, duration: 0.16 }, "-=0.18");
-  }
-
-  if (reaction === "perfect-day") {
-    return timeline
-      .to(body, {
-        y: -25,
-        scale: 1.08,
-        duration: 0.27,
-        ease: "power3.out",
-      })
-      .to(leftArm, { rotation: -66, y: -4, duration: 0.3, ease: "back.out(2)" }, "<")
-      .to(rightArm, { rotation: 66, y: -4, duration: 0.3, ease: "back.out(2)" }, "<")
-      .to([leftRotor, rightRotor], { y: -6, scale: 1.08, duration: 0.25 }, "<")
-      .to(propellers, { rotation: "+=720", duration: 0.52, ease: "power2.inOut" }, "<")
-      .to(reactor, { scaleY: 1.65, scaleX: 1.18, duration: 0.24 }, "<")
-      .fromTo(
-        particles,
-        { opacity: 0, scale: 0.2, y: 8 },
-        {
-          opacity: 1,
-          scale: 1.35,
-          y: -9,
-          rotation: 36,
-          duration: 0.42,
-          stagger: 0.035,
-          ease: "back.out(3)",
-        },
-        "<0.08",
-      )
-      .to(face, { scale: 1.08, duration: 0.18, yoyo: true, repeat: 1 }, "<")
-      .to(body, { y: 3, scale: 0.98, duration: 0.28, ease: "power2.in" })
-      .to(
-        [body, leftArm, rightArm, leftRotor, rightRotor, reactor],
-        {
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.34,
-          ease: "elastic.out(1, 0.55)",
-        },
-      )
-      .to(particles, { opacity: 0, scale: 0.4, duration: 0.2 }, "-=0.3");
-  }
-
-  return timeline
-    .to(ring, { scale: 1.35, opacity: 0.95, duration: 0.28, ease: "power2.out" })
-    .to(body, { rotation: -8, y: -10, duration: 0.22, ease: "power2.out" }, "<")
-    .to(leftArm, { rotation: -58, duration: 0.25, ease: "back.out(2)" }, "<")
-    .to(rightArm, { rotation: 24, duration: 0.25, ease: "back.out(2)" }, "<")
-    .to(propellers, { rotation: "+=540", duration: 0.46, ease: "power2.inOut" }, "<")
-    .fromTo(
-      particles,
-      { opacity: 0, scale: 0.25, rotation: -30 },
-      {
-        opacity: 1,
-        scale: 1.2,
-        rotation: 30,
-        duration: 0.36,
-        stagger: 0.03,
-        ease: "back.out(2.6)",
-      },
-      "<0.06",
-    )
-    .to(body, { rotation: 8, duration: 0.2, ease: "sine.inOut" })
-    .to(body, { rotation: -4, duration: 0.16, ease: "sine.inOut" })
-    .to(
-      [body, leftArm, rightArm, ring],
-      {
-        y: 0,
-        rotation: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 0.34,
-        ease: "back.out(2)",
-      },
-    )
-    .to(particles, { opacity: 0, scale: 0.45, duration: 0.2 }, "-=0.24");
-}
+const eyePixels = [
+  [84, 94], [90, 94], [96, 94],
+  [84, 101], [90, 101], [96, 101],
+  [84, 108], [90, 108], [96, 108],
+  [119, 94], [125, 94], [131, 94],
+  [119, 101], [125, 101], [131, 101],
+  [119, 108], [125, 108], [131, 108],
+] as const;
 
 export function CyberpunkMascot({ mood, reaction }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
-
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-
-    const start = () => {
-      if (cancelled) return;
-
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-    };
-  }, [reaction]);
+  useCyberpunkReaction(svgRef, reaction ?? null);
 
   return (
     <svg
@@ -297,7 +76,6 @@ export function CyberpunkMascot({ mood, reaction }: MascotCreatureProps) {
 
       <g className="cyber-rig">
         <ellipse
-          className="cyber-shadow"
           cx="110"
           cy="199"
           rx="45"
@@ -401,28 +179,9 @@ export function CyberpunkMascot({ mood, reaction }: MascotCreatureProps) {
 
             <g className="cyber-face" data-gsap>
               <g className="cyber-eye-pixels" fill="#00eaff" filter="url(#cyber-glow)">
-                <g>
-                  <rect x="84" y="94" width="5" height="6" rx="1" />
-                  <rect x="90" y="94" width="5" height="6" rx="1" />
-                  <rect x="96" y="94" width="5" height="6" rx="1" />
-                  <rect x="84" y="101" width="5" height="6" rx="1" />
-                  <rect x="90" y="101" width="5" height="6" rx="1" />
-                  <rect x="96" y="101" width="5" height="6" rx="1" />
-                  <rect x="84" y="108" width="5" height="6" rx="1" />
-                  <rect x="90" y="108" width="5" height="6" rx="1" />
-                  <rect x="96" y="108" width="5" height="6" rx="1" />
-                </g>
-                <g>
-                  <rect x="119" y="94" width="5" height="6" rx="1" />
-                  <rect x="125" y="94" width="5" height="6" rx="1" />
-                  <rect x="131" y="94" width="5" height="6" rx="1" />
-                  <rect x="119" y="101" width="5" height="6" rx="1" />
-                  <rect x="125" y="101" width="5" height="6" rx="1" />
-                  <rect x="131" y="101" width="5" height="6" rx="1" />
-                  <rect x="119" y="108" width="5" height="6" rx="1" />
-                  <rect x="125" y="108" width="5" height="6" rx="1" />
-                  <rect x="131" y="108" width="5" height="6" rx="1" />
-                </g>
+                {eyePixels.map(([x, y]) => (
+                  <rect key={`${x}-${y}`} x={x} y={y} width="5" height="6" rx="1" />
+                ))}
               </g>
               <g className="cyber-sleep-eyes" fill="none" stroke="#00eaff" strokeWidth="4" strokeLinecap="round" filter="url(#cyber-glow)">
                 <path d="M84 105H100" />
@@ -436,11 +195,11 @@ export function CyberpunkMascot({ mood, reaction }: MascotCreatureProps) {
                 <path d="M83 91L100 96" />
                 <path d="M137 91L120 96" />
               </g>
-              <path className="cyber-mouth-neutral" d="M101 125H107V129H113V125H119" fill="none" stroke="#00eaff" strokeWidth="3" strokeLinecap="square" />
-              <path className="cyber-mouth-happy" d="M99 123H104V128H110V131H116V128H121V123" fill="none" stroke="#00eaff" strokeWidth="3" strokeLinecap="square" />
-              <path className="cyber-mouth-worried" d="M99 130H104V126H110V123H116V126H121V130" fill="none" stroke="#00eaff" strokeWidth="3" strokeLinecap="square" />
+              <path className="cyber-mouth-neutral" d="M101 125H107V129H113V125H119" fill="none" stroke="#00eaff" strokeWidth="3" />
+              <path className="cyber-mouth-happy" d="M99 123H104V128H110V131H116V128H121V123" fill="none" stroke="#00eaff" strokeWidth="3" />
+              <path className="cyber-mouth-worried" d="M99 130H104V126H110V123H116V126H121V130" fill="none" stroke="#00eaff" strokeWidth="3" />
               <path className="cyber-mouth-sleepy" d="M105 127H115" fill="none" stroke="#00eaff" strokeWidth="3" strokeLinecap="round" />
-              <g className="cyber-cheeks" fill="#ff00df" opacity="0.85" filter="url(#cyber-glow)">
+              <g className="cyber-cheeks" fill="#ff00df" filter="url(#cyber-glow)">
                 <rect x="77" y="121" width="9" height="3" rx="1.5" />
                 <rect x="134" y="121" width="9" height="3" rx="1.5" />
               </g>
