@@ -29,10 +29,16 @@ jobs:
           cache: npm
       - name: Generate GSAP lockfile
         run: npm install --package-lock-only --ignore-scripts --save-exact gsap@3.15.0
-      - name: Assemble and apply migration
-        run: |
-          cat scripts/pr35-parts/*.part > scripts/apply-pr35-refactor.py
-          python scripts/apply-pr35-refactor.py
+      - name: Assemble migration
+        run: cat scripts/pr35-parts/*.part > scripts/apply-pr35-refactor.py
+      - name: Upload assembled migration
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr35-assembled-migration
+          path: scripts/apply-pr35-refactor.py
+          retention-days: 1
+      - name: Apply migration
+        run: python scripts/apply-pr35-refactor.py
       - name: Validate final tree
         run: |
           npm ci
