@@ -3,15 +3,12 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { DashboardMascot } from "./DashboardMascot";
-import type {
-  MascotMood,
-  MascotReactionEvent,
-} from "./mascot.types";
+import { MascotRenderer } from "./MascotRenderer";
+import type { MascotMood, MascotReactionEvent } from "./mascot.types";
 import type { ThemeId } from "../../themes/theme-types";
+import { useMotionPreference } from "./useMotionPreference";
 import "./roaming-mascot.css";
 
 type Point = { x: number; y: number };
@@ -31,13 +28,6 @@ const MAX_TRAVEL_MS = 7800;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), Math.max(min, max));
-}
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
 }
 
 function viewportBounds(size: Size) {
@@ -60,60 +50,46 @@ function keepInViewport(point: Point, size: Size): Point {
 function randomDestination(size: Size): Point {
   const bounds = viewportBounds(size);
   const favourEdges = Math.random() < 0.68;
-
-  if (favourEdges) {
-    const edge = Math.floor(Math.random() * 4);
-    if (edge === 0) {
-      return {
-        x: bounds.minX,
-        y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
-      };
-    }
-    if (edge === 1) {
-      return {
-        x: bounds.maxX,
-        y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
-      };
-    }
-    if (edge === 2) {
-      return {
-        x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
-        y: bounds.minY,
-      };
-    }
+  if (!favourEdges) {
     return {
       x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
-      y: bounds.maxY,
+      y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
     };
   }
 
+  const edge = Math.floor(Math.random() * 4);
+  if (edge === 0 || edge === 1) {
+    return {
+      x: edge === 0 ? bounds.minX : bounds.maxX,
+      y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
+    };
+  }
   return {
     x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
-    y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
+    y: edge === 2 ? bounds.minY : bounds.maxY,
   };
 }
 
-export function RoamingMascot({
-  themeId,
-  mood,
-  reaction,
-  onReactionComplete,
-}: RoamingMascotProps) {
+export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: RoamingMascotProps) {
   const handleRef = useRef<HTMLDivElement>(null);
   const sizeRef = useRef<Size>({ width: 72, height: 72 });
   const positionRef = useRef<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
   const dragOffsetRef = useRef<Point>({ x: 0, y: 0 });
+  const pendingDragRef = useRef<Point | null>(null);
+  const dragFrameRef = useRef<number | null>(null);
   const draggingRef = useRef(false);
   const scheduleRoamRef = useRef<() => void>(() => undefined);
   const roamTimerRef = useRef<number | null>(null);
   const resumeTimerRef = useRef<number | null>(null);
-  const [position, setPosition] = useState<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
-  const [travelDuration, setTravelDuration] = useState(0);
-  const [dragging, setDragging] = useState(false);
+  const motionPreference = useMotionPreference();
 
-  const updatePosition = useCallback((next: Point) => {
+  const applyPosition = useCallback((next: Point, durationMs = 0) => {
+    const handle = handleRef.current;
     positionRef.current = next;
-    setPosition(next);
+    if (!handle) return;
+    handle.style.transitionDuration = `${durationMs}ms`;
+    handle.style.transform = `translate3d(${next.x}px, ${next.y}px, 0)`;
+    handle.dataset.moving = durationMs > 0 ? "true" : "false";
   }, []);
 
   const clearTimers = useCallback(() => {
@@ -124,18 +100,11 @@ export function RoamingMascot({
   }, []);
 
   const scheduleRoam = useCallback(() => {
-    if (draggingRef.current || prefersReducedMotion() || document.hidden) return;
-
-    const duration = Math.round(
-      MIN_TRAVEL_MS + Math.random() * (MAX_TRAVEL_MS - MIN_TRAVEL_MS),
-    );
-    setTravelDuration(duration);
-    updatePosition(randomDestination(sizeRef.current));
-
-    roamTimerRef.current = window.setTimeout(() => {
-      scheduleRoamRef.current();
-    }, duration + 500 + Math.random() * 1200);
-  }, [updatePosition]);
+    if (draggingRef.current || motionPreference === "reduced" || document.hidden) return;
+    const duration = Math.round(MIN_TRAVEL_MS + Math.random() * (MAX_TRAVEL_MS - MIN_TRAVEL_MS));
+    applyPosition(randomDestination(sizeRef.current), duration);
+    roamTimerRef.current = window.setTimeout(() => scheduleRoamRef.current(), duration + 500 + Math.random() * 1200);
+  }, [applyPosition, motionPreference]);
 
   useEffect(() => {
     scheduleRoamRef.current = scheduleRoam;
@@ -144,28 +113,27 @@ export function RoamingMascot({
   useLayoutEffect(() => {
     const handle = handleRef.current;
     if (!handle) return;
-
     const rect = handle.getBoundingClientRect();
     sizeRef.current = { width: rect.width, height: rect.height };
-    updatePosition({
+    applyPosition({
       x: Math.max(EDGE_MARGIN, window.innerWidth - rect.width - 24),
       y: Math.max(EDGE_MARGIN, window.innerHeight - rect.height - 32),
     });
-  }, [themeId, updatePosition]);
+  }, [applyPosition, themeId]);
 
   useEffect(() => {
+    const handle = handleRef.current;
+    if (!handle || mood === "hidden") return;
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      sizeRef.current = { width: entry.contentRect.width, height: entry.contentRect.height };
+      applyPosition(keepInViewport(positionRef.current, sizeRef.current));
+    });
+    resizeObserver.observe(handle);
+
     const startTimer = window.setTimeout(scheduleRoam, 900);
-
-    const handleResize = () => {
-      const handle = handleRef.current;
-      if (handle) {
-        const rect = handle.getBoundingClientRect();
-        sizeRef.current = { width: rect.width, height: rect.height };
-      }
-      setTravelDuration(0);
-      updatePosition(keepInViewport(positionRef.current, sizeRef.current));
-    };
-
+    const handleResize = () => applyPosition(keepInViewport(positionRef.current, sizeRef.current));
     const handleVisibility = () => {
       clearTimers();
       if (!document.hidden && !draggingRef.current) scheduleRoam();
@@ -173,52 +141,52 @@ export function RoamingMascot({
 
     window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibility);
-
     return () => {
       window.clearTimeout(startTimer);
       clearTimers();
+      resizeObserver.disconnect();
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [clearTimers, scheduleRoam, updatePosition]);
+  }, [applyPosition, clearTimers, mood, scheduleRoam]);
 
   const startDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
-
     clearTimers();
     draggingRef.current = true;
-    setTravelDuration(0);
-    setDragging(true);
+    const handle = event.currentTarget;
+    handle.dataset.dragging = "true";
+    handle.dataset.moving = "true";
+    handle.style.transitionDuration = "0ms";
     dragOffsetRef.current = {
       x: event.clientX - positionRef.current.x,
       y: event.clientY - positionRef.current.y,
     };
-    event.currentTarget.setPointerCapture(event.pointerId);
+    handle.setPointerCapture(event.pointerId);
   };
 
   const moveDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
-    updatePosition(
-      keepInViewport(
-        {
-          x: event.clientX - dragOffsetRef.current.x,
-          y: event.clientY - dragOffsetRef.current.y,
-        },
-        sizeRef.current,
-      ),
-    );
+    pendingDragRef.current = keepInViewport({
+      x: event.clientX - dragOffsetRef.current.x,
+      y: event.clientY - dragOffsetRef.current.y,
+    }, sizeRef.current);
+    if (dragFrameRef.current !== null) return;
+    dragFrameRef.current = window.requestAnimationFrame(() => {
+      dragFrameRef.current = null;
+      if (pendingDragRef.current) applyPosition(pendingDragRef.current);
+    });
   };
 
   const finishDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     draggingRef.current = false;
-    setDragging(false);
-    setTravelDuration(220);
-    updatePosition(keepInViewport(positionRef.current, sizeRef.current));
+    pendingDragRef.current = null;
+    if (dragFrameRef.current !== null) window.cancelAnimationFrame(dragFrameRef.current);
+    dragFrameRef.current = null;
+    event.currentTarget.dataset.dragging = "false";
+    applyPosition(keepInViewport(positionRef.current, sizeRef.current), 220);
     resumeTimerRef.current = window.setTimeout(scheduleRoam, RESUME_DELAY_MS);
   };
 
@@ -229,17 +197,14 @@ export function RoamingMascot({
       <div
         ref={handleRef}
         className="roaming-mascot-handle"
-        data-dragging={dragging ? "true" : "false"}
+        data-dragging="false"
+        data-moving="false"
         onPointerDown={startDrag}
         onPointerMove={moveDrag}
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
-        style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-          transitionDuration: dragging ? "0ms" : `${travelDuration}ms`,
-        }}
       >
-        <DashboardMascot
+        <MascotRenderer
           themeId={themeId}
           mood={mood}
           reaction={reaction}
