@@ -3,6 +3,8 @@ import { Flame } from "lucide-react";
 import { AmbientBackground } from "../components/effects/premium-effects";
 import { ThemeNavigationStatus } from "../components/theme-identity/ThemeNavigationStatus";
 import { typographyClass } from "../components/theme-identity/identity-utils";
+import { RoamingMascot } from "../features/mascot/RoamingMascot";
+import { selectMascotMood } from "../features/mascot/mascot-mood";
 import { applyThemeStyle } from "../themes/apply-theme";
 import { pageSpecs, Page } from "./constants";
 import {
@@ -27,6 +29,14 @@ export function App() {
     mascotReaction,
     clearMascotReaction,
   } = useTrackerController();
+
+  const mascotMood = selectMascotMood({
+    enabled: data.settings.mascotEnabled,
+    todayScore: stats.todayScore,
+    monthScore: stats.currentMonth,
+    fragileHabitCount: stats.fragileHabits.length,
+    currentHour: new Date().getHours(),
+  });
 
   const pageProps = {
     data,
@@ -78,8 +88,6 @@ export function App() {
             theme={theme}
             stats={stats}
             setSettings={updateSettings}
-            mascotReaction={mascotReaction}
-            clearMascotReaction={clearMascotReaction}
           />
         )}
         {page === "Aujourd’hui" && <TodayPage {...pageProps} />}
@@ -88,6 +96,13 @@ export function App() {
         {page === "Statistiques" && <StatsPage {...pageProps} />}
         {page === "Paramètres" && <SettingsPage {...pageProps} />}
       </main>
+
+      <RoamingMascot
+        themeId={theme.id}
+        mood={mascotMood}
+        reaction={mascotReaction}
+        onReactionComplete={clearMascotReaction}
+      />
     </div>
   );
 }

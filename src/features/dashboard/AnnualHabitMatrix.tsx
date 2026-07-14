@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Badge } from "../../components/ui/badge";
 import {
   Card,
@@ -15,13 +15,11 @@ import { monthShortLabels } from "../../app/constants";
 type AnnualHabitMatrixProps = {
   theme: AppTheme;
   rates: DashboardStats["annualRates"];
-  mascot?: ReactNode;
 };
 
 export function AnnualHabitMatrix({
   theme,
   rates,
-  mascot,
 }: AnnualHabitMatrixProps) {
   return (
     <Card className="annual-matrix-card">
@@ -63,7 +61,6 @@ export function AnnualHabitMatrix({
           ))}
         </div>
       </CardContent>
-      {mascot && <div className="annual-matrix-mascot-slot">{mascot}</div>}
     </Card>
   );
 }
