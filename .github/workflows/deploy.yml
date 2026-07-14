@@ -33,9 +33,16 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          parts = sorted(Path('scripts/pr35-parts').glob('*.part'))
-          content = ''.join(part.read_text().rstrip('\n') for part in parts[:-1]) + parts[-1].read_text()
+          root = Path('scripts/pr35-parts')
+          parts = sorted(
+              path for path in root.glob('[0-9][0-9].part')
+              if path.stem.isdigit()
+          )
+          if not parts:
+              raise SystemExit('Aucun fragment numérique de migration trouvé')
+          content = ''.join(path.read_text() for path in parts)
           Path('scripts/apply-pr35-refactor.py').write_text(content)
+          print('Fragments assemblés :', ', '.join(path.name for path in parts))
           PY
           python -m py_compile scripts/apply-pr35-refactor.py
       - name: Apply migration
