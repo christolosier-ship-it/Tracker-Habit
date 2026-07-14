@@ -22,6 +22,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Upload source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-snapshot
+          path: |
+            src
+            scripts
+            package.json
+            package-lock.json
+            index.html
+            .github/workflows/deploy.yml
+          retention-days: 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
