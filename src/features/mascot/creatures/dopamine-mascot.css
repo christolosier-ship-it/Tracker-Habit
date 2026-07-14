@@ -1,0 +1,165 @@
+.mascot-dopamine-pro {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.mascot-dopamine-pro .dopamine-rig,
+.mascot-dopamine-pro .dopamine-body,
+.mascot-dopamine-pro .dopamine-arm,
+.mascot-dopamine-pro .dopamine-leg,
+.mascot-dopamine-pro .dopamine-tuft,
+.mascot-dopamine-pro .dopamine-face,
+.mascot-dopamine-pro .dopamine-sprinkle,
+.mascot-dopamine-pro .dopamine-burst-particle {
+  transform-box: fill-box;
+}
+
+.mascot-dopamine-pro .dopamine-rig {
+  transform-origin: center bottom;
+  animation: dopamine-bob 3.4s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-body {
+  transform-origin: center bottom;
+  animation: dopamine-breathe 3s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-arm-left {
+  transform-origin: 88% 18%;
+  animation: dopamine-arm-sway-left 3.8s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-arm-right {
+  transform-origin: 12% 18%;
+  animation: dopamine-wave 2.9s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-leg-left,
+.mascot-dopamine-pro .dopamine-leg-right {
+  transform-origin: center top;
+}
+
+.mascot-dopamine-pro .dopamine-tuft {
+  transform-origin: center bottom;
+  animation: dopamine-tuft-sway 2.7s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-eye-shine {
+  animation: dopamine-eye-glint 3.2s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-sprinkle {
+  transform-origin: center;
+  animation: dopamine-sprinkle-pulse 2.8s ease-in-out infinite;
+}
+
+.mascot-dopamine-pro .dopamine-sprinkle:nth-of-type(3n) {
+  animation-delay: -0.8s;
+}
+
+.mascot-dopamine-pro .dopamine-sprinkle:nth-of-type(4n) {
+  animation-delay: -1.5s;
+}
+
+.mascot-dopamine-pro .dopamine-face-happy,
+.mascot-dopamine-pro .dopamine-face-worried,
+.mascot-dopamine-pro .dopamine-face-sleepy,
+.mascot-dopamine-pro .dopamine-star-eyes {
+  opacity: 0;
+}
+
+.dashboard-mascot[data-mood="happy"] .mascot-dopamine-pro .dopamine-face-neutral,
+.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-face-neutral,
+.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-face-neutral,
+.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-face-neutral {
+  opacity: 0;
+}
+
+.dashboard-mascot[data-mood="happy"] .mascot-dopamine-pro .dopamine-face-happy {
+  opacity: 1;
+}
+
+.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-star-eyes,
+.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-face-happy {
+  opacity: 1;
+}
+
+.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-face-worried {
+  opacity: 1;
+}
+
+.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-face-sleepy {
+  opacity: 1;
+}
+
+.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-rig {
+  animation-duration: 5.4s;
+}
+
+.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-rig {
+  animation: dopamine-wobble 1.8s ease-in-out infinite;
+}
+
+.dashboard-mascot[data-reaction="habit-done"] .mascot-dopamine-pro .dopamine-body,
+.dashboard-mascot[data-reaction="perfect-day"] .mascot-dopamine-pro .dopamine-body,
+.dashboard-mascot[data-reaction="streak-record"] .mascot-dopamine-pro .dopamine-body,
+.dashboard-mascot[data-reaction="habit-done"] .mascot-dopamine-pro .dopamine-rig,
+.dashboard-mascot[data-reaction="perfect-day"] .mascot-dopamine-pro .dopamine-rig,
+.dashboard-mascot[data-reaction="streak-record"] .mascot-dopamine-pro .dopamine-rig {
+  animation-play-state: paused;
+}
+
+.dopamine-burst-particle {
+  opacity: 0;
+}
+
+@keyframes dopamine-bob {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50% { transform: translateY(-4px) rotate(0.8deg); }
+}
+
+@keyframes dopamine-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scaleX(1.02) scaleY(1.035); }
+}
+
+@keyframes dopamine-arm-sway-left {
+  0%, 100% { transform: rotate(4deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+@keyframes dopamine-wave {
+  0%, 100% { transform: rotate(-8deg); }
+  45% { transform: rotate(10deg); }
+  70% { transform: rotate(-2deg); }
+}
+
+@keyframes dopamine-tuft-sway {
+  0%, 100% { transform: rotate(-2deg) scaleY(1); }
+  50% { transform: rotate(3deg) scaleY(1.035); }
+}
+
+@keyframes dopamine-eye-glint {
+  0%, 72%, 100% { opacity: 1; transform: scale(1); }
+  80% { opacity: 0.35; transform: scale(0.65); }
+}
+
+@keyframes dopamine-sprinkle-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.08); filter: brightness(1.12); }
+}
+
+@keyframes dopamine-wobble {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  35% { transform: translateX(-2px) rotate(-1.5deg); }
+  70% { transform: translateX(2px) rotate(1.5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-dopamine-pro *,
+  .mascot-dopamine-pro *::before,
+  .mascot-dopamine-pro *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
