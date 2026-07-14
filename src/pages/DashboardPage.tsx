@@ -10,32 +10,13 @@ import { AnnualHabitMatrix } from "../features/dashboard/AnnualHabitMatrix";
 import { KpiRail } from "../features/dashboard/KpiRail";
 import { formatPercent } from "../app/constants";
 import { DashboardPageProps } from "./page-types";
-import { DashboardMascot } from "../features/mascot/DashboardMascot";
-import { selectMascotMood } from "../features/mascot/mascot-mood";
 
 export function DashboardPage({
   data,
   theme,
   stats,
   setSettings,
-  mascotReaction = null,
-  clearMascotReaction,
 }: DashboardPageProps) {
-  const mascotMood = selectMascotMood({
-    enabled: data.settings.mascotEnabled,
-    todayScore: stats.todayScore,
-    monthScore: stats.currentMonth,
-    fragileHabitCount: stats.fragileHabits.length,
-    currentHour: new Date().getHours(),
-  });
-  const mascot = (
-    <DashboardMascot
-      themeId={theme.id}
-      mood={mascotMood}
-      reaction={mascotReaction}
-      onReactionComplete={clearMascotReaction}
-    />
-  );
   return (
     <>
       <PeriodControls
@@ -46,7 +27,7 @@ export function DashboardPage({
       />
       <KpiRail theme={theme} stats={stats} />
       <BentoShell className="dashboard-layout">
-        <AnnualHabitMatrix theme={theme} rates={stats.annualRates} mascot={mascot} />
+        <AnnualHabitMatrix theme={theme} rates={stats.annualRates} />
         <div className="dashboard-side">
           <ChartPanel
             title="Progression mensuelle"
