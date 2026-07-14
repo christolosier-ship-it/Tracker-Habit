@@ -106,6 +106,8 @@ jobs:
           python -m py_compile scripts/apply-pr35-refactor.py
       - name: Apply migration
         run: python scripts/apply-pr35-refactor.py
+      - name: Synchronize final lockfile
+        run: npm install --package-lock-only --ignore-scripts
       - name: Validate final tree
         run: |
           npm ci
