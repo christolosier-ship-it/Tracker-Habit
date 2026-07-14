@@ -1,0 +1,173 @@
+.mascot-aurora-pro {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.mascot-aurora-pro .aurora-rig,
+.mascot-aurora-pro .aurora-body,
+.mascot-aurora-pro .aurora-head,
+.mascot-aurora-pro .aurora-arm,
+.mascot-aurora-pro .aurora-leg,
+.mascot-aurora-pro .aurora-halo,
+.mascot-aurora-pro .aurora-face,
+.mascot-aurora-pro .aurora-burst-particle {
+  transform-box: fill-box;
+}
+
+.mascot-aurora-pro .aurora-rig {
+  transform-origin: center;
+  animation: aurora-float 4.8s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-body {
+  transform-origin: center;
+  animation: aurora-breathe 3.6s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-head {
+  transform-origin: center bottom;
+  animation: aurora-head-sway 4.4s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-halo {
+  transform-origin: center;
+  animation: aurora-halo-pulse 3.2s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-arm-left {
+  transform-origin: 80% 14%;
+  animation: aurora-arm-left 3.8s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-arm-right {
+  transform-origin: 20% 14%;
+  animation: aurora-arm-right 3.8s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-leg-left,
+.mascot-aurora-pro .aurora-leg-right {
+  transform-origin: center top;
+}
+
+.mascot-aurora-pro .aurora-leg-left {
+  animation: aurora-step-left 4.2s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-leg-right {
+  animation: aurora-step-right 4.2s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-star {
+  animation: aurora-twinkle 2.6s ease-in-out infinite;
+}
+
+.mascot-aurora-pro .aurora-star:nth-child(2n) {
+  animation-delay: -1.1s;
+}
+
+.mascot-aurora-pro .aurora-star:nth-child(3n) {
+  animation-delay: -1.8s;
+}
+
+.mascot-aurora-pro .aurora-face-happy,
+.mascot-aurora-pro .aurora-face-worried,
+.mascot-aurora-pro .aurora-face-sleepy,
+.mascot-aurora-pro .aurora-star-eyes {
+  opacity: 0;
+}
+
+.mascot-aurora-pro[data-mood="happy"] .aurora-face-neutral,
+.mascot-aurora-pro[data-mood="celebrate"] .aurora-face-neutral,
+.mascot-aurora-pro[data-mood="worried"] .aurora-face-neutral,
+.mascot-aurora-pro[data-mood="sleepy"] .aurora-face-neutral {
+  opacity: 0;
+}
+
+.mascot-aurora-pro[data-mood="happy"] .aurora-face-happy,
+.mascot-aurora-pro[data-mood="celebrate"] .aurora-face-happy {
+  opacity: 1;
+}
+
+.mascot-aurora-pro[data-mood="celebrate"] .aurora-star-eyes {
+  opacity: 1;
+}
+
+.mascot-aurora-pro[data-mood="celebrate"] .aurora-face-happy-eyes {
+  opacity: 0;
+}
+
+.mascot-aurora-pro[data-mood="worried"] .aurora-face-worried,
+.mascot-aurora-pro[data-mood="sleepy"] .aurora-face-sleepy {
+  opacity: 1;
+}
+
+.mascot-aurora-pro[data-mood="sleepy"] .aurora-rig {
+  animation-duration: 7s;
+}
+
+.mascot-aurora-pro[data-mood="worried"] .aurora-body {
+  animation: aurora-worry 0.55s ease-in-out infinite alternate;
+}
+
+.aurora-burst-particle {
+  opacity: 0;
+}
+
+@keyframes aurora-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+@keyframes aurora-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025, 0.985); }
+}
+
+@keyframes aurora-head-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes aurora-halo-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+@keyframes aurora-arm-left {
+  0%, 100% { transform: rotate(3deg); }
+  50% { transform: rotate(-7deg); }
+}
+
+@keyframes aurora-arm-right {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes aurora-step-left {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(-3deg) translateY(-1px); }
+}
+
+@keyframes aurora-step-right {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(3deg) translateY(-1px); }
+}
+
+@keyframes aurora-twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes aurora-worry {
+  from { transform: translateX(-1px) rotate(-1deg); }
+  to { transform: translateX(1px) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-aurora-pro *,
+  .mascot-aurora-pro *::before,
+  .mascot-aurora-pro *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
