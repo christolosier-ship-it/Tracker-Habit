@@ -118,25 +118,25 @@ export function KawaiiMascot({ mood, reaction }: MascotCreatureProps) {
             </g>
 
             <g className="kawaii-face-motion" data-gsap>
-              <g className="kawaii-face kawai-face-neutral">
+              <g className="kawaii-face kawaii-face-neutral">
                 <ellipse cx="82" cy="112" rx="13" ry="18" fill="#29152d" />
                 <ellipse cx="138" cy="112" rx="13" ry="18" fill="#29152d" />
                 <ellipse className="kawaii-eye-shine" cx="78" cy="105" rx="5" ry="7" fill="#fff" />
                 <ellipse className="kawaii-eye-shine" cx="134" cy="105" rx="5" ry="7" fill="#fff" />
               </g>
-              <g className="kawaii-face kawai-face-happy">
+              <g className="kawaii-face kawaii-face-happy">
                 <path d="M69 111q13-14 26 0M125 111q13-14 26 0" fill="none" stroke="#29152d" strokeWidth="5" strokeLinecap="round" />
               </g>
-              <g className="kawaii-face kawai-face-celebrate">
+              <g className="kawaii-face kawaii-face-celebrate">
                 <path d="M69 110q13-15 26 0M125 110q13-15 26 0" fill="none" stroke="#29152d" strokeWidth="5" strokeLinecap="round" />
                 <path d="M99 135q11 12 22 0" fill="#b84d77" stroke="#6f274a" strokeWidth="2.5" />
               </g>
-              <g className="kawaii-face kawai-face-worried">
+              <g className="kawaii-face kawaii-face-worried">
                 <ellipse cx="82" cy="113" rx="11" ry="15" fill="#29152d" />
                 <ellipse cx="138" cy="113" rx="11" ry="15" fill="#29152d" />
                 <path d="M70 94l18-5M132 89l18 5" stroke="#6f274a" strokeWidth="4" strokeLinecap="round" />
               </g>
-              <g className="kawaii-face kawai-face-sleepy">
+              <g className="kawaii-face kawaii-face-sleepy">
                 <path d="M69 112h26M125 112h26" stroke="#29152d" strokeWidth="5" strokeLinecap="round" />
               </g>
 
