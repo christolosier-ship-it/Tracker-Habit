@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react";
+import { lazy, Suspense, type ComponentType } from "react";
 import type { ThemeId } from "../../themes/theme-types";
 import type { DashboardMascotProps, MascotCreatureProps } from "./mascot.types";
 import { useMascotReaction } from "./useMascotReaction";
@@ -22,21 +22,26 @@ const loaders: Record<ThemeId, MascotLoader> = {
   "liquid-gradient-future": () => import("./creatures/LiquidMascot").then((module) => ({ default: module.LiquidMascot })),
 };
 
-const cache = new Map<ThemeId, LazyExoticComponent<ComponentType<MascotCreatureProps>>>();
-
-function getMascot(themeId: ThemeId) {
-  const cached = cache.get(themeId);
-  if (cached) return cached;
-  const component = lazy(loaders[themeId]);
-  cache.set(themeId, component);
-  return component;
-}
+const mascotByTheme: Record<ThemeId, ReturnType<typeof lazy>> = {
+  "dopamine-pop": lazy(loaders["dopamine-pop"]),
+  "neon-cyberpunk-matrix": lazy(loaders["neon-cyberpunk-matrix"]),
+  "memphis-productivity": lazy(loaders["memphis-productivity"]),
+  "aurora-glassmorphism": lazy(loaders["aurora-glassmorphism"]),
+  "tropical-festival": lazy(loaders["tropical-festival"]),
+  "retro-arcade": lazy(loaders["retro-arcade"]),
+  "cosmic-dreamscape": lazy(loaders["cosmic-dreamscape"]),
+  "kawaii-maximalist": lazy(loaders["kawaii-maximalist"]),
+  "brutalist-color-clash": lazy(loaders["brutalist-color-clash"]),
+  "editorial-fashion-tech": lazy(loaders["editorial-fashion-tech"]),
+  "comic-book-energy": lazy(loaders["comic-book-energy"]),
+  "liquid-gradient-future": lazy(loaders["liquid-gradient-future"]),
+};
 
 export function MascotRenderer({ themeId, mood, reaction, onReactionComplete }: DashboardMascotProps) {
   const activeReaction = useMascotReaction(reaction, onReactionComplete);
   if (mood === "hidden") return null;
 
-  const Mascot = getMascot(themeId);
+  const Mascot = mascotByTheme[themeId];
   return (
     <aside className="app-mascot" data-theme={themeId} data-mood={mood} data-reaction={activeReaction ?? "none"}>
       <Suspense fallback={<span className="app-mascot-loading" aria-hidden="true" />}>
