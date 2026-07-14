@@ -1,0 +1,240 @@
+.mascot-cyberpunk-pro {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.mascot-cyberpunk-pro .cyber-rig,
+.mascot-cyberpunk-pro .cyber-body,
+.mascot-cyberpunk-pro .cyber-arm,
+.mascot-cyberpunk-pro .cyber-rotor,
+.mascot-cyberpunk-pro .cyber-reactor,
+.mascot-cyberpunk-pro .cyber-particle,
+.mascot-cyberpunk-pro .cyber-face,
+.mascot-cyberpunk-pro .cyber-brow {
+  transform-box: fill-box;
+}
+
+.mascot-cyberpunk-pro .cyber-rig {
+  transform-origin: center;
+  animation: cyber-hover 3.8s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-body {
+  transform-origin: center;
+  animation: cyber-breathe 3.2s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-arm-left {
+  transform-origin: 90% 14%;
+}
+
+.mascot-cyberpunk-pro .cyber-arm-right {
+  transform-origin: 10% 14%;
+}
+
+.mascot-cyberpunk-pro .cyber-claw-left,
+.mascot-cyberpunk-pro .cyber-claw-right {
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+
+.mascot-cyberpunk-pro .cyber-rotor-left,
+.mascot-cyberpunk-pro .cyber-rotor-right {
+  transform-origin: center;
+  animation: cyber-rotor-rock 1.7s ease-in-out infinite alternate;
+}
+
+.mascot-cyberpunk-pro .cyber-propeller {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cyber-rotor-spin 0.68s linear infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-reactor-flame {
+  transform-origin: center top;
+  animation: cyber-reactor-pulse 0.55s ease-in-out infinite alternate;
+}
+
+.mascot-cyberpunk-pro .cyber-core-glow,
+.mascot-cyberpunk-pro .cyber-screen-glow {
+  animation: cyber-neon-pulse 2.1s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-scan-line {
+  animation: cyber-scan 2.8s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-eye-pixels {
+  transform-origin: center;
+  animation: cyber-blink 6.2s steps(1, end) infinite;
+}
+
+.mascot-cyberpunk-pro .cyber-sleep-eyes,
+.mascot-cyberpunk-pro .cyber-star-eyes,
+.mascot-cyberpunk-pro .cyber-worry-brows,
+.mascot-cyberpunk-pro .cyber-mouth-happy,
+.mascot-cyberpunk-pro .cyber-mouth-worried,
+.mascot-cyberpunk-pro .cyber-mouth-sleepy,
+.mascot-cyberpunk-pro .cyber-cheeks {
+  opacity: 0;
+}
+
+.mascot-cyberpunk-pro[data-mood="happy"] .cyber-mouth-neutral,
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-mouth-neutral,
+.mascot-cyberpunk-pro[data-mood="worried"] .cyber-mouth-neutral,
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-mouth-neutral {
+  opacity: 0;
+}
+
+.mascot-cyberpunk-pro[data-mood="happy"] .cyber-mouth-happy,
+.mascot-cyberpunk-pro[data-mood="happy"] .cyber-cheeks {
+  opacity: 1;
+}
+
+.mascot-cyberpunk-pro[data-mood="happy"] .cyber-arm-left {
+  transform: rotate(-5deg);
+}
+
+.mascot-cyberpunk-pro[data-mood="happy"] .cyber-arm-right {
+  transform: rotate(5deg);
+}
+
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-eye-pixels,
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-sleep-eyes {
+  opacity: 0;
+}
+
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-star-eyes,
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-mouth-happy,
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-cheeks {
+  opacity: 1;
+}
+
+.mascot-cyberpunk-pro[data-mood="celebrate"] .cyber-core-glow {
+  animation-duration: 0.75s;
+}
+
+.mascot-cyberpunk-pro[data-mood="worried"] .cyber-worry-brows,
+.mascot-cyberpunk-pro[data-mood="worried"] .cyber-mouth-worried {
+  opacity: 1;
+}
+
+.mascot-cyberpunk-pro[data-mood="worried"] .cyber-rig {
+  animation: cyber-worry-hover 1.25s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro[data-mood="worried"] .cyber-reactor-flame {
+  animation-duration: 0.24s;
+}
+
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-eye-pixels,
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-star-eyes {
+  opacity: 0;
+}
+
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-sleep-eyes,
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-mouth-sleepy {
+  opacity: 1;
+}
+
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-rig {
+  animation: cyber-sleep-hover 5.5s ease-in-out infinite;
+}
+
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-propeller {
+  animation-duration: 1.45s;
+}
+
+.mascot-cyberpunk-pro[data-mood="sleepy"] .cyber-reactor-flame {
+  opacity: 0.58;
+  animation-duration: 1.2s;
+}
+
+.mascot-cyberpunk-pro .cyber-particle {
+  opacity: 0;
+  transform-origin: center;
+}
+
+.mascot-cyberpunk-pro .cyber-status-ring {
+  opacity: 0.45;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cyber-ring 3.2s ease-out infinite;
+}
+
+.mascot-cyberpunk-pro[data-reaction="habit-done"] .cyber-particle,
+.mascot-cyberpunk-pro[data-reaction="perfect-day"] .cyber-particle,
+.mascot-cyberpunk-pro[data-reaction="streak-record"] .cyber-particle {
+  opacity: 1;
+}
+
+.mascot-cyberpunk-pro[data-reaction="perfect-day"] .cyber-core-glow,
+.mascot-cyberpunk-pro[data-reaction="streak-record"] .cyber-core-glow {
+  filter: url(#cyber-strong-glow);
+}
+
+@keyframes cyber-hover {
+  0%, 100% { transform: translateY(0) rotate(-0.7deg); }
+  50% { transform: translateY(-5px) rotate(0.7deg); }
+}
+
+@keyframes cyber-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.012, 1.022); }
+}
+
+@keyframes cyber-rotor-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cyber-rotor-rock {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1.8px); }
+}
+
+@keyframes cyber-reactor-pulse {
+  from { transform: scaleY(0.82) scaleX(0.92); opacity: 0.7; }
+  to { transform: scaleY(1.12) scaleX(1.05); opacity: 1; }
+}
+
+@keyframes cyber-neon-pulse {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+@keyframes cyber-scan {
+  0%, 15% { transform: translateY(-19px); opacity: 0; }
+  25% { opacity: 0.85; }
+  70% { opacity: 0.5; }
+  85%, 100% { transform: translateY(22px); opacity: 0; }
+}
+
+@keyframes cyber-blink {
+  0%, 46%, 48%, 100% { transform: scaleY(1); }
+  47% { transform: scaleY(0.08); }
+}
+
+@keyframes cyber-ring {
+  0% { transform: scale(0.82); opacity: 0.42; }
+  72%, 100% { transform: scale(1.18); opacity: 0; }
+}
+
+@keyframes cyber-worry-hover {
+  0%, 100% { transform: translate(0, 1px) rotate(-1deg); }
+  25% { transform: translate(-1.5px, -1px) rotate(0.5deg); }
+  75% { transform: translate(1.5px, 0) rotate(1deg); }
+}
+
+@keyframes cyber-sleep-hover {
+  0%, 100% { transform: translateY(2px) rotate(-2deg); }
+  50% { transform: translateY(5px) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-cyberpunk-pro *,
+  .mascot-cyberpunk-pro *::before,
+  .mascot-cyberpunk-pro *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
