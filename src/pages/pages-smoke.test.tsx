@@ -68,13 +68,13 @@ describe("montage des pages", () => {
     },
   );
 
-  it("rend les douze mascottes dans leur couche globale et masque la couche désactivée", () => {
+  it("rend les douze mascottes lazy dans leur couche globale et masque la couche désactivée", () => {
     for (const candidateTheme of themeIds) {
       const html = renderToStaticMarkup(
         <RoamingMascot themeId={candidateTheme} mood="idle" />,
       );
       expect(html).toContain("roaming-mascot-layer");
-      expect(html).toContain("Compagnon animé du Dashboard");
+      expect(html).toContain('class="app-mascot"');
       expect(html).toContain('data-theme="' + candidateTheme + '"');
     }
 
