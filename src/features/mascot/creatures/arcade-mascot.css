@@ -1,0 +1,119 @@
+.mascot-arcade-pro {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.mascot-arcade-pro .arcade-rig,
+.mascot-arcade-pro .arcade-body,
+.mascot-arcade-pro .arcade-face,
+.mascot-arcade-pro .arcade-eye,
+.mascot-arcade-pro .arcade-particle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mascot-arcade-pro .arcade-rig {
+  animation: arcade-hover 2.8s steps(8, end) infinite;
+}
+
+.mascot-arcade-pro .arcade-body {
+  animation: arcade-breathe 1.9s steps(4, end) infinite;
+}
+
+.mascot-arcade-pro .arcade-eye {
+  animation: arcade-look 4.8s steps(1, end) infinite;
+}
+
+.mascot-arcade-pro .arcade-scan {
+  animation: arcade-scan 2.2s linear infinite;
+}
+
+.mascot-arcade-pro .arcade-glow {
+  animation: arcade-glow 1.4s steps(4, end) infinite;
+}
+
+.mascot-arcade-pro .arcade-pixel-spark {
+  animation: arcade-spark 1.6s steps(3, end) infinite;
+}
+
+.mascot-arcade-pro .arcade-face-happy,
+.mascot-arcade-pro .arcade-face-worried,
+.mascot-arcade-pro .arcade-face-sleepy,
+.mascot-arcade-pro .arcade-face-celebrate {
+  opacity: 0;
+}
+
+.mascot-arcade-pro[data-mood="happy"] .arcade-face-neutral,
+.mascot-arcade-pro[data-mood="celebrate"] .arcade-face-neutral,
+.mascot-arcade-pro[data-mood="worried"] .arcade-face-neutral,
+.mascot-arcade-pro[data-mood="sleepy"] .arcade-face-neutral {
+  opacity: 0;
+}
+
+.mascot-arcade-pro[data-mood="happy"] .arcade-face-happy,
+.mascot-arcade-pro[data-mood="celebrate"] .arcade-face-celebrate,
+.mascot-arcade-pro[data-mood="worried"] .arcade-face-worried,
+.mascot-arcade-pro[data-mood="sleepy"] .arcade-face-sleepy {
+  opacity: 1;
+}
+
+.mascot-arcade-pro[data-mood="happy"] .arcade-rig {
+  animation-duration: 2.1s;
+}
+
+.mascot-arcade-pro[data-mood="worried"] .arcade-body {
+  animation: arcade-worry 0.45s steps(2, end) infinite;
+}
+
+.mascot-arcade-pro[data-mood="sleepy"] .arcade-rig {
+  animation-duration: 4.4s;
+}
+
+.arcade-burst-particle {
+  opacity: 0;
+}
+
+@keyframes arcade-hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes arcade-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025, 0.985); }
+}
+
+@keyframes arcade-look {
+  0%, 42%, 100% { transform: translateX(0); }
+  44%, 62% { transform: translateX(5px); }
+  64%, 82% { transform: translateX(-5px); }
+}
+
+@keyframes arcade-scan {
+  from { transform: translateY(-48px); opacity: 0; }
+  15%, 80% { opacity: 0.28; }
+  to { transform: translateY(55px); opacity: 0; }
+}
+
+@keyframes arcade-glow {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.75; }
+}
+
+@keyframes arcade-spark {
+  0%, 65%, 100% { opacity: 0.15; transform: scale(0.8); }
+  72%, 88% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes arcade-worry {
+  0%, 100% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-arcade-pro *,
+  .mascot-arcade-pro *::before,
+  .mascot-arcade-pro *::after {
+    animation: none !important;
+  }
+}
