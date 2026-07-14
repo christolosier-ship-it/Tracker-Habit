@@ -136,9 +136,11 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
     const handleResize = () => applyPosition(keepInViewport(positionRef.current, sizeRef.current));
     const handleVisibility = () => {
       clearTimers();
+      handle.dataset.suspended = document.hidden ? "true" : "false";
       if (!document.hidden && !draggingRef.current) scheduleRoam();
     };
 
+    handle.dataset.suspended = document.hidden ? "true" : "false";
     window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
@@ -156,6 +158,7 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
     draggingRef.current = true;
     const handle = event.currentTarget;
     handle.dataset.dragging = "true";
+    handle.dataset.suspended = "true";
     handle.dataset.moving = "true";
     handle.style.transitionDuration = "0ms";
     dragOffsetRef.current = {
@@ -186,6 +189,7 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
     if (dragFrameRef.current !== null) window.cancelAnimationFrame(dragFrameRef.current);
     dragFrameRef.current = null;
     event.currentTarget.dataset.dragging = "false";
+    event.currentTarget.dataset.suspended = "false";
     applyPosition(keepInViewport(positionRef.current, sizeRef.current), 220);
     resumeTimerRef.current = window.setTimeout(scheduleRoam, RESUME_DELAY_MS);
   };
@@ -199,6 +203,7 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
         className="roaming-mascot-handle"
         data-dragging="false"
         data-moving="false"
+        data-suspended="false"
         onPointerDown={startDrag}
         onPointerMove={moveDrag}
         onPointerUp={finishDrag}
