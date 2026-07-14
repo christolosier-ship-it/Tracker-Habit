@@ -1,0 +1,176 @@
+.mascot-memphis-pro {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.mascot-memphis-pro .memphis-rig,
+.mascot-memphis-pro .memphis-body,
+.mascot-memphis-pro .memphis-head,
+.mascot-memphis-pro .memphis-arm,
+.mascot-memphis-pro .memphis-leg,
+.mascot-memphis-pro .memphis-glove,
+.mascot-memphis-pro .memphis-face,
+.mascot-memphis-pro .memphis-particle {
+  transform-box: fill-box;
+}
+
+.mascot-memphis-pro .memphis-rig {
+  transform-origin: center;
+  animation: memphis-hover 4.2s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-body {
+  transform-origin: center;
+  animation: memphis-body-breathe 3.3s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-head {
+  transform-origin: 50% 82%;
+  animation: memphis-head-nod 4.8s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-arm-left {
+  transform-origin: 88% 16%;
+  animation: memphis-arm-left-sway 3.9s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-arm-right {
+  transform-origin: 12% 82%;
+  animation: memphis-wave 3.1s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-glove {
+  transform-origin: 50% 82%;
+  animation: memphis-glove-flex 3.1s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-leg-left,
+.mascot-memphis-pro .memphis-leg-right {
+  transform-origin: 50% 8%;
+}
+
+.mascot-memphis-pro .memphis-leg-left {
+  animation: memphis-step-left 4.2s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-leg-right {
+  animation: memphis-step-right 4.2s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-face,
+.mascot-memphis-pro .memphis-face-happy,
+.mascot-memphis-pro .memphis-face-worried,
+.mascot-memphis-pro .memphis-face-sleepy,
+.mascot-memphis-pro .memphis-star-eyes {
+  opacity: 0;
+}
+
+.mascot-memphis-pro[data-mood="idle"] .memphis-face-neutral,
+.mascot-memphis-pro[data-mood="happy"] .memphis-face-happy,
+.mascot-memphis-pro[data-mood="worried"] .memphis-face-worried,
+.mascot-memphis-pro[data-mood="sleepy"] .memphis-face-sleepy,
+.mascot-memphis-pro[data-mood="celebrate"] .memphis-star-eyes {
+  opacity: 1;
+}
+
+.mascot-memphis-pro[data-mood="happy"] .memphis-head {
+  animation-duration: 2.8s;
+}
+
+.mascot-memphis-pro[data-mood="worried"] .memphis-rig {
+  animation: memphis-worry 0.34s ease-in-out infinite alternate;
+}
+
+.mascot-memphis-pro[data-mood="sleepy"] .memphis-rig {
+  animation-duration: 6.4s;
+}
+
+.mascot-memphis-pro[data-mood="sleepy"] .memphis-arm-right {
+  animation: none;
+  transform: rotate(-8deg);
+}
+
+.mascot-memphis-pro[data-mood="celebrate"] .memphis-body {
+  animation-duration: 1.25s;
+}
+
+.mascot-memphis-pro .memphis-dot {
+  animation: memphis-dot-pulse 2.4s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-accent-line {
+  animation: memphis-accent-flash 2.9s ease-in-out infinite;
+}
+
+.mascot-memphis-pro .memphis-burst-particle {
+  opacity: 0;
+}
+
+@keyframes memphis-hover {
+  0%, 100% { transform: translateY(0) rotate(-0.8deg); }
+  50% { transform: translateY(-5px) rotate(0.8deg); }
+}
+
+@keyframes memphis-body-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.018, 0.988); }
+}
+
+@keyframes memphis-head-nod {
+  0%, 100% { transform: rotate(-1deg); }
+  45% { transform: rotate(2.2deg); }
+  55% { transform: rotate(0deg); }
+}
+
+@keyframes memphis-arm-left-sway {
+  0%, 100% { transform: rotate(2deg); }
+  50% { transform: rotate(-7deg); }
+}
+
+@keyframes memphis-wave {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  64% { transform: rotate(-12deg); }
+  73% { transform: rotate(9deg); }
+  82% { transform: rotate(-8deg); }
+  91% { transform: rotate(5deg); }
+}
+
+@keyframes memphis-glove-flex {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  72% { transform: rotate(8deg); }
+  86% { transform: rotate(-6deg); }
+}
+
+@keyframes memphis-step-left {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-1.5px) rotate(1.2deg); }
+}
+
+@keyframes memphis-step-right {
+  0%, 100% { transform: translateY(-1.5px) rotate(-1deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes memphis-worry {
+  from { transform: translateX(-1.5px) rotate(-1deg); }
+  to { transform: translateX(1.5px) rotate(1deg); }
+}
+
+@keyframes memphis-dot-pulse {
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 0.48; }
+}
+
+@keyframes memphis-accent-flash {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.92; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-memphis-pro *,
+  .mascot-memphis-pro *::before,
+  .mascot-memphis-pro *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
