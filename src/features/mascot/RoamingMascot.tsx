@@ -64,15 +64,27 @@ function randomDestination(size: Size): Point {
   if (favourEdges) {
     const edge = Math.floor(Math.random() * 4);
     if (edge === 0) {
-      return { x: bounds.minX, y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY) };
+      return {
+        x: bounds.minX,
+        y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
+      };
     }
     if (edge === 1) {
-      return { x: bounds.maxX, y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY) };
+      return {
+        x: bounds.maxX,
+        y: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
+      };
     }
     if (edge === 2) {
-      return { x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX), y: bounds.minY };
+      return {
+        x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
+        y: bounds.minY,
+      };
     }
-    return { x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX), y: bounds.maxY };
+    return {
+      x: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
+      y: bounds.maxY,
+    };
   }
 
   return {
@@ -91,6 +103,7 @@ export function RoamingMascot({
   const sizeRef = useRef<Size>({ width: 72, height: 72 });
   const positionRef = useRef<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
   const dragOffsetRef = useRef<Point>({ x: 0, y: 0 });
+  const draggingRef = useRef(false);
   const roamTimerRef = useRef<number | null>(null);
   const resumeTimerRef = useRef<number | null>(null);
   const [position, setPosition] = useState<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
@@ -110,7 +123,7 @@ export function RoamingMascot({
   }, []);
 
   const scheduleRoam = useCallback(() => {
-    if (prefersReducedMotion() || document.hidden) return;
+    if (draggingRef.current || prefersReducedMotion() || document.hidden) return;
 
     const duration = Math.round(
       MIN_TRAVEL_MS + Math.random() * (MAX_TRAVEL_MS - MIN_TRAVEL_MS),
@@ -150,7 +163,7 @@ export function RoamingMascot({
 
     const handleVisibility = () => {
       clearTimers();
-      if (!document.hidden && !dragging) scheduleRoam();
+      if (!document.hidden && !draggingRef.current) scheduleRoam();
     };
 
     window.addEventListener("resize", handleResize);
@@ -162,12 +175,13 @@ export function RoamingMascot({
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [clearTimers, dragging, scheduleRoam, updatePosition]);
+  }, [clearTimers, scheduleRoam, updatePosition]);
 
   const startDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
 
     clearTimers();
+    draggingRef.current = true;
     setTravelDuration(0);
     setDragging(true);
     dragOffsetRef.current = {
@@ -178,7 +192,7 @@ export function RoamingMascot({
   };
 
   const moveDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!dragging) return;
+    if (!draggingRef.current) return;
     updatePosition(
       keepInViewport(
         {
@@ -191,11 +205,12 @@ export function RoamingMascot({
   };
 
   const finishDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!dragging) return;
+    if (!draggingRef.current) return;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
 
+    draggingRef.current = false;
     setDragging(false);
     setTravelDuration(220);
     updatePosition(keepInViewport(positionRef.current, sizeRef.current));
