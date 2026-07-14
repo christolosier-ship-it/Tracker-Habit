@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import type { RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
+type TimelineLike = {
+  to: (target: unknown, vars: Record<string, unknown>, position?: string | number) => TimelineLike;
+  fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => TimelineLike;
+  kill: () => void;
+};
+
 type GsapLike = {
-  timeline: (options?: Record<string, unknown>) => {
-    to: (target: unknown, vars: Record<string, unknown>, position?: string | number) => unknown;
-    fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => unknown;
-    kill: () => void;
-  };
+  timeline: (options?: Record<string, unknown>) => TimelineLike;
   set: (target: unknown, vars: Record<string, unknown>) => void;
   killTweensOf: (target: unknown) => void;
 };
