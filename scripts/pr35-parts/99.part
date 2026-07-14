@@ -1,0 +1,5 @@
+
+# Nettoyage final du transport temporaire de la refonte.
+from shutil import rmtree
+rmtree(ROOT / "scripts/pr35-parts", ignore_errors=True)
+(ROOT / "scripts/apply-pr35-refactor.py").unlink(missing_ok=True)
