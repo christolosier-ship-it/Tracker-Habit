@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from "react";
-import { MascotReaction } from "../mascot.types";
+import type { MascotReaction } from "../mascot.types";
 
 type GsapVars = Record<string, unknown>;
 
@@ -59,7 +59,18 @@ function playReaction(
 
   gsap.killTweensOf(animatedParts);
   gsap.set(animatedParts, { clearProps: "transform" });
-  gsap.set(particles, { opacity: 0, scale: 0.45 });
+  gsap.set(body, { transformOrigin: "50% 50%" });
+  gsap.set([leftArm, rightArm], { transformOrigin: "50% 14%" });
+  gsap.set([leftRotor, rightRotor], { transformOrigin: "50% 70%" });
+  gsap.set(propellers, { transformOrigin: "50% 50%" });
+  gsap.set(reactor, { transformOrigin: "50% 0%" });
+  gsap.set(face, { transformOrigin: "50% 50%" });
+  gsap.set(ring, { transformOrigin: "50% 50%" });
+  gsap.set(particles, {
+    opacity: 0,
+    scale: 0.45,
+    transformOrigin: "50% 50%",
+  });
 
   const timeline = gsap.timeline({ defaults: { overwrite: "auto" } });
 
