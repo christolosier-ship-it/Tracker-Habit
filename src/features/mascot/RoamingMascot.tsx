@@ -104,6 +104,7 @@ export function RoamingMascot({
   const positionRef = useRef<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
   const dragOffsetRef = useRef<Point>({ x: 0, y: 0 });
   const draggingRef = useRef(false);
+  const scheduleRoamRef = useRef<() => void>(() => undefined);
   const roamTimerRef = useRef<number | null>(null);
   const resumeTimerRef = useRef<number | null>(null);
   const [position, setPosition] = useState<Point>({ x: EDGE_MARGIN, y: EDGE_MARGIN });
@@ -132,9 +133,11 @@ export function RoamingMascot({
     updatePosition(randomDestination(sizeRef.current));
 
     roamTimerRef.current = window.setTimeout(() => {
-      scheduleRoam();
+      scheduleRoamRef.current();
     }, duration + 500 + Math.random() * 1200);
   }, [updatePosition]);
+
+  scheduleRoamRef.current = scheduleRoam;
 
   useLayoutEffect(() => {
     const handle = handleRef.current;
