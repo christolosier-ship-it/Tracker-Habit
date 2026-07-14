@@ -1,30 +1,6 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-
-type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
 const transformTargets = [
   ".dopamine-body-motion",
@@ -37,15 +13,7 @@ const transformTargets = [
   ".dopamine-sprinkle-burst",
 ].join(",");
 
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
+function resetAnimatedParts(root: SVGSVGElement) {
   gsap.set(root.querySelectorAll<SVGElement>(transformTargets), {
     clearProps: "transform,opacity",
   });
@@ -55,11 +23,7 @@ function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
   });
 }
 
-function playReaction(
-  gsap: GsapApi,
-  root: SVGSVGElement,
-  reaction: MascotReaction,
-) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".dopamine-body-motion");
   const leftArm = root.querySelector<SVGElement>(".dopamine-arm-left-motion");
   const rightArm = root.querySelector<SVGElement>(".dopamine-arm-right-motion");
@@ -74,7 +38,7 @@ function playReaction(
   const animated = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animated);
-  resetAnimatedParts(gsap, root);
+  resetAnimatedParts(root);
   gsap.set(body, { transformOrigin: "50% 72%" });
   gsap.set(leftArm, { transformOrigin: "86% 18%" });
   gsap.set(rightArm, { transformOrigin: "14% 18%" });
@@ -86,7 +50,7 @@ function playReaction(
 
   const timeline = gsap.timeline({
     defaults: { overwrite: "auto" },
-    onComplete: () => resetAnimatedParts(gsap, root),
+    onComplete: () => resetAnimatedParts(root),
   });
 
   if (reaction === "habit-done") {
@@ -202,39 +166,5 @@ function playReaction(
     .to(particles, { opacity: 0, scale: 0.4, duration: 0.18 }, "-=0.22");
 }
 
-export function useDopamineReaction(
-  svgRef: RefObject<SVGSVGElement>,
-  reaction: MascotReaction | null,
-) {
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frameId = 0;
-    let attempts = 0;
-    let timeline: GsapTimeline | undefined;
-
-    const start = () => {
-      if (cancelled) return;
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) resetAnimatedParts(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+export const dopamineReactions = { play: playReaction, reset: resetAnimatedParts } satisfies GsapReactionDefinition;

@@ -1,25 +1,14 @@
-import { useEffect } from "react";
-import type { RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
-type TimelineLike = {
-  to: (target: unknown, vars: Record<string, unknown>, position?: string | number) => TimelineLike;
-  fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => TimelineLike;
-  kill: () => void;
-};
-type GsapLike = {
-  timeline: (options?: Record<string, unknown>) => TimelineLike;
-  set: (target: unknown, vars: Record<string, unknown>) => void;
-  killTweensOf: (target: unknown) => void;
-};
-declare global { interface Window { gsap?: GsapLike; } }
+function reset(svg: SVGSVGElement) {
+  gsap.set(svg.querySelectorAll<SVGElement>("[data-gsap]"), { clearProps: "transform,opacity,visibility" });
+  gsap.set(svg.querySelectorAll<SVGElement>(".comic-burst-particle"), {
+    clearProps: "transform,opacity,visibility", opacity: 0,
+  });
+}
 
-export function useComicReaction(svgRef: RefObject<SVGSVGElement | null>, reaction: MascotReaction | null) {
-  useEffect(() => {
-    const svg = svgRef.current;
-    const gsap = window.gsap;
-    if (!svg || !gsap || !reaction || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+function playReaction(svg: SVGSVGElement, reaction: MascotReaction) {
     const body = svg.querySelector(".comic-body-motion");
     const head = svg.querySelector(".comic-head-motion");
     const cape = svg.querySelector(".comic-cape-motion");
@@ -30,10 +19,11 @@ export function useComicReaction(svgRef: RefObject<SVGSVGElement | null>, reacti
     const star = svg.querySelector(".comic-star-motion");
     const burst = svg.querySelectorAll(".comic-burst-particle");
     const targets = [body, head, cape, leftArm, rightArm, leftLeg, rightLeg, star, ...burst].filter(Boolean);
-    const reset = () => gsap.set(targets, { clearProps: "transform,opacity,visibility" });
 
-    reset();
-    const timeline = gsap.timeline({ onComplete: reset });
+    gsap.killTweensOf(targets);
+
+    reset(svg);
+    const timeline = gsap.timeline({ onComplete: () => reset(svg) });
     if (reaction === "habit-done") {
       timeline
         .to(body, { y: -12, scaleX: 1.05, scaleY: .95, duration: .16, ease: "power2.out" })
@@ -67,10 +57,8 @@ export function useComicReaction(svgRef: RefObject<SVGSVGElement | null>, reacti
         .to(burst, { opacity: 0, y: -10, duration: .3 }, .4);
     }
 
-    return () => {
-      timeline.kill();
-      gsap.killTweensOf(targets);
-      reset();
-    };
-  }, [reaction, svgRef]);
+    return timeline;
+
 }
+
+export const comicReactions = { play: playReaction, reset } satisfies GsapReactionDefinition;

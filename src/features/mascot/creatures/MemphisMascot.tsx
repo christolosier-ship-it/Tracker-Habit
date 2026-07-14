@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useMemphisReaction } from "./useMemphisReaction";
+import { memphisReactions } from "./memphis-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./memphis-mascot.css";
 
 const polkaDots = [
@@ -21,9 +22,11 @@ const burstShapes = [
   [43, 177, "circle", "#1565d8"],
 ] as const;
 
-export function MemphisMascot({ mood, reaction }: MascotCreatureProps) {
+export function MemphisMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useMemphisReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, memphisReactions.play, memphisReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

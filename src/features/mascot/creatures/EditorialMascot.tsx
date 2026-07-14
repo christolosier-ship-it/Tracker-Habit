@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useEditorialReaction } from "./useEditorialReaction";
+import { editorialReactions } from "./editorial-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./editorial-mascot.css";
 
 const facets = [
@@ -15,9 +16,11 @@ const burst = [
   [170, 164], [132, 190], [86, 195], [48, 170], [28, 126], [27, 82],
 ] as const;
 
-export function EditorialMascot({ mood, reaction }: MascotCreatureProps) {
+export function EditorialMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useEditorialReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, editorialReactions.play, editorialReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

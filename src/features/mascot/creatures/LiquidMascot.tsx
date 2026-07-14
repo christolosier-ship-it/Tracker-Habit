@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useLiquidReaction } from "./useLiquidReaction";
+import { liquidReactions } from "./liquid-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./liquid-mascot.css";
 
 const particles = [
@@ -10,9 +11,11 @@ const particles = [
   [30, 146, 4, "#55dcff"], [22, 98, 5, "#ff83dc"],
 ] as const;
 
-export function LiquidMascot({ mood, reaction }: MascotCreatureProps) {
+export function LiquidMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useLiquidReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, liquidReactions.play, liquidReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

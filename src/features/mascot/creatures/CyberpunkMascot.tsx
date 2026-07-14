@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useCyberpunkReaction } from "./useCyberpunkReaction";
+import { cyberpunkReactions } from "./cyberpunk-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./cyberpunk-mascot.css";
 
 const eyePixels = [
@@ -12,9 +13,11 @@ const eyePixels = [
   [119, 108], [125, 108], [131, 108],
 ] as const;
 
-export function CyberpunkMascot({ mood, reaction }: MascotCreatureProps) {
+export function CyberpunkMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useCyberpunkReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, cyberpunkReactions.play, cyberpunkReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useCosmicReaction } from "./useCosmicReaction";
+import { cosmicReactions } from "./cosmic-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./cosmic-mascot.css";
 
 const stars = [
@@ -14,9 +15,11 @@ const particles = [
   [174, 126], [148, 161], [108, 177], [67, 164], [39, 134], [28, 92],
 ] as const;
 
-export function CosmicMascot({ mood, reaction }: MascotCreatureProps) {
+export function CosmicMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useCosmicReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, cosmicReactions.play, cosmicReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

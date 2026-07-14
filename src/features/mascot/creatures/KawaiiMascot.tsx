@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useKawaiiReaction } from "./useKawaiiReaction";
+import { kawaiiReactions } from "./kawaii-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./kawaii-mascot.css";
 
 const burst = [
@@ -22,9 +23,11 @@ function Flower({ x, y, color }: { x: number; y: number; color: string }) {
   );
 }
 
-export function KawaiiMascot({ mood, reaction }: MascotCreatureProps) {
+export function KawaiiMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useKawaiiReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, kawaiiReactions.play, kawaiiReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

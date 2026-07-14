@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useBrutalistReaction } from "./useBrutalistReaction";
+import { brutalistReactions } from "./brutalist-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./brutalist-mascot.css";
 
 const pores = [
@@ -14,9 +15,11 @@ const dust = [
   [190, 118], [170, 171], [126, 190], [76, 187], [35, 148],
 ] as const;
 
-export function BrutalistMascot({ mood, reaction }: MascotCreatureProps) {
+export function BrutalistMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useBrutalistReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, brutalistReactions.play, brutalistReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

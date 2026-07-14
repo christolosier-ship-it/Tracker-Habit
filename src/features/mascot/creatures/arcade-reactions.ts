@@ -1,36 +1,15 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (target: unknown, fromVars: GsapVars, toVars: GsapVars, position?: string | number) => GsapTimeline;
-  kill: () => void;
-};
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
-
-function prefersReducedMotion() {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function reset(gsap: GsapApi, root: SVGSVGElement) {
+function reset(root: SVGSVGElement) {
   const targets = root.querySelectorAll<SVGElement>("[data-gsap]");
   const particles = root.querySelectorAll<SVGElement>(".arcade-burst-particle");
   gsap.set(targets, { clearProps: "transform,opacity" });
   gsap.set(particles, { opacity: 0, clearProps: "transform" });
 }
 
-function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReaction) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".arcade-body-motion");
   const face = root.querySelector<SVGElement>(".arcade-face-motion");
   const eyes = root.querySelectorAll<SVGElement>(".arcade-eye");
@@ -39,12 +18,12 @@ function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReacti
   const targets = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(targets);
-  reset(gsap, root);
+  reset(root);
   gsap.set([body, face, glow, particles], { transformOrigin: "50% 50%" });
 
   const timeline = gsap.timeline({
     defaults: { overwrite: "auto" },
-    onComplete: () => reset(gsap, root),
+    onComplete: () => reset(root),
   });
 
   if (reaction === "habit-done") {
@@ -76,35 +55,5 @@ function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReacti
     .to(particles, { opacity: 0, duration: 0.14 }, "-=0.12");
 }
 
-export function useArcadeReaction(svgRef: RefObject<SVGSVGElement>, reaction: MascotReaction | null) {
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-
-    const start = () => {
-      if (cancelled) return;
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) reset(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+export const arcadeReactions = { play: playReaction, reset: reset } satisfies GsapReactionDefinition;

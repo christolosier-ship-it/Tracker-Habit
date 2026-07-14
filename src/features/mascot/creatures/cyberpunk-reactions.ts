@@ -1,34 +1,6 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-
-type GsapTimeline = {
-  to: (
-    target: unknown,
-    vars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
 const transformTargetSelector = [
   ".cyber-body-motion",
@@ -42,15 +14,7 @@ const transformTargetSelector = [
   ".cyber-status-ring",
 ].join(",");
 
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
+function resetAnimatedParts(root: SVGSVGElement) {
   const transformTargets = root.querySelectorAll<SVGElement>(
     transformTargetSelector,
   );
@@ -62,11 +26,7 @@ function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
   gsap.set(particles, { opacity: 0, clearProps: "transform" });
 }
 
-function playReaction(
-  gsap: GsapApi,
-  root: SVGSVGElement,
-  reaction: MascotReaction,
-) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".cyber-body-motion");
   const leftArm = root.querySelector<SVGElement>(".cyber-arm-motion-left");
   const rightArm = root.querySelector<SVGElement>(".cyber-arm-motion-right");
@@ -82,7 +42,7 @@ function playReaction(
   const animatedParts = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animatedParts);
-  resetAnimatedParts(gsap, root);
+  resetAnimatedParts(root);
   gsap.set(body, { transformOrigin: "50% 50%" });
   gsap.set([leftArm, rightArm], { transformOrigin: "50% 14%" });
   gsap.set([leftRotor, rightRotor], { transformOrigin: "50% 70%" });
@@ -98,7 +58,7 @@ function playReaction(
 
   const timeline = gsap.timeline({
     defaults: { overwrite: "auto" },
-    onComplete: () => resetAnimatedParts(gsap, root),
+    onComplete: () => resetAnimatedParts(root),
   });
 
   if (reaction === "habit-done") {
@@ -228,42 +188,5 @@ function playReaction(
     .to(particles, { opacity: 0, scale: 0.45, duration: 0.2 }, "-=0.24");
 }
 
-export function useCyberpunkReaction(
-  svgRef: RefObject<SVGSVGElement>,
-  reaction: MascotReaction | null,
-) {
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-
-    const start = () => {
-      if (cancelled) return;
-
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) resetAnimatedParts(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+export const cyberpunkReactions = { play: playReaction, reset: resetAnimatedParts } satisfies GsapReactionDefinition;

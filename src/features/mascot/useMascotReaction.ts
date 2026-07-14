@@ -1,11 +1,7 @@
-import { useEffect } from "react";
-import { MascotReaction, MascotReactionEvent } from "./mascot.types";
+import { useCallback, useEffect, useRef } from "react";
+import type { MascotReactionEvent } from "./mascot.types";
 
-const reactionDurations: Record<MascotReaction, number> = {
-  "habit-done": 720,
-  "perfect-day": 1400,
-  "streak-record": 1400,
-};
+const WATCHDOG_MS = 3500;
 
 function prefersReducedMotion() {
   return (
@@ -19,17 +15,25 @@ export function useMascotReaction(
   reaction: MascotReactionEvent | null | undefined,
   onReactionComplete?: (reactionId: number) => void,
 ) {
+  const completedIdRef = useRef<number | null>(null);
+
   useEffect(() => {
+    completedIdRef.current = null;
     if (!reaction) return undefined;
-
-    const reactionId = reaction.id;
-    const duration = prefersReducedMotion() ? 80 : reactionDurations[reaction.type];
+    const delay = prefersReducedMotion() ? 80 : WATCHDOG_MS;
     const timer = window.setTimeout(() => {
-      onReactionComplete?.(reactionId);
-    }, duration);
-
+      if (completedIdRef.current === reaction.id) return;
+      completedIdRef.current = reaction.id;
+      onReactionComplete?.(reaction.id);
+    }, delay);
     return () => window.clearTimeout(timer);
   }, [reaction, onReactionComplete]);
 
-  return reaction?.type ?? null;
+  const complete = useCallback(() => {
+    if (!reaction || completedIdRef.current === reaction.id) return;
+    completedIdRef.current = reaction.id;
+    onReactionComplete?.(reaction.id);
+  }, [reaction, onReactionComplete]);
+
+  return { activeReaction: reaction?.type ?? null, complete };
 }

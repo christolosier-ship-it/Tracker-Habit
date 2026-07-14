@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useTropicalReaction } from "./useTropicalReaction";
+import { tropicalReactions } from "./tropical-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./tropical-mascot.css";
 
 const flowers = [
@@ -11,9 +12,11 @@ const flowers = [
   [151, 98, "#ff4a22"],
 ] as const;
 
-export function TropicalMascot({ mood, reaction }: MascotCreatureProps) {
+export function TropicalMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useTropicalReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, tropicalReactions.play, tropicalReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

@@ -1,28 +1,6 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
 const transformTargets = [
   ".tropical-body-motion",
@@ -35,11 +13,7 @@ const transformTargets = [
   ".tropical-garland-motion",
 ].join(",");
 
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function reset(gsap: GsapApi, root: SVGSVGElement) {
+function reset(root: SVGSVGElement) {
   gsap.set(root.querySelectorAll<SVGElement>(transformTargets), {
     clearProps: "transform,opacity",
   });
@@ -49,7 +23,7 @@ function reset(gsap: GsapApi, root: SVGSVGElement) {
   });
 }
 
-function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReaction) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".tropical-body-motion");
   const head = root.querySelector<SVGElement>(".tropical-head-motion");
   const beak = root.querySelector<SVGElement>(".tropical-beak-motion");
@@ -64,7 +38,7 @@ function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReacti
   const animated = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animated);
-  reset(gsap, root);
+  reset(root);
   gsap.set(body, { transformOrigin: "50% 58%" });
   gsap.set(head, { transformOrigin: "47% 58%" });
   gsap.set(beak, { transformOrigin: "8% 58%" });
@@ -75,7 +49,7 @@ function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReacti
 
   const timeline = gsap.timeline({
     defaults: { overwrite: "auto" },
-    onComplete: () => reset(gsap, root),
+    onComplete: () => reset(root),
   });
 
   if (reaction === "habit-done") {
@@ -151,38 +125,5 @@ function playReaction(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReacti
     .to(particles, { opacity: 0, duration: 0.18 }, "-=0.24");
 }
 
-export function useTropicalReaction(
-  svgRef: RefObject<SVGSVGElement>,
-  reaction: MascotReaction | null,
-) {
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frame = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-
-    const start = () => {
-      if (cancelled) return;
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frame = window.requestAnimationFrame(start);
-        return;
-      }
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-    return () => {
-      cancelled = true;
-      if (frame) window.cancelAnimationFrame(frame);
-      timeline?.kill();
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) reset(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+export const tropicalReactions = { play: playReaction, reset: reset } satisfies GsapReactionDefinition;

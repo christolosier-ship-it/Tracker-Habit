@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useDopamineReaction } from "./useDopamineReaction";
+import { dopamineReactions } from "./dopamine-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./dopamine-mascot.css";
 
 const sprinkles = [
@@ -18,9 +19,11 @@ const sprinkles = [
   [53, 88, 7, 42, "#ff4f91"],
 ] as const;
 
-export function DopamineMascot({ mood, reaction }: MascotCreatureProps) {
+export function DopamineMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useDopamineReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, dopamineReactions.play, dopamineReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

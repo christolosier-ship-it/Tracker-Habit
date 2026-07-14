@@ -74,6 +74,29 @@ for (const dependency of ["@tremor/react", "framer-motion"]) {
   }
 }
 
+
+const mascotDirectory = join(root, "src/features/mascot");
+const mascotFiles = [];
+function collectMascotFiles(directory) {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) collectMascotFiles(path);
+    else mascotFiles.push(path);
+  }
+}
+collectMascotFiles(mascotDirectory);
+
+for (const file of mascotFiles) {
+  const content = readFileSync(file, "utf8");
+  const relative = file.slice(root.length + 1);
+  if (content.includes("window.gsap")) failures.push(`GSAP global interdit : ${relative}`);
+  if (/creatures\/use[A-Z][A-Za-z]+Reaction\.ts$/.test(relative)) failures.push(`Hook de réaction individuel interdit : ${relative}`);
+}
+
+const indexHtml = readFileSync(join(root, "index.html"), "utf8");
+if (indexHtml.includes("cdn.jsdelivr.net/npm/gsap")) failures.push("Le CDN GSAP ne doit plus être utilisé.");
+if (!packageJson.dependencies?.gsap) failures.push("GSAP doit être déclaré comme dépendance npm.");
+
 const main = readFileSync(join(root, "src/main.tsx"), "utf8");
 if (!main.includes('import "./styles/index.css";')) {
   failures.push("main.tsx doit charger uniquement src/styles/index.css");

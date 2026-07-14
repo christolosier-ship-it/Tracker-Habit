@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useAuroraReaction } from "./useAuroraReaction";
+import { auroraReactions } from "./aurora-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./aurora-mascot.css";
 
 const stars = [
@@ -10,9 +11,11 @@ const stars = [
   [124, 169, 1.4], [62, 131, 1.4], [158, 132, 1.3],
 ] as const;
 
-export function AuroraMascot({ mood, reaction }: MascotCreatureProps) {
+export function AuroraMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useAuroraReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, auroraReactions.play, auroraReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

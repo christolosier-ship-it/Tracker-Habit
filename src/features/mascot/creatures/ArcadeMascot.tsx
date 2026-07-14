@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useArcadeReaction } from "./useArcadeReaction";
+import { arcadeReactions } from "./arcade-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./arcade-mascot.css";
 
 const bodyPixels = [
@@ -15,9 +16,11 @@ const burstPixels = [
   [43, 157, "#3ef4ff"], [26, 107, "#2154ff"],
 ] as const;
 
-export function ArcadeMascot({ mood, reaction }: MascotCreatureProps) {
+export function ArcadeMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useArcadeReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, arcadeReactions.play, arcadeReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

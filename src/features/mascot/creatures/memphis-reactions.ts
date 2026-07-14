@@ -1,30 +1,6 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-
-type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
 const transformTargetSelector = [
   ".memphis-body-motion",
@@ -37,14 +13,7 @@ const transformTargetSelector = [
   ".memphis-face-motion",
 ].join(",");
 
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
+function resetAnimatedParts(root: SVGSVGElement) {
   const transformTargets = root.querySelectorAll<SVGElement>(
     transformTargetSelector,
   );
@@ -56,11 +25,7 @@ function resetAnimatedParts(gsap: GsapApi, root: SVGSVGElement) {
   gsap.set(particles, { opacity: 0, clearProps: "transform" });
 }
 
-function playReaction(
-  gsap: GsapApi,
-  root: SVGSVGElement,
-  reaction: MascotReaction,
-) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".memphis-body-motion");
   const head = root.querySelector<SVGElement>(".memphis-head-motion");
   const leftArm = root.querySelector<SVGElement>(".memphis-arm-left-motion");
@@ -75,7 +40,7 @@ function playReaction(
   const animatedParts = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animatedParts);
-  resetAnimatedParts(gsap, root);
+  resetAnimatedParts(root);
   gsap.set(body, { transformOrigin: "50% 50%" });
   gsap.set(head, { transformOrigin: "50% 82%" });
   gsap.set(leftArm, { transformOrigin: "88% 16%" });
@@ -91,7 +56,7 @@ function playReaction(
 
   const timeline = gsap.timeline({
     defaults: { overwrite: "auto" },
-    onComplete: () => resetAnimatedParts(gsap, root),
+    onComplete: () => resetAnimatedParts(root),
   });
 
   if (reaction === "habit-done") {
@@ -212,42 +177,5 @@ function playReaction(
     .to(particles, { opacity: 0, scale: 0.45, duration: 0.18 }, "-=0.24");
 }
 
-export function useMemphisReaction(
-  svgRef: RefObject<SVGSVGElement>,
-  reaction: MascotReaction | null,
-) {
-  useEffect(() => {
-    if (!reaction || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-
-    const start = () => {
-      if (cancelled) return;
-
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
-
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) resetAnimatedParts(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+export const memphisReactions = { play: playReaction, reset: resetAnimatedParts } satisfies GsapReactionDefinition;

@@ -25,4 +25,5 @@ export type DashboardMascotProps = {
 export type MascotCreatureProps = {
   mood: Exclude<MascotMood, "hidden">;
   reaction: MascotReaction | null;
+  onReactionComplete?: () => void;
 };

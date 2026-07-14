@@ -1,77 +1,51 @@
 import { useEffect, type RefObject } from "react";
+import { gsap } from "gsap";
 import type { MascotReaction } from "./mascot.types";
 
-export type GsapVars = Record<string, unknown>;
+export { gsap };
 
-export type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: GsapVars,
-    toVars: GsapVars,
-    position?: string | number,
-  ) => GsapTimeline;
-  kill: () => void;
-};
-
-export type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    gsap?: GsapApi;
-  }
-}
-
-type PlayReaction = (
-  gsap: GsapApi,
+export type PlayGsapReaction = (
   root: SVGSVGElement,
   reaction: MascotReaction,
-) => GsapTimeline;
+) => gsap.core.Timeline;
 
-type ResetReaction = (gsap: GsapApi, root: SVGSVGElement) => void;
+export type ResetGsapReaction = (root: SVGSVGElement) => void;
 
-function reducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+export type GsapReactionDefinition = {
+  play: PlayGsapReaction;
+  reset: ResetGsapReaction;
+};
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 export function useGsapReactionRuntime(
   svgRef: RefObject<SVGSVGElement | null>,
   reaction: MascotReaction | null,
-  playReaction: PlayReaction,
-  resetReaction: ResetReaction,
+  playReaction: PlayGsapReaction,
+  resetReaction: ResetGsapReaction,
+  onComplete?: () => void,
 ) {
   useEffect(() => {
-    if (!reaction || reducedMotion()) return undefined;
+    const root = svgRef.current;
+    if (!reaction || !root || prefersReducedMotion()) return undefined;
 
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
+    const timeline = playReaction(root, reaction);
+    const previousOnComplete = timeline.eventCallback("onComplete");
+    timeline.eventCallback("onComplete", () => {
+      if (typeof previousOnComplete === "function") previousOnComplete();
+      onComplete?.();
+    });
 
-    const start = () => {
-      if (cancelled) return;
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-      timeline = playReaction(gsap, root, reaction);
-    };
-
-    start();
     return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) resetReaction(gsap, root);
+      timeline.kill();
+      gsap.killTweensOf(root.querySelectorAll("[data-gsap]"));
+      resetReaction(root);
     };
-  }, [playReaction, reaction, resetReaction, svgRef]);
+  }, [onComplete, playReaction, reaction, resetReaction, svgRef]);
 }

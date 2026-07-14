@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MascotCreatureProps } from "../mascot.types";
-import { useComicReaction } from "./useComicReaction";
+import { comicReactions } from "./comic-reactions";
+import { useGsapReactionRuntime } from "../gsap-runtime";
 import "./comic-mascot.css";
 
 const burst = [
@@ -9,9 +10,11 @@ const burst = [
   [27, 151, "#2b74d8"], [17, 93, "#ffd21f"],
 ] as const;
 
-export function ComicMascot({ mood, reaction }: MascotCreatureProps) {
+export function ComicMascot({ mood, reaction, onReactionComplete }: MascotCreatureProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  useComicReaction(svgRef, reaction ?? null);
+  useGsapReactionRuntime(
+    svgRef, reaction ?? null, comicReactions.play, comicReactions.reset, onReactionComplete,
+  );
 
   return (
     <svg

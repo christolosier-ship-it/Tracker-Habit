@@ -1,21 +1,6 @@
-import { useEffect, type RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
 
-type GsapVars = Record<string, unknown>;
-type GsapTimeline = {
-  to: (target: unknown, vars: GsapVars, position?: string | number) => GsapTimeline;
-  fromTo: (target: unknown, fromVars: GsapVars, toVars: GsapVars, position?: string | number) => GsapTimeline;
-  kill: () => void;
-};
-type GsapApi = {
-  timeline: (vars?: GsapVars) => GsapTimeline;
-  set: (target: unknown, vars: GsapVars) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window { gsap?: GsapApi; }
-}
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
 const animatedSelector = [
   ".cosmic-body-motion",
@@ -27,16 +12,12 @@ const animatedSelector = [
   ".cosmic-face-motion",
 ].join(",");
 
-function reducedMotion() {
-  return typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function reset(gsap: GsapApi, root: SVGSVGElement) {
+function reset(root: SVGSVGElement) {
   gsap.set(root.querySelectorAll<SVGElement>(animatedSelector), { clearProps: "transform,opacity" });
   gsap.set(root.querySelectorAll<SVGElement>(".cosmic-particle"), { opacity: 0, clearProps: "transform" });
 }
 
-function play(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReaction) {
+function playReaction(root: SVGSVGElement, reaction: MascotReaction) {
   const body = root.querySelector<SVGElement>(".cosmic-body-motion");
   const ring = root.querySelector<SVGElement>(".cosmic-ring-motion");
   const leftArm = root.querySelector<SVGElement>(".cosmic-arm-left-motion");
@@ -48,13 +29,13 @@ function play(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReaction) {
   const animated = root.querySelectorAll<SVGElement>("[data-gsap]");
 
   gsap.killTweensOf(animated);
-  reset(gsap, root);
+  reset(root);
   gsap.set([body, ring, face], { transformOrigin: "50% 50%" });
   gsap.set([leftArm, rightArm], { transformOrigin: "50% 15%" });
   gsap.set([leftLeg, rightLeg], { transformOrigin: "50% 10%" });
   gsap.set(particles, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" });
 
-  const tl = gsap.timeline({ defaults: { overwrite: "auto" }, onComplete: () => reset(gsap, root) });
+  const tl = gsap.timeline({ defaults: { overwrite: "auto" }, onComplete: () => reset(root) });
 
   if (reaction === "habit-done") {
     return tl
@@ -90,32 +71,5 @@ function play(gsap: GsapApi, root: SVGSVGElement, reaction: MascotReaction) {
     .to(particles, { opacity: 0, scale: 0.4, duration: 0.18 }, "-=0.22");
 }
 
-export function useCosmicReaction(svgRef: RefObject<SVGSVGElement>, reaction: MascotReaction | null) {
-  useEffect(() => {
-    if (!reaction || reducedMotion()) return undefined;
-    let cancelled = false;
-    let frameId = 0;
-    let timeline: GsapTimeline | undefined;
-    let attempts = 0;
-    const start = () => {
-      if (cancelled) return;
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (!gsap || !root) {
-        attempts += 1;
-        if (attempts < 120) frameId = window.requestAnimationFrame(start);
-        return;
-      }
-      timeline = play(gsap, root, reaction);
-    };
-    start();
-    return () => {
-      cancelled = true;
-      if (frameId) window.cancelAnimationFrame(frameId);
-      timeline?.kill();
-      const gsap = window.gsap;
-      const root = svgRef.current;
-      if (gsap && root) reset(gsap, root);
-    };
-  }, [reaction, svgRef]);
-}
+
+export const cosmicReactions = { play: playReaction, reset: reset } satisfies GsapReactionDefinition;

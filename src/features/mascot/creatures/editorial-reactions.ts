@@ -1,29 +1,14 @@
-import { useEffect } from "react";
-import type { RefObject } from "react";
 import type { MascotReaction } from "../mascot.types";
+import { gsap, type GsapReactionDefinition } from "../gsap-runtime";
 
-type TimelineLike = {
-  to: (target: unknown, vars: Record<string, unknown>, position?: string | number) => TimelineLike;
-  fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => TimelineLike;
-  kill: () => void;
-};
-
-type GsapLike = {
-  timeline: (options?: Record<string, unknown>) => TimelineLike;
-  set: (target: unknown, vars: Record<string, unknown>) => void;
-  killTweensOf: (target: unknown) => void;
-};
-
-declare global {
-  interface Window { gsap?: GsapLike; }
+function reset(svg: SVGSVGElement) {
+  gsap.set(svg.querySelectorAll<SVGElement>("[data-gsap]"), { clearProps: "transform,opacity,visibility" });
+  gsap.set(svg.querySelectorAll<SVGElement>(".editorial-burst-particle"), {
+    clearProps: "transform,opacity,visibility", opacity: 0,
+  });
 }
 
-export function useEditorialReaction(svgRef: RefObject<SVGSVGElement | null>, reaction: MascotReaction | null) {
-  useEffect(() => {
-    const svg = svgRef.current;
-    const gsap = window.gsap;
-    if (!svg || !gsap || !reaction || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+function playReaction(svg: SVGSVGElement, reaction: MascotReaction) {
     const body = svg.querySelector(".editorial-body-motion");
     const head = svg.querySelector(".editorial-head-motion");
     const tail = svg.querySelector(".editorial-tail-motion");
@@ -32,10 +17,11 @@ export function useEditorialReaction(svgRef: RefObject<SVGSVGElement | null>, re
     const jewel = svg.querySelector(".editorial-jewel-motion");
     const particles = svg.querySelectorAll(".editorial-burst-particle");
     const targets = [body, head, tail, leftPaw, rightPaw, jewel, ...particles].filter(Boolean);
-    const reset = () => gsap.set(targets, { clearProps: "transform,opacity,visibility" });
 
-    reset();
-    const timeline = gsap.timeline({ onComplete: reset });
+    gsap.killTweensOf(targets);
+
+    reset(svg);
+    const timeline = gsap.timeline({ onComplete: () => reset(svg) });
 
     if (reaction === "habit-done") {
       timeline
@@ -69,10 +55,8 @@ export function useEditorialReaction(svgRef: RefObject<SVGSVGElement | null>, re
         .to(particles, { opacity: 0, y: -10, duration: .3 }, .45);
     }
 
-    return () => {
-      timeline.kill();
-      gsap.killTweensOf(targets);
-      reset();
-    };
-  }, [reaction, svgRef]);
+    return timeline;
+
 }
+
+export const editorialReactions = { play: playReaction, reset } satisfies GsapReactionDefinition;
