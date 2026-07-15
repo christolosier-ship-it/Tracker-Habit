@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { formatLocalIso } from "../lib/date-utils";
 
-function readHour() {
-  return new Date().getHours();
+function readCurrentTime() {
+  const now = new Date();
+  return { date: formatLocalIso(now), hour: now.getHours() };
 }
 
-export function useCurrentHour() {
-  const [hour, setHour] = useState(readHour);
+export function useCurrentTime() {
+  const [current, setCurrent] = useState(readCurrentTime);
 
   useEffect(() => {
     let timer = 0;
@@ -14,7 +16,7 @@ export function useCurrentHour() {
       const nextHour = new Date(now);
       nextHour.setHours(now.getHours() + 1, 0, 0, 50);
       timer = window.setTimeout(() => {
-        setHour(readHour());
+        setCurrent(readCurrentTime());
         schedule();
       }, nextHour.getTime() - now.getTime());
     };
@@ -22,5 +24,5 @@ export function useCurrentHour() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  return hour;
+  return current;
 }

@@ -20,7 +20,13 @@ export function isValidIsoDate(value: unknown): value is string {
 }
 
 export function compareIsoDates(left: string, right: string) {
-  return left.localeCompare(right);
+  return left === right ? 0 : left < right ? -1 : 1;
+}
+
+export function shiftIsoDate(value: string, days: number) {
+  const date = parseLocalIso(value);
+  date.setDate(date.getDate() + days);
+  return formatLocalIso(date);
 }
 
 export function monthPrefix(year: number, month: number) {
@@ -31,16 +37,14 @@ export function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
-export function iterateIsoDates(start: string, end: string) {
-  if (compareIsoDates(start, end) > 0) return [];
-  const dates: string[] = [];
+export function* iterateIsoDates(start: string, end: string) {
+  if (compareIsoDates(start, end) > 0) return;
   const cursor = parseLocalIso(start);
   const last = parseLocalIso(end);
   while (cursor <= last) {
-    dates.push(formatLocalIso(cursor));
+    yield formatLocalIso(cursor);
     cursor.setDate(cursor.getDate() + 1);
   }
-  return dates;
 }
 
 export function getIsoWeekKey(value: string) {
@@ -55,17 +59,15 @@ export function getIsoWeekKey(value: string) {
   return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 
-function addIsoDays(value: string, amount: number) {
-  const date = parseLocalIso(value);
-  date.setDate(date.getDate() + amount);
-  return formatLocalIso(date);
-}
-
 export function getIsoWeekBounds(value: string) {
   const date = parseLocalIso(value);
   const dayFromMonday = (date.getDay() + 6) % 7;
+  const start = new Date(date);
+  const end = new Date(date);
+  start.setDate(start.getDate() - dayFromMonday);
+  end.setDate(end.getDate() + 6 - dayFromMonday);
   return {
-    start: addIsoDays(value, -dayFromMonday),
-    end: addIsoDays(value, 6 - dayFromMonday),
+    start: formatLocalIso(start),
+    end: formatLocalIso(end),
   };
 }

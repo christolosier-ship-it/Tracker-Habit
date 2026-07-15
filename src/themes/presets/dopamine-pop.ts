@@ -3,7 +3,6 @@ import { createCharts, defineTheme } from "../define-theme";
 export const dopaminePopTheme = defineTheme({
   id: "dopamine-pop",
   name: "Dopamine Pop",
-  shortName: "Dopamine",
   description: "Bright. Happy. Feel-good progress.",
   personality: "Candy premium, joyeux, tactile et ultra motivant.",
   previewEmoji: "🌈",
@@ -29,16 +28,15 @@ export const dopaminePopTheme = defineTheme({
   },
   identity: {
     typography: "friendly-rounded",
-    frame: "candy",
-    navigation: { variant: "candy", compactLabels: false, showDecorativeStatus: false },
+    navigation: {},
     cells: { variant: "candy-dot" },
   },
   charts: createCharts({
     hexPalette: ["#FF5C8A", "#FFD166", "#6EC5FF", "#57CC99", "#B967FF", "#FF8FAB"],
     status: { done: "#57CC99", partial: "#FFD166", missed: "#F94144", rest: "#6EC5FF", empty: "#D8C7DA" },
     score: { great: "#FF5C8A", good: "#57CC99" },
-    visual: { strokeWidth: 16, cornerRadius: 18, grid: "soft", donutVariant: "soft", barVariant: "rounded", heatmapVariant: "candy-dots" },
+    visual: { strokeWidth: 16, cornerRadius: 18, grid: "soft", donutVariant: "soft", barVariant: "rounded" },
   }),
   radius: { card: "34px", button: "999px", pill: "999px" },
-  effects: { backgroundStyle: "pop", glass: false, glow: true, pattern: true, stickers: true, highContrast: false, pixel: false, comic: false },
+  effects: { backgroundStyle: "pop", pixel: false },
 });

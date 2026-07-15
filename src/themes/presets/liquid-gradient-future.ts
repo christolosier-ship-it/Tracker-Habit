@@ -3,7 +3,6 @@ import { createCharts, defineTheme } from "../define-theme";
 export const liquidGradientFutureTheme = defineTheme({
   id: "liquid-gradient-future",
   name: "Liquid Gradient Future",
-  shortName: "Liquid",
   description: "Fluid, futuristic, colorful.",
   personality: "Dégradés liquides cyan, violet, rose et bleu.",
   previewEmoji: "🌀",
@@ -13,12 +12,12 @@ export const liquidGradientFutureTheme = defineTheme({
     accent: "#F472B6", accent2: "#22D3EE", success: "#34D399", warning: "#FBBF24", danger: "#FB7185",
     border: "rgba(255,255,255,0.22)", shadow: "0 28px 90px rgba(56,189,248,.20)", glow: "rgba(244,114,182,.38)",
   },
-  identity: { typography: "future-rounded", frame: "liquid", navigation: { variant: "liquid", compactLabels: true, showDecorativeStatus: false }, cells: { variant: "liquid-bubble" } },
+  identity: { typography: "future-rounded", navigation: {}, cells: { variant: "liquid-bubble" } },
   charts: createCharts({
     hexPalette: ["#38BDF8", "#A855F7", "#F472B6", "#22D3EE", "#34D399"],
     status: { done: "#34D399", partial: "#FBBF24", missed: "#FB7185", rest: "#38BDF8", empty: "rgba(255,255,255,.22)" },
-    visual: { strokeWidth: 12, cornerRadius: 18, grid: "soft", donutVariant: "glass", barVariant: "rounded", heatmapVariant: "liquid-bubbles" },
+    visual: { strokeWidth: 12, cornerRadius: 18, grid: "soft", donutVariant: "glass", barVariant: "rounded" },
   }),
   radius: { card: "30px", button: "18px", pill: "999px" },
-  effects: { backgroundStyle: "liquid", glass: true, glow: true, pattern: true, stickers: false, highContrast: false, pixel: false, comic: false },
+  effects: { backgroundStyle: "liquid", pixel: false },
 });

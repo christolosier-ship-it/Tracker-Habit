@@ -11,12 +11,12 @@ import {
 import { ThemedProgressRing } from "../../components/charts/ThemedProgressRing";
 import { SpotlightCard } from "../../components/effects/premium-effects";
 import { ThemeKpiFrame } from "../../components/theme-identity/ThemeKpiFrame";
-import { DashboardStats } from "../../lib/dashboard-selectors";
+import type { DashboardAnalytics } from "../../analytics/tracker-analytics";
 import { AppTheme } from "../../themes/theme-types";
 
 type KpiRailProps = {
   theme: AppTheme;
-  stats: DashboardStats;
+  stats: DashboardAnalytics;
 };
 
 export function KpiRail({ theme, stats }: KpiRailProps) {
@@ -35,21 +35,18 @@ export function KpiRail({ theme, stats }: KpiRailProps) {
     <section className="kpi-grid" aria-label="Indicateurs clés">
       {kpis.map(({ label, value, suffix, icon: Icon, gauge }) => (
         <SpotlightCard className="kpi-card" key={label}>
-          <ThemeKpiFrame theme={theme}>
+          <ThemeKpiFrame>
             <div className="kpi-content">
               <div className="kpi-icon">
                 <Icon />
               </div>
               <span>{label}</span>
-              <strong>
-                {value}
-                {suffix}
-              </strong>
+              <strong>{value === null ? "—" : `${value}${suffix}`}</strong>
             </div>
             {gauge && (
               <ThemedProgressRing
                 theme={theme}
-                value={Number(value)}
+                value={value}
                 variant="score"
                 label={label}
               />

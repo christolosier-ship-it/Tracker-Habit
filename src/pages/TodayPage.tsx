@@ -1,41 +1,24 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { HabitStatusCard } from "../features/tracking/HabitStatusCard";
-import { PeriodControls } from "../features/period/PeriodControls";
 import { FilterToday } from "../app/constants";
-import { formatLocalIso } from "../lib/date-utils";
 import { TodayPageProps } from "./page-types";
-import { selectDayTracking } from "../lib/tracking-selectors";
 import { readTrackerStatus } from "../analytics/tracker-index";
+import { habitExistsOnDate } from "../domain/evaluation";
 
-export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
+export function TodayPage({ data, analytics, today, cycle }: TodayPageProps) {
   const [filter, setFilter] = useState<FilterToday>("Quotidiennes");
-  const now = new Date();
-  const date = formatLocalIso(now);
+  const now = new Date(`${today}T12:00:00`);
   const dateFr = new Intl.DateTimeFormat("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(now);
-  const tracking = useMemo(
-    () =>
-      selectDayTracking(
-        data.habits,
-        data.logs,
-        data.settings.compterNonSaisisCommeManques,
-        date,
-      ),
-    [
-      data.habits,
-      data.logs,
-      data.settings.compterNonSaisisCommeManques,
-      date,
-    ],
-  );
+  const score = analytics.dayScore(today).score;
   const habits = data.habits.filter((habit) => {
-    if (!habit.active) return false;
+    if (!habit.active || !habitExistsOnDate(habit, today)) return false;
     if (filter === "Quotidiennes") return habit.frequence === "quotidienne";
     if (filter === "Hebdomadaires") return habit.frequence === "hebdomadaire";
     return true;
@@ -43,12 +26,6 @@ export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
 
   return (
     <>
-      <PeriodControls
-        year={data.settings.anneeActive}
-        month={data.settings.moisActif}
-        onYearChange={(year) => setSettings({ anneeActive: year })}
-        onMonthChange={(month) => setSettings({ moisActif: month })}
-      />
       <Card className="today-summary">
         <div>
           <p className="eyebrow compact">Saisie rapide</p>
@@ -61,7 +38,7 @@ export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
         <div className="today-score">
           <span>Score du jour</span>
           <strong>
-            {tracking.score}%
+            {score === null ? "—" : `${score}%`}
           </strong>
         </div>
       </Card>
@@ -83,8 +60,8 @@ export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
         {habits.map((habit) => (
           <HabitStatusCard
             habit={habit}
-            date={date}
-            status={readTrackerStatus(tracking.index, habit.id, date)}
+            date={today}
+            status={readTrackerStatus(analytics.index, habit.id, today)}
             cycle={cycle}
             key={habit.id}
           />

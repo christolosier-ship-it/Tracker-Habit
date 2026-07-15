@@ -24,16 +24,16 @@ describe("registre des thèmes", () => {
     expect(ids).toEqual(expectedIds);
   });
 
-  it("fournit des palettes et variantes complètes pour chaque thème", () => {
+  it("fournit uniquement des identités et palettes effectivement consommées", () => {
     for (const theme of themes) {
       expect(theme.charts.hexPalette.length).toBeGreaterThanOrEqual(3);
-      expect(theme.identity.navigation.variant).toBeTruthy();
       expect(theme.identity.cells.variant).toBeTruthy();
-      expect(theme.identity.frame).toBeTruthy();
       expect(theme.identity.typography).toBeTruthy();
       expect(theme.tokens.background).toMatch(/^#|^rgba/);
       expect(theme.tokens.text).toMatch(/^#/);
     }
+    expect(resolveTheme("neon-cyberpunk-matrix").identity.navigation.status).toBe("terminal");
+    expect(resolveTheme("retro-arcade").identity.navigation.status).toBe("arcade");
   });
 
   it("retombe sur le thème par défaut pour un identifiant inconnu", () => {

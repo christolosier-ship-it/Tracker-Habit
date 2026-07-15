@@ -1,1 +1,175 @@
-.mascot-liquid-pro .liquid-rig{transform-box:fill-box;transform-origin:center;animation:liquid-float 4.2s ease-in-out infinite}.mascot-liquid-pro .liquid-body{transform-box:fill-box;transform-origin:center 75%;animation:liquid-breathe 3.1s ease-in-out infinite}.mascot-liquid-pro .liquid-tip{transform-box:fill-box;transform-origin:bottom center;animation:liquid-tip 3.7s ease-in-out infinite}.mascot-liquid-pro .liquid-arm-left{transform-box:fill-box;transform-origin:right center;animation:liquid-arm-left 3.4s ease-in-out infinite}.mascot-liquid-pro .liquid-arm-right{transform-box:fill-box;transform-origin:left center;animation:liquid-arm-right 3.8s ease-in-out infinite}.mascot-liquid-pro .liquid-leg-left,.mascot-liquid-pro .liquid-leg-right{transform-box:fill-box;transform-origin:top center;animation:liquid-step 3.2s ease-in-out infinite}.mascot-liquid-pro .liquid-leg-right{animation-delay:-1.6s}.mascot-liquid-pro .liquid-highlight{animation:liquid-glint 2.5s ease-in-out infinite}.mascot-liquid-pro .liquid-bubble{animation:liquid-bubble 2.8s ease-in-out infinite}.mascot-liquid-pro .liquid-bubble:nth-child(2n){animation-delay:-1.4s}.mascot-liquid-pro .liquid-face{display:none}.mascot-liquid-pro[data-mood="idle"] .liquid-face-neutral,.mascot-liquid-pro[data-mood="happy"] .liquid-face-happy,.mascot-liquid-pro[data-mood="celebrate"] .liquid-face-celebrate,.mascot-liquid-pro[data-mood="worried"] .liquid-face-worried,.mascot-liquid-pro[data-mood="sleepy"] .liquid-face-sleepy{display:block}.mascot-liquid-pro[data-mood="worried"] .liquid-body{animation:liquid-worry .18s ease-in-out infinite alternate}.mascot-liquid-pro[data-mood="sleepy"] .liquid-rig{animation-duration:6.5s}.liquid-burst-particle{opacity:0;visibility:hidden;transform-box:fill-box;transform-origin:center}@keyframes liquid-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}@keyframes liquid-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025,.98)}}@keyframes liquid-tip{0%,100%{transform:rotate(-2deg) skewX(0)}50%{transform:rotate(3deg) skewX(2deg)}}@keyframes liquid-arm-left{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-8deg)}}@keyframes liquid-arm-right{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(9deg)}}@keyframes liquid-step{0%,100%{transform:rotate(2deg)}50%{transform:rotate(-3deg)}}@keyframes liquid-glint{0%,100%{opacity:.45;transform:translateY(0)}50%{opacity:.95;transform:translateY(-2px)}}@keyframes liquid-bubble{0%,100%{opacity:.25;transform:translateY(2px) scale(.8)}50%{opacity:.75;transform:translateY(-3px) scale(1.1)}}@keyframes liquid-worry{from{transform:translateX(-1px) scale(1)}to{transform:translateX(1px) scale(.99,1.01)}}@media (prefers-reduced-motion:reduce){.mascot-liquid-pro *{animation:none!important;transition:none!important}}
+.mascot-liquid-pro .liquid-rig {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: liquid-float 4.2s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-body {
+  transform-box: fill-box;
+  transform-origin: center 75%;
+  animation: liquid-breathe 3.1s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-tip {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: liquid-tip 3.7s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-arm-left {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: liquid-arm-left 3.4s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-arm-right {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: liquid-arm-right 3.8s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-leg-left,.mascot-liquid-pro .liquid-leg-right {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: liquid-step 3.2s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-leg-right {
+  animation-delay: -1.6s;
+}
+
+.mascot-liquid-pro .liquid-highlight {
+  animation: liquid-glint 2.5s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-bubble {
+  animation: liquid-bubble 2.8s ease-in-out infinite;
+}
+
+.mascot-liquid-pro .liquid-bubble:nth-child(2n) {
+  animation-delay: -1.4s;
+}
+
+.mascot-liquid-pro .liquid-face {
+  display: none;
+}
+
+.mascot-liquid-pro[data-mood="idle"] .liquid-face-neutral,.mascot-liquid-pro[data-mood="happy"] .liquid-face-happy,.mascot-liquid-pro[data-mood="celebrate"] .liquid-face-celebrate,.mascot-liquid-pro[data-mood="worried"] .liquid-face-worried,.mascot-liquid-pro[data-mood="sleepy"] .liquid-face-sleepy {
+  display: block;
+}
+
+.mascot-liquid-pro[data-mood="worried"] .liquid-body {
+  animation: liquid-worry .18s ease-in-out infinite alternate;
+}
+
+.mascot-liquid-pro[data-mood="sleepy"] .liquid-rig {
+  animation-duration: 6.5s;
+}
+
+.liquid-burst-particle {
+  opacity: 0;
+  visibility: hidden;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes liquid-float {
+  0%,100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes liquid-breathe {
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.025,.98);
+  }
+}
+
+@keyframes liquid-tip {
+  0%,100% {
+    transform: rotate(-2deg) skewX(0);
+  }
+
+  50% {
+    transform: rotate(3deg) skewX(2deg);
+  }
+}
+
+@keyframes liquid-arm-left {
+  0%,100% {
+    transform: rotate(4deg);
+  }
+
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes liquid-arm-right {
+  0%,100% {
+    transform: rotate(-5deg);
+  }
+
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+@keyframes liquid-step {
+  0%,100% {
+    transform: rotate(2deg);
+  }
+
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes liquid-glint {
+  0%,100% {
+    opacity: .45;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: .95;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes liquid-bubble {
+  0%,100% {
+    opacity: .25;
+    transform: translateY(2px) scale(.8);
+  }
+
+  50% {
+    opacity: .75;
+    transform: translateY(-3px) scale(1.1);
+  }
+}
+
+@keyframes liquid-worry {
+  from {
+    transform: translateX(-1px) scale(1);
+  }
+
+  to {
+    transform: translateX(1px) scale(.99,1.01);
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .mascot-liquid-pro * {
+    animation: none!important;
+    transition: none!important;
+  }
+}

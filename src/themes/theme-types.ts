@@ -17,34 +17,6 @@ type ThemeTypographyVariant =
   | "comic-display"
   | "future-rounded";
 
-type ThemeFrameVariant =
-  | "hud"
-  | "candy"
-  | "memphis"
-  | "glass"
-  | "botanical"
-  | "pixel"
-  | "orbit"
-  | "sticker"
-  | "brutalist"
-  | "editorial"
-  | "comic"
-  | "liquid";
-
-type ThemeNavigationVariant =
-  | "terminal"
-  | "candy"
-  | "color-block"
-  | "glass"
-  | "botanical"
-  | "arcade"
-  | "cosmic"
-  | "kawaii"
-  | "brutalist"
-  | "editorial"
-  | "comic"
-  | "liquid";
-
 type ThemeCellVariant =
   | "neon-square"
   | "candy-dot"
@@ -87,12 +59,8 @@ export type ThemeCharts = {
   score: { low: string; mid: string; good: string; great: string };
   category: Record<ChartCategoryName, string>;
   gradients: {
-    progressFrom: string;
     progressTo: string;
-    dangerFrom: string;
     dangerTo: string;
-    neutralFrom: string;
-    neutralTo: string;
   };
   visual: {
     strokeWidth: number;
@@ -100,26 +68,12 @@ export type ThemeCharts = {
     grid: "soft" | "visible" | "none" | "pixel" | "comic";
     donutVariant: "soft" | "neon" | "glass" | "solid" | "pixel" | "comic" | "luxury";
     barVariant: "rounded" | "block" | "pixel" | "comic" | "luxury";
-    heatmapVariant:
-      | "candy-dots"
-      | "neon-squares"
-      | "memphis-shapes"
-      | "glass-pills"
-      | "tropical-seeds"
-      | "pixel-blocks"
-      | "cosmic-stars"
-      | "kawaii-stickers"
-      | "brutalist-blocks"
-      | "editorial-dots"
-      | "comic-badges"
-      | "liquid-bubbles";
   };
 };
 
 export type AppTheme = {
   id: ThemeId;
   name: string;
-  shortName: string;
   description: string;
   personality: string;
   previewEmoji: string;
@@ -146,23 +100,14 @@ export type AppTheme = {
   charts: ThemeCharts;
   identity: {
     typography: ThemeTypographyVariant;
-    frame: ThemeFrameVariant;
     navigation: {
-      variant: ThemeNavigationVariant;
-      compactLabels: boolean;
-      showDecorativeStatus: boolean;
+      status?: "terminal" | "arcade";
     };
     cells: { variant: ThemeCellVariant };
   };
   radius: { card: string; button: string; pill: string };
   effects: {
     backgroundStyle: ThemeStyle;
-    glass: boolean;
-    glow: boolean;
-    pattern: boolean;
-    stickers: boolean;
-    highContrast: boolean;
     pixel: boolean;
-    comic: boolean;
   };
 };

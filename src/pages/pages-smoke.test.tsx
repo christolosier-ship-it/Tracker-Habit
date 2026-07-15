@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { createTrackerAnalytics } from "../analytics/tracker-analytics";
 import { RoamingMascot } from "../features/mascot/RoamingMascot";
 import { demoData } from "../persistence";
 import { resolveTheme } from "../themes/theme-registry";
@@ -12,6 +13,7 @@ import { TodayPage } from "./TodayPage";
 
 const data = demoData();
 const theme = resolveTheme(data.settings.themeId);
+const analytics = createTrackerAnalytics(data.habits, data.logs, data.settings);
 const setSettings = () => undefined;
 const cycle = () => undefined;
 const addHabit = () => undefined;
@@ -23,18 +25,24 @@ const pages = [
   <DashboardPage
     data={data}
     theme={theme}
+    analytics={analytics}
     setSettings={setSettings}
   />,
-  <TodayPage data={data} setSettings={setSettings} cycle={cycle} />,
+  <TodayPage
+    data={data}
+    analytics={analytics}
+    today={analytics.today}
+    cycle={cycle}
+  />,
   <MonthPage
     data={data}
     theme={theme}
+    analytics={analytics}
     setSettings={setSettings}
     cycle={cycle}
   />,
   <HabitsPage
     data={data}
-    setSettings={setSettings}
     addHabit={addHabit}
     updateHabit={updateHabit}
     deleteHabit={deleteHabit}
@@ -42,6 +50,7 @@ const pages = [
   <StatsPage
     data={data}
     theme={theme}
+    analytics={analytics}
     setSettings={setSettings}
   />,
   <SettingsPage
@@ -74,6 +83,20 @@ describe("montage des pages", () => {
       expect(html.length).toBeGreaterThan(100);
     },
   );
+
+  it("rend les graphiques SVG natifs sans dépendance de rendu externe", () => {
+    const html = renderToStaticMarkup(
+      <DashboardPage
+        data={data}
+        theme={theme}
+        analytics={analytics}
+        setSettings={setSettings}
+      />,
+    );
+    expect(html).toContain("native-cartesian-chart");
+    expect(html).toContain("native-donut-chart");
+    expect(html).not.toContain("recharts");
+  });
 
   it("rend les douze mascottes lazy dans leur couche globale et masque la couche désactivée", () => {
     for (const candidateTheme of themeIds) {

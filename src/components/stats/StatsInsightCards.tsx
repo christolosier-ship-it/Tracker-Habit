@@ -1,5 +1,5 @@
 import { AppTheme } from "../../themes/theme-types";
-import { CategoryStats } from "../../types";
+import type { CategoryStats } from "../../analytics/tracker-analytics";
 import {
   fragileCategory,
   fragileMonth,

@@ -1,22 +1,14 @@
 import { useMemo } from "react";
-import { selectDashboardStatsForPeriod } from "../lib/dashboard-selectors";
-import type { AppData } from "../persistence";
+import type { TrackerAnalytics } from "../analytics/tracker-analytics";
+import { monthShortLabels } from "../app/constants";
 
-export function useDashboardStats(data: AppData) {
+export function useDashboardStats(
+  analytics: TrackerAnalytics,
+  year: number,
+  month: number,
+) {
   return useMemo(
-    () =>
-      selectDashboardStatsForPeriod(data.habits, data.logs, {
-        anneeActive: data.settings.anneeActive,
-        moisActif: data.settings.moisActif,
-        compterNonSaisisCommeManques:
-          data.settings.compterNonSaisisCommeManques,
-      }),
-    [
-      data.habits,
-      data.logs,
-      data.settings.anneeActive,
-      data.settings.moisActif,
-      data.settings.compterNonSaisisCommeManques,
-    ],
+    () => analytics.dashboard(year, month, monthShortLabels),
+    [analytics, month, year],
   );
 }

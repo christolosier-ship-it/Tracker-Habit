@@ -7,7 +7,7 @@ import {
 import { isValidIsoDate } from "../lib/date-utils";
 import type { Habit, HabitLog, UserSettings } from "../types";
 
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 export const STORAGE_KEY = "discipline-dashboard-v2";
 export const BACKUP_STORAGE_KEY = `${STORAGE_KEY}-backup`;
 
@@ -34,6 +34,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isHabit(value: unknown): value is Habit {
   if (!isRecord(value)) return false;
+  const creationDate = isValidIsoDate(value.dateCreation)
+    ? value.dateCreation
+    : null;
+  const inactiveRangesAreValid =
+    creationDate !== null &&
+    (value.inactiveRanges === undefined ||
+      (Array.isArray(value.inactiveRanges) &&
+        value.inactiveRanges.every(
+          (range) =>
+            isRecord(range) &&
+            isValidIsoDate(range.start) &&
+            isValidIsoDate(range.end) &&
+            range.start >= creationDate &&
+            range.start <= range.end,
+        )));
   return (
     typeof value.id === "string" &&
     typeof value.nom === "string" &&
@@ -43,7 +58,9 @@ function isHabit(value: unknown): value is Habit {
     isHabitPriority(value.priorite) &&
     typeof value.active === "boolean" &&
     isValidIsoDate(value.dateCreation) &&
-    (value.couleur === undefined || typeof value.couleur === "string")
+    (value.archivedAt === undefined ||
+      (isValidIsoDate(value.archivedAt) && value.archivedAt >= value.dateCreation)) &&
+    inactiveRangesAreValid
   );
 }
 

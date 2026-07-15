@@ -49,6 +49,9 @@ try {
 
   await clickNavigation("Aujourd’hui");
   await page.waitForSelector(".status-button");
+  if (await page.$(".period-controls")) {
+    throw new Error("La page Aujourd’hui expose encore des contrôles de période inutiles.");
+  }
   const initialStatus = await page.$eval(
     ".status-button",
     (button) => button.textContent?.trim(),
@@ -76,6 +79,9 @@ try {
 
   await clickNavigation("Paramètres");
   await page.waitForSelector(".theme-card");
+  if (await page.$(".period-controls")) {
+    throw new Error("Les paramètres exposent encore des contrôles de période inutiles.");
+  }
   const previousTheme = await page.$eval(".app-shell", (shell) => shell.getAttribute("data-theme"));
   await page.$$eval(".theme-card", (cards) => {
     const target = cards[1];
@@ -88,6 +94,14 @@ try {
         ?.getAttribute("data-theme") !== theme,
     {},
     previousTheme,
+  );
+  const mascotToggle = await page.$$(".tracking-options-panel input[type=checkbox]");
+  if (mascotToggle.length < 2) {
+    throw new Error("Le réglage de la mascotte est introuvable.");
+  }
+  await mascotToggle[1].click();
+  await page.waitForFunction(
+    () => !globalThis.document.querySelector(".roaming-mascot-layer"),
   );
 
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
@@ -106,7 +120,9 @@ try {
     throw new Error(`Layout mobile invalide : ${JSON.stringify(mobileLayout)}`);
   }
 
-  console.log("Smoke navigateur conforme : navigation, persistance, thème et mobile.");
+  console.log(
+    "Smoke navigateur conforme : navigation, persistance, pages ciblées, thème, mascotte et mobile.",
+  );
 } finally {
   await browser.close();
 }

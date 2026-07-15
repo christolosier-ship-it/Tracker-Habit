@@ -14,23 +14,51 @@
   color: var(--text);
 }
 
-.themed-chart-panel .recharts-surface {
-  overflow: visible;
-}
-
-.themed-chart-panel .recharts-cartesian-grid line {
+.native-chart-grid line {
   stroke: color-mix(in srgb, var(--border) 65%, transparent);
+  stroke-dasharray: 4 6;
 }
 
-.themed-chart-panel .recharts-cartesian-axis-tick-value,
-.themed-chart-panel .recharts-text {
+.native-chart-grid text,
+.native-chart-labels text {
   fill: var(--text-muted);
   font-size: 0.68rem;
   font-weight: 700;
 }
 
-.themed-chart-panel .recharts-tooltip-wrapper {
-  z-index: 8;
+.native-cartesian-chart {
+  display: block;
+  width: 100%;
+  height: 280px;
+  overflow: visible;
+}
+
+.native-chart-area {
+  pointer-events: none;
+}
+
+.native-chart-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--chart-stroke);
+  vector-effect: non-scaling-stroke;
+}
+
+.native-chart-dot {
+  stroke: var(--surface);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+
+.native-chart-bar,
+.native-chart-dot {
+  transition: filter 120ms ease, opacity 120ms ease;
+}
+
+.native-chart-bar:hover,
+.native-chart-dot:hover {
+  filter: brightness(1.12) drop-shadow(0 0 6px var(--chart-primary));
 }
 
 .themed-area-chart,
@@ -87,6 +115,25 @@
 
 .themed-donut-chart {
   min-width: 0;
+}
+
+.native-donut-chart {
+  display: block;
+  width: 100%;
+  height: 248px;
+  overflow: visible;
+}
+
+.themed-donut.compact .native-donut-chart {
+  height: 190px;
+}
+
+.native-donut-segment {
+  transition: filter 120ms ease, opacity 120ms ease;
+}
+
+.native-donut-segment:hover {
+  filter: brightness(1.12);
 }
 
 .themed-donut-center {
@@ -189,43 +236,29 @@
   font-size: 1.35rem;
 }
 
-.bar-block .recharts-rectangle,
-.bar-pixel .recharts-rectangle,
-.bar-luxury .recharts-rectangle {
-  rx: 0;
-  ry: 0;
-}
-
-.bar-comic .recharts-rectangle {
+.bar-comic .native-chart-bar {
   stroke: var(--text);
   stroke-width: 2px;
 }
 
-.donut-neon .recharts-sector {
+.donut-neon .native-donut-segment {
   filter: drop-shadow(0 0 5px var(--chart-primary));
 }
 
-.donut-pixel .recharts-sector,
-.donut-solid .recharts-sector,
-.donut-luxury .recharts-sector {
-  stroke-width: 1px;
-}
-
-.grid-none .recharts-cartesian-grid,
-.grid-none .recharts-cartesian-axis-line {
+.grid-none .native-chart-grid line {
   display: none;
 }
 
-.grid-visible .recharts-cartesian-grid line,
-.grid-pixel .recharts-cartesian-grid line,
-.grid-comic .recharts-cartesian-grid line {
+.grid-visible .native-chart-grid line,
+.grid-pixel .native-chart-grid line,
+.grid-comic .native-chart-grid line {
   stroke: color-mix(in srgb, var(--text) 28%, transparent);
 }
 
-.grid-pixel .recharts-cartesian-grid line {
+.grid-pixel .native-chart-grid line {
   stroke-dasharray: 0;
 }
 
-.grid-comic .recharts-cartesian-grid line {
+.grid-comic .native-chart-grid line {
   stroke-width: 2px;
 }

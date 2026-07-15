@@ -10,12 +10,14 @@ type HabitEditorProps = {
   habit: Habit;
   updateHabit: UpdateHabit;
   deleteHabit: DeleteHabit;
+  hasHistory: boolean;
 };
 
 export const HabitEditor = memo(function HabitEditor({
   habit,
   updateHabit,
   deleteHabit,
+  hasHistory,
 }: HabitEditorProps) {
   const [name, setName] = useState(habit.nom);
   const [objective, setObjective] = useState(habit.objectif);
@@ -60,6 +62,7 @@ export const HabitEditor = memo(function HabitEditor({
           Catégorie
           <select
             value={habit.categorie}
+            disabled={hasHistory}
             onChange={(event) =>
               updateHabit(habit.id, {
                 categorie: event.target.value as Habit["categorie"],
@@ -75,6 +78,7 @@ export const HabitEditor = memo(function HabitEditor({
           Fréquence
           <select
             value={habit.frequence}
+            disabled={hasHistory}
             onChange={(event) =>
               updateHabit(habit.id, {
                 frequence: event.target.value as Habit["frequence"],
@@ -100,6 +104,7 @@ export const HabitEditor = memo(function HabitEditor({
           Priorité
           <select
             value={habit.priorite}
+            disabled={hasHistory}
             onChange={(event) =>
               updateHabit(habit.id, {
                 priorite: event.target.value as Habit["priorite"],
@@ -112,6 +117,11 @@ export const HabitEditor = memo(function HabitEditor({
           </select>
         </label>
       </div>
+      {hasHistory && (
+        <p className="history-lock-note">
+          Catégorie, fréquence et priorité sont figées pour préserver les statistiques passées.
+        </p>
+      )}
       <div className="settings-actions habit-editor-actions">
         <Button
           variant="secondary"

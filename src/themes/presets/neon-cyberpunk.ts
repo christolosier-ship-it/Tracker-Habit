@@ -3,7 +3,6 @@ import { createCharts, defineTheme } from "../define-theme";
 export const neonCyberpunkTheme = defineTheme({
   id: "neon-cyberpunk-matrix",
   name: "Neon Cyberpunk Matrix",
-  shortName: "Neon",
   description: "Dark. Electric. Relentless.",
   personality: "Matrice sombre, néons cyan, rose, violet et lime.",
   previewEmoji: "⚡",
@@ -29,15 +28,14 @@ export const neonCyberpunkTheme = defineTheme({
   },
   identity: {
     typography: "terminal",
-    frame: "hud",
-    navigation: { variant: "terminal", compactLabels: false, showDecorativeStatus: true },
+    navigation: { status: "terminal" },
     cells: { variant: "neon-square" },
   },
   charts: createCharts({
     hexPalette: ["#00E5FF", "#FF2BD6", "#B6FF00", "#7C3AED", "#FFD400"],
     status: { done: "#00FFB3", partial: "#FFD400", missed: "#FF3B6B", rest: "#7C3AED", empty: "#26304F" },
-    visual: { strokeWidth: 12, cornerRadius: 8, grid: "visible", donutVariant: "neon", barVariant: "rounded", heatmapVariant: "neon-squares" },
+    visual: { strokeWidth: 12, cornerRadius: 8, grid: "visible", donutVariant: "neon", barVariant: "rounded" },
   }),
   radius: { card: "22px", button: "12px", pill: "999px" },
-  effects: { backgroundStyle: "neon", glass: false, glow: true, pattern: true, stickers: false, highContrast: false, pixel: false, comic: false },
+  effects: { backgroundStyle: "neon", pixel: false },
 });

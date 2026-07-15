@@ -1,1 +1,171 @@
-.mascot-comic-pro .comic-rig{transform-box:fill-box;transform-origin:center;animation:comic-float 3.2s ease-in-out infinite}.mascot-comic-pro .comic-body{transform-box:fill-box;transform-origin:center;animation:comic-breathe 2.4s ease-in-out infinite}.mascot-comic-pro .comic-head{transform-box:fill-box;transform-origin:50% 80%;animation:comic-head 4s ease-in-out infinite}.mascot-comic-pro .comic-cape{transform-box:fill-box;transform-origin:85% 20%;animation:comic-cape 2.2s ease-in-out infinite}.mascot-comic-pro .comic-arm-left,.mascot-comic-pro .comic-arm-right{transform-box:fill-box;transform-origin:top center;animation:comic-arms 3s ease-in-out infinite alternate}.mascot-comic-pro .comic-arm-right{animation-delay:-1.5s}.mascot-comic-pro .comic-leg-left,.mascot-comic-pro .comic-leg-right{transform-box:fill-box;transform-origin:top center;animation:comic-step 2.6s ease-in-out infinite alternate}.mascot-comic-pro .comic-leg-right{animation-delay:-1.3s}.mascot-comic-pro .comic-star{transform-box:fill-box;transform-origin:center;animation:comic-star 1.5s ease-in-out infinite}.mascot-comic-pro .comic-eye-shine{animation:comic-blink 5s infinite}.mascot-comic-pro .comic-face{display:none}.mascot-comic-pro[data-mood="idle"] .comic-face-neutral,.mascot-comic-pro[data-mood="happy"] .comic-face-happy,.mascot-comic-pro[data-mood="celebrate"] .comic-face-celebrate,.mascot-comic-pro[data-mood="worried"] .comic-face-worried,.mascot-comic-pro[data-mood="sleepy"] .comic-face-sleepy{display:block}.mascot-comic-pro[data-mood="worried"] .comic-rig{animation:comic-worry .18s linear infinite}.mascot-comic-pro[data-mood="sleepy"] .comic-rig{animation-duration:5s}.comic-burst-particle{opacity:0;visibility:hidden}@keyframes comic-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}@keyframes comic-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025,.98)}}@keyframes comic-head{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(2deg)}}@keyframes comic-cape{0%,100%{transform:rotate(-4deg) skewY(0)}50%{transform:rotate(4deg) skewY(-4deg)}}@keyframes comic-arms{from{transform:rotate(-3deg)}to{transform:rotate(5deg)}}@keyframes comic-step{from{transform:rotate(-2deg)}to{transform:rotate(2deg)}}@keyframes comic-star{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35);transform:scale(1.05)}}@keyframes comic-blink{0%,46%,50%,100%{opacity:1}48%{opacity:.1}}@keyframes comic-worry{0%,100%{transform:translateX(-1px)}50%{transform:translateX(1px)}}@media (prefers-reduced-motion:reduce){.mascot-comic-pro *{animation:none!important}}
+.mascot-comic-pro .comic-rig {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: comic-float 3.2s ease-in-out infinite;
+}
+
+.mascot-comic-pro .comic-body {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: comic-breathe 2.4s ease-in-out infinite;
+}
+
+.mascot-comic-pro .comic-head {
+  transform-box: fill-box;
+  transform-origin: 50% 80%;
+  animation: comic-head 4s ease-in-out infinite;
+}
+
+.mascot-comic-pro .comic-cape {
+  transform-box: fill-box;
+  transform-origin: 85% 20%;
+  animation: comic-cape 2.2s ease-in-out infinite;
+}
+
+.mascot-comic-pro .comic-arm-left,.mascot-comic-pro .comic-arm-right {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: comic-arms 3s ease-in-out infinite alternate;
+}
+
+.mascot-comic-pro .comic-arm-right {
+  animation-delay: -1.5s;
+}
+
+.mascot-comic-pro .comic-leg-left,.mascot-comic-pro .comic-leg-right {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: comic-step 2.6s ease-in-out infinite alternate;
+}
+
+.mascot-comic-pro .comic-leg-right {
+  animation-delay: -1.3s;
+}
+
+.mascot-comic-pro .comic-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: comic-star 1.5s ease-in-out infinite;
+}
+
+.mascot-comic-pro .comic-eye-shine {
+  animation: comic-blink 5s infinite;
+}
+
+.mascot-comic-pro .comic-face {
+  display: none;
+}
+
+.mascot-comic-pro[data-mood="idle"] .comic-face-neutral,.mascot-comic-pro[data-mood="happy"] .comic-face-happy,.mascot-comic-pro[data-mood="celebrate"] .comic-face-celebrate,.mascot-comic-pro[data-mood="worried"] .comic-face-worried,.mascot-comic-pro[data-mood="sleepy"] .comic-face-sleepy {
+  display: block;
+}
+
+.mascot-comic-pro[data-mood="worried"] .comic-rig {
+  animation: comic-worry .18s linear infinite;
+}
+
+.mascot-comic-pro[data-mood="sleepy"] .comic-rig {
+  animation-duration: 5s;
+}
+
+.comic-burst-particle {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes comic-float {
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes comic-breathe {
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.025,.98);
+  }
+}
+
+@keyframes comic-head {
+  0%,100% {
+    transform: rotate(-1deg);
+  }
+
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes comic-cape {
+  0%,100% {
+    transform: rotate(-4deg) skewY(0);
+  }
+
+  50% {
+    transform: rotate(4deg) skewY(-4deg);
+  }
+}
+
+@keyframes comic-arms {
+  from {
+    transform: rotate(-3deg);
+  }
+
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes comic-step {
+  from {
+    transform: rotate(-2deg);
+  }
+
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes comic-star {
+  0%,100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.35);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes comic-blink {
+  0%,46%,50%,100% {
+    opacity: 1;
+  }
+
+  48% {
+    opacity: .1;
+  }
+}
+
+@keyframes comic-worry {
+  0%,100% {
+    transform: translateX(-1px);
+  }
+
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .mascot-comic-pro * {
+    animation: none!important;
+  }
+}

@@ -33,7 +33,7 @@ describe("moteur analytique indexé", () => {
     ];
     const analytics = createTrackerAnalytics(habits, logs, settings, now);
 
-    expect(analytics.monthScores(2026, 0).get("weekly")).toBe(-1);
+    expect(analytics.monthScores(2026, 0).get("weekly")).toBeNull();
     expect(analytics.monthScores(2026, 1).get("weekly")).toBe(100);
     expect(analytics.evaluationsForYear(2026)).toEqual([
       expect.objectContaining({
@@ -89,5 +89,100 @@ describe("moteur analytique indexé", () => {
       Array.from({ length: 12 }, (_, index) => String(index + 1)),
     );
     expect(dashboard.fragileHabits).toEqual([{ nom: "tracked", score: 0 }]);
+  });
+
+  it("distingue une absence de données d’un échec réel à 0 %", () => {
+    const habits = [habit("daily")];
+    const empty = createTrackerAnalytics(habits, [], settings, now).dashboard(
+      2026,
+      1,
+      Array.from({ length: 12 }, (_, index) => String(index + 1)),
+    );
+    expect(empty.scoreGlobal).toBeNull();
+    expect(empty.currentMonth).toBeNull();
+    expect(empty.monthly[1].score).toBeNull();
+
+    const failed = createTrackerAnalytics(
+      habits,
+      [{ habitId: "daily", date: "2026-02-01", status: "missed" }],
+      settings,
+      now,
+    ).dashboard(
+      2026,
+      1,
+      Array.from({ length: 12 }, (_, index) => String(index + 1)),
+    );
+    expect(failed.scoreGlobal).toBe(0);
+    expect(failed.currentMonth).toBe(0);
+    expect(failed.monthly[1].score).toBe(0);
+  });
+
+  it("conserve l’historique d’une habitude archivée sans la compter active", () => {
+    const archived = {
+      ...habit("archived"),
+      active: false,
+      archivedAt: "2026-02-10",
+    };
+    const dashboard = createTrackerAnalytics(
+      [archived],
+      [{ habitId: archived.id, date: "2026-02-05", status: "done" }],
+      settings,
+      now,
+    ).dashboard(
+      2026,
+      1,
+      Array.from({ length: 12 }, (_, index) => String(index + 1)),
+    );
+    expect(dashboard.scoreGlobal).toBe(100);
+    expect(dashboard.activeHabits).toBe(0);
+    expect(dashboard.annualRates).toHaveLength(1);
+  });
+
+  it("n’assimile pas une période inactive passée à des échecs", () => {
+    const paused = {
+      ...habit("paused"),
+      dateCreation: "2026-02-01",
+      inactiveRanges: [{ start: "2026-02-02", end: "2026-02-14" }],
+    };
+    const analytics = createTrackerAnalytics(
+      [paused],
+      [
+        { habitId: paused.id, date: "2026-02-01", status: "done" },
+        { habitId: paused.id, date: "2026-02-15", status: "done" },
+      ],
+      { ...settings, compterNonSaisisCommeManques: true },
+      now,
+    );
+
+    expect(analytics.dashboard(2026, 1, Array(12).fill("M")).scoreGlobal).toBe(100);
+  });
+
+  it("compte les statuts explicitement saisis, jamais les manques synthétiques", () => {
+    const countMissing = {
+      ...settings,
+      compterNonSaisisCommeManques: true,
+    };
+    const dashboard = createTrackerAnalytics(
+      [habit("one"), habit("two")],
+      [{ habitId: "one", date: "2026-02-01", status: "missed" }],
+      countMissing,
+      now,
+    ).dashboard(
+      2026,
+      1,
+      Array.from({ length: 12 }, (_, index) => String(index + 1)),
+    );
+    expect(dashboard.statusStats.find((item) => item.status === "missed")?.value).toBe(1);
+    expect(dashboard.statusStats.some((item) => item.status === "empty")).toBe(false);
+  });
+
+  it("ne tronque pas la matrice annuelle au-delà de trente habitudes", () => {
+    const habits = Array.from({ length: 45 }, (_, index) => habit(`h-${index}`));
+    const dashboard = createTrackerAnalytics(habits, [], settings, now).dashboard(
+      2026,
+      1,
+      Array.from({ length: 12 }, (_, index) => String(index + 1)),
+    );
+    expect(dashboard.annualRates).toHaveLength(45);
   });
 });

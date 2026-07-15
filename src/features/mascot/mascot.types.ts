@@ -1,3 +1,7 @@
+import type {
+  TrackerReaction,
+  TrackerReactionEvent,
+} from "../../app/tracker-events";
 import { ThemeId } from "../../themes/theme-types";
 
 export type MascotMood =
@@ -8,12 +12,8 @@ export type MascotMood =
   | "worried"
   | "hidden";
 
-export type MascotReaction = "habit-done" | "perfect-day" | "streak-record";
-
-export type MascotReactionEvent = {
-  id: number;
-  type: MascotReaction;
-};
+export type MascotReaction = TrackerReaction;
+export type MascotReactionEvent = TrackerReactionEvent;
 
 export type DashboardMascotProps = {
   themeId: ThemeId;

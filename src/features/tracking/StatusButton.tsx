@@ -6,9 +6,10 @@ import { HABIT_STATUS_DEFINITIONS } from "../../domain/definitions";
 type StatusButtonProps = {
   status: HabitStatus;
   onClick: () => void;
+  disabled?: boolean;
 };
 
-export function StatusButton({ status, onClick }: StatusButtonProps) {
+export function StatusButton({ status, onClick, disabled = false }: StatusButtonProps) {
   const Icon =
     status === "done"
       ? Check
@@ -24,6 +25,7 @@ export function StatusButton({ status, onClick }: StatusButtonProps) {
     <Button
       className={`status-button ${status}`}
       onClick={onClick}
+      disabled={disabled}
       type="button"
       variant="status"
     >

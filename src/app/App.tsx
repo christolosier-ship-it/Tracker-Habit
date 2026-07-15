@@ -8,7 +8,7 @@ import { selectMascotMood } from "../features/mascot/mascot-mood";
 import { applyThemeStyle } from "../themes/apply-theme";
 import { pageSpecs, Page } from "./constants";
 import { useTrackerController } from "./useTrackerController";
-import { useCurrentHour } from "./useCurrentHour";
+import { useCurrentTime } from "./useCurrentTime";
 
 const DashboardPage = lazy(() =>
   import("../pages/DashboardPage").then((module) => ({ default: module.DashboardPage })),
@@ -31,10 +31,11 @@ const SettingsPage = lazy(() =>
 
 export function App() {
   const [page, setPage] = useState<Page>("Dashboard");
-  const currentHour = useCurrentHour();
+  const currentTime = useCurrentTime();
   const {
     data,
     theme,
+    analytics,
     mascotStats,
     updateSettings,
     cycleHabitStatus,
@@ -44,26 +45,16 @@ export function App() {
     replaceData,
     mascotReaction,
     clearMascotReaction,
-  } = useTrackerController();
+    storageError,
+  } = useTrackerController(currentTime.date);
 
   const mascotMood = selectMascotMood({
     enabled: data.settings.mascotEnabled,
     todayScore: mascotStats.todayScore,
     monthScore: mascotStats.currentMonthScore,
     fragileHabitCount: mascotStats.fragileHabitCount,
-    currentHour,
+    currentHour: currentTime.hour,
   });
-
-  const pageProps = {
-    data,
-    theme,
-    setSettings: updateSettings,
-    cycle: cycleHabitStatus,
-    addHabit,
-    updateHabit,
-    deleteHabit,
-    replaceData,
-  };
 
   return (
     <div
@@ -76,7 +67,6 @@ export function App() {
       <nav
         className="sidebar"
         aria-label="Navigation principale"
-        data-navigation-style={theme.identity.navigation.variant}
       >
         <div className="brand">
           <Flame />
@@ -100,28 +90,71 @@ export function App() {
       </nav>
 
       <main>
+        {storageError && (
+          <p className="storage-warning" role="alert">
+            La sauvegarde locale est saturée. Exporte tes données avant de continuer.
+          </p>
+        )}
         <Suspense fallback={<div className="page-loading" aria-hidden="true" />}>
         {page === "Dashboard" && (
           <DashboardPage
             data={data}
             theme={theme}
+            analytics={analytics}
             setSettings={updateSettings}
           />
         )}
-        {page === "Aujourd’hui" && <TodayPage {...pageProps} />}
-        {page === "Mois" && <MonthPage {...pageProps} />}
-        {page === "Habitudes" && <HabitsPage {...pageProps} />}
-        {page === "Statistiques" && <StatsPage {...pageProps} />}
-        {page === "Paramètres" && <SettingsPage {...pageProps} />}
+        {page === "Aujourd’hui" && (
+          <TodayPage
+            data={data}
+            analytics={analytics}
+            today={currentTime.date}
+            cycle={cycleHabitStatus}
+          />
+        )}
+        {page === "Mois" && (
+          <MonthPage
+            data={data}
+            theme={theme}
+            analytics={analytics}
+            setSettings={updateSettings}
+            cycle={cycleHabitStatus}
+          />
+        )}
+        {page === "Habitudes" && (
+          <HabitsPage
+            data={data}
+            addHabit={addHabit}
+            updateHabit={updateHabit}
+            deleteHabit={deleteHabit}
+          />
+        )}
+        {page === "Statistiques" && (
+          <StatsPage
+            data={data}
+            theme={theme}
+            analytics={analytics}
+            setSettings={updateSettings}
+          />
+        )}
+        {page === "Paramètres" && (
+          <SettingsPage
+            data={data}
+            setSettings={updateSettings}
+            replaceData={replaceData}
+          />
+        )}
         </Suspense>
       </main>
 
-      <RoamingMascot
-        themeId={theme.id}
-        mood={mascotMood}
-        reaction={mascotReaction}
-        onReactionComplete={clearMascotReaction}
-      />
+      {data.settings.mascotEnabled && (
+        <RoamingMascot
+          themeId={theme.id}
+          mood={mascotMood}
+          reaction={mascotReaction}
+          onReactionComplete={clearMascotReaction}
+        />
+      )}
     </div>
   );
 }

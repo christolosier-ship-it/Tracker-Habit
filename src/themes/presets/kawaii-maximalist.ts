@@ -3,7 +3,6 @@ import { createCharts, defineTheme } from "../define-theme";
 export const kawaiiMaximalistTheme = defineTheme({
   id: "kawaii-maximalist",
   name: "Kawaii Maximalist",
-  shortName: "Kawaii",
   description: "Habit Party!",
   personality: "Pastel maximaliste, stickers, cute et joyeux.",
   previewEmoji: "🐰",
@@ -13,12 +12,12 @@ export const kawaiiMaximalistTheme = defineTheme({
     accent: "#8BD3FF", accent2: "#FFF176", success: "#A7F3D0", warning: "#FDE68A", danger: "#FDA4AF",
     border: "#FFC4E6", shadow: "0 24px 60px rgba(255,138,205,.22)", glow: "rgba(139,211,255,.28)",
   },
-  identity: { typography: "kawaii-rounded", frame: "sticker", navigation: { variant: "kawaii", compactLabels: false, showDecorativeStatus: false }, cells: { variant: "kawaii-sticker" } },
+  identity: { typography: "kawaii-rounded", navigation: {}, cells: { variant: "kawaii-sticker" } },
   charts: createCharts({
     hexPalette: ["#FF8ACD", "#8BD3FF", "#FFF176", "#A7F3D0", "#FDA4AF"],
     status: { done: "#A7F3D0", partial: "#FDE68A", missed: "#FDA4AF", rest: "#8BD3FF", empty: "#F2D9F4" },
-    visual: { strokeWidth: 15, cornerRadius: 20, grid: "soft", donutVariant: "soft", barVariant: "rounded", heatmapVariant: "kawaii-stickers" },
+    visual: { strokeWidth: 15, cornerRadius: 20, grid: "soft", donutVariant: "soft", barVariant: "rounded" },
   }),
   radius: { card: "32px", button: "999px", pill: "999px" },
-  effects: { backgroundStyle: "kawaii", glass: false, glow: false, pattern: true, stickers: true, highContrast: false, pixel: false, comic: false },
+  effects: { backgroundStyle: "kawaii", pixel: false },
 });

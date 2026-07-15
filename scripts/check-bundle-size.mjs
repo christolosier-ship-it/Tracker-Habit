@@ -42,15 +42,15 @@ const jsGzip = total(javascript, gzipSize);
 const cssBytes = total(styles, size);
 const cssGzip = total(styles, gzipSize);
 
-if (largestJavascript.bytes > 380_000) {
+if (largestJavascript.bytes > 220_000) {
   failures.push(
     `Plus gros chunk trop lourd : ${largestJavascript.file} (${largestJavascript.bytes})`,
   );
 }
-if (jsBytes > 875_000) failures.push(`JavaScript total trop lourd : ${jsBytes}`);
-if (jsGzip > 270_000) failures.push(`JavaScript gzip total trop lourd : ${jsGzip}`);
-if (cssBytes > 80_000) failures.push(`CSS total trop lourd : ${cssBytes}`);
-if (cssGzip > 18_500) failures.push(`CSS gzip total trop lourd : ${cssGzip}`);
+if (jsBytes > 500_000) failures.push(`JavaScript total trop lourd : ${jsBytes}`);
+if (jsGzip > 165_000) failures.push(`JavaScript gzip total trop lourd : ${jsGzip}`);
+if (cssBytes > 85_000) failures.push(`CSS total trop lourd : ${cssBytes}`);
+if (cssGzip > 19_000) failures.push(`CSS gzip total trop lourd : ${cssGzip}`);
 
 if (failures.length) {
   console.error(`Budget bundle dépassé :\n- ${failures.join("\n- ")}`);

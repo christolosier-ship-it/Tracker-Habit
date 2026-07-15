@@ -117,7 +117,6 @@
 }
 
 .ui-button-secondary,
-.ui-button-ghost,
 .file-button {
   color: var(--text);
   background: color-mix(in srgb, var(--surface-soft) 88%, transparent);
@@ -127,17 +126,6 @@
   color: white;
   border-color: color-mix(in srgb, var(--danger) 78%, white);
   background: var(--danger);
-}
-
-.ui-button-sm {
-  min-height: 34px;
-  padding-inline: 11px;
-  font-size: 0.8rem;
-}
-
-.ui-button-lg {
-  min-height: 50px;
-  padding-inline: 20px;
 }
 
 .ui-badge {
@@ -172,10 +160,6 @@
   color: var(--danger);
   border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
   background: color-mix(in srgb, var(--danger) 14%, var(--surface));
-}
-
-.ui-badge-muted {
-  color: var(--text-muted);
 }
 
 .theme-kpi-frame {
@@ -347,6 +331,11 @@ button.theme-calendar-cell:hover {
 .theme-calendar-cell.empty,
 .status-button.empty {
   color: var(--text-muted);
+}
+
+.annual-matrix .theme-calendar-cell {
+  border-color: color-mix(in srgb, var(--cell-score-color) 72%, var(--border));
+  background: color-mix(in srgb, var(--cell-score-color) 76%, var(--surface));
 }
 
 .today-summary {
@@ -570,6 +559,24 @@ button.theme-calendar-cell:hover {
   margin: 14px 0 0;
   color: var(--success);
   font-weight: 750;
+}
+
+.storage-warning {
+  margin: 0 0 14px;
+  padding: 11px 14px;
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border));
+  border-radius: var(--control-radius);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.history-lock-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
 }
 
 .theme-card {

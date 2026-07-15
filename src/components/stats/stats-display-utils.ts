@@ -1,13 +1,17 @@
 import { AppTheme } from "../../themes/theme-types";
-import { CategoryStats, StatusStats } from "../../types";
+import type {
+  CategoryStats,
+  MonthlyScore,
+  StatusStats,
+} from "../../analytics/tracker-analytics";
 import { getScoreBand, getScoreColor } from "../charts/chart-theme-utils";
 
-export type MonthlyScore = { mois: string; score: number };
+export type { MonthlyScore } from "../../analytics/tracker-analytics";
 
 export function strongestMonth(monthly: MonthlyScore[]) {
   return monthly
-    .filter((item) => item.score > 0)
-    .reduce<MonthlyScore | undefined>(
+    .filter((item): item is MonthlyScore & { score: number } => item.score !== null)
+    .reduce<(MonthlyScore & { score: number }) | undefined>(
       (best, item) => (!best || item.score > best.score ? item : best),
       undefined,
     );
@@ -15,8 +19,8 @@ export function strongestMonth(monthly: MonthlyScore[]) {
 
 export function fragileMonth(monthly: MonthlyScore[]) {
   return monthly
-    .filter((item) => item.score > 0)
-    .reduce<MonthlyScore | undefined>(
+    .filter((item): item is MonthlyScore & { score: number } => item.score !== null)
+    .reduce<(MonthlyScore & { score: number }) | undefined>(
       (fragile, item) => (!fragile || item.score < fragile.score ? item : fragile),
       undefined,
     );
@@ -40,13 +44,11 @@ export function fragileCategory(categoryStats: CategoryStats[]) {
     );
 }
 
-export function scoreColor(theme: AppTheme, score: number) {
-  return score === 0 ? theme.charts.status.empty : getScoreColor(theme, score);
+export function scoreColor(theme: AppTheme, score: number | null) {
+  return score === null ? theme.charts.status.empty : getScoreColor(theme, score);
 }
 
 export function scoreBadge(theme: AppTheme, score: number) {
-  if (score === 0)
-    return { label: "À lancer", color: theme.charts.status.empty };
   const band = getScoreBand(score);
   const label =
     band === "great"
@@ -67,7 +69,6 @@ export const statusLegendOrder: Array<{
   { status: "partial", label: "Partiel" },
   { status: "missed", label: "Manqué" },
   { status: "rest", label: "Repos" },
-  { status: "empty", label: "Non saisi" },
 ];
 
 export function softColor(color: string) {

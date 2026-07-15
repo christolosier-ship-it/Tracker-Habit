@@ -34,12 +34,8 @@ export function createCharts({
       {} as ThemeCharts["category"],
     ),
     gradients: {
-      progressFrom: hexPalette[0],
       progressTo: hexPalette[1] ?? hexPalette[0],
-      dangerFrom: status.missed,
       dangerTo: hexPalette[2] ?? status.partial,
-      neutralFrom: status.empty,
-      neutralTo: status.rest,
     },
     visual,
   };

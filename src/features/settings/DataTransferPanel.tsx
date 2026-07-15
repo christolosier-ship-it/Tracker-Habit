@@ -6,7 +6,6 @@ import { Card } from "../../components/ui/card";
 import {
   AppData,
   demoData,
-  migrateData,
   resetData,
   validateImport,
 } from "../../persistence";
@@ -40,7 +39,7 @@ export function DataTransferPanel({ data, replaceData }: DataTransferPanelProps)
       .then((text) => {
         const imported: unknown = JSON.parse(text);
         if (validateImport(imported)) {
-          replaceData(migrateData(imported));
+          replaceData(imported);
           setMessage("Import réussi.");
         } else {
           setMessage("JSON invalide : structure non reconnue.");

@@ -1,10 +1,10 @@
 import { HABIT_STATUS_DEFINITIONS } from "./definitions";
-import type { Habit, HabitStatus, UserSettings } from "../types";
-import type { TrackerIndex } from "../analytics/tracker-index";
-import {
-  readHabitWeekLogs,
-  readTrackerStatus,
-} from "../analytics/tracker-index";
+import type {
+  AnalyticsOptions,
+  Habit,
+  TrackerLogReader,
+} from "./tracker-types";
+import type { HabitStatus } from "./definitions";
 import { compareIsoDates } from "../lib/date-utils";
 
 export type TrackerEvaluation = {
@@ -12,30 +12,35 @@ export type TrackerEvaluation = {
   date: string;
   status: HabitStatus;
   score: number | null;
-  synthetic: boolean;
 };
 
 export type ScoreAggregate = {
-  earned: number;
   opportunities: number;
-  done: number;
-  score: number;
-  successRate: number;
+  score: number | null;
+  successRate: number | null;
 };
 
 export function habitExistsOnDate(habit: Habit, date: string) {
-  return compareIsoDates(date, habit.dateCreation) >= 0;
+  return (
+    compareIsoDates(date, habit.dateCreation) >= 0 &&
+    (!habit.archivedAt || compareIsoDates(date, habit.archivedAt) <= 0) &&
+    !habit.inactiveRanges?.some(
+      (range) =>
+        compareIsoDates(date, range.start) >= 0 &&
+        compareIsoDates(date, range.end) <= 0,
+    )
+  );
 }
 
 export function statusScore(
   status: HabitStatus,
   date: string,
-  settings: UserSettings,
+  options: AnalyticsOptions,
   today: string,
 ) {
   if (
     status === "empty" &&
-    settings.compterNonSaisisCommeManques &&
+    options.compterNonSaisisCommeManques &&
     compareIsoDates(date, today) < 0
   ) {
     return 0;
@@ -46,20 +51,19 @@ export function statusScore(
 export function evaluateDailyHabit(
   habit: Habit,
   date: string,
-  index: TrackerIndex,
-  settings: UserSettings,
+  reader: TrackerLogReader,
+  options: AnalyticsOptions,
   today: string,
 ): TrackerEvaluation | null {
-  if (!habit.active || !habitExistsOnDate(habit, date)) return null;
-  const status = readTrackerStatus(index, habit.id, date);
-  const score = statusScore(status, date, settings, today);
+  if (!habitExistsOnDate(habit, date)) return null;
+  const status = reader.readStatus(habit.id, date);
+  const score = statusScore(status, date, options, today);
   if (score === null && status === "empty") return null;
   return {
     habitId: habit.id,
     date,
     status,
     score,
-    synthetic: status === "empty",
   };
 }
 
@@ -67,19 +71,22 @@ export function evaluateWeeklyHabit(
   habit: Habit,
   weekStart: string,
   weekEnd: string,
-  index: TrackerIndex,
-  settings: UserSettings,
+  reader: TrackerLogReader,
+  options: AnalyticsOptions,
   today: string,
 ): TrackerEvaluation | null {
-  if (!habit.active || compareIsoDates(weekEnd, habit.dateCreation) < 0) {
+  if (
+    compareIsoDates(weekEnd, habit.dateCreation) < 0 ||
+    (habit.archivedAt && compareIsoDates(weekStart, habit.archivedAt) > 0)
+  ) {
     return null;
   }
 
-  const weekLogs = readHabitWeekLogs(index, habit.id, weekStart).filter(
+  const weekLogs = reader.readWeekLogs(habit.id, weekStart).filter(
     (log) =>
       compareIsoDates(log.date, weekStart) >= 0 &&
       compareIsoDates(log.date, weekEnd) <= 0 &&
-      compareIsoDates(log.date, habit.dateCreation) >= 0,
+      habitExistsOnDate(habit, log.date),
   );
   const statuses = new Set(weekLogs.map((log) => log.status));
   const status: HabitStatus = statuses.has("done")
@@ -91,7 +98,10 @@ export function evaluateWeeklyHabit(
         : statuses.has("rest")
           ? "rest"
           : "empty";
-  const score = statusScore(status, weekEnd, settings, today);
+  const effectiveDate = habit.archivedAt && compareIsoDates(habit.archivedAt, weekEnd) < 0
+    ? habit.archivedAt
+    : weekEnd;
+  const score = statusScore(status, effectiveDate, options, today);
   if (score === null && status === "empty") return null;
 
   return {
@@ -99,7 +109,6 @@ export function evaluateWeeklyHabit(
     date: weekEnd,
     status,
     score,
-    synthetic: status === "empty",
   };
 }
 
@@ -118,12 +127,10 @@ export function aggregateEvaluations(
   }
 
   return {
-    earned,
     opportunities,
-    done,
-    score: opportunities ? Math.round((earned / opportunities) * 100) : 0,
+    score: opportunities ? Math.round((earned / opportunities) * 100) : null,
     successRate: opportunities
       ? Math.round((done / opportunities) * 100)
-      : 0,
+      : null,
   };
 }

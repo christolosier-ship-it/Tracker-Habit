@@ -13,9 +13,14 @@ import { useDashboardStats } from "../hooks/useDashboardStats";
 export function StatsPage({
   data,
   theme,
+  analytics,
   setSettings,
 }: StatsPageProps) {
-  const stats = useDashboardStats(data);
+  const stats = useDashboardStats(
+    analytics,
+    data.settings.anneeActive,
+    data.settings.moisActif,
+  );
   return (
     <>
       <PeriodControls
