@@ -11,9 +11,9 @@ export const HABIT_CATEGORIES = [
   "Autre",
 ] as const;
 
-export const HABIT_FREQUENCIES = ["quotidienne", "hebdomadaire"] as const;
-export const HABIT_PRIORITIES = ["faible", "normale", "haute"] as const;
-export const HABIT_STATUSES = [
+const HABIT_FREQUENCIES = ["quotidienne", "hebdomadaire"] as const;
+const HABIT_PRIORITIES = ["faible", "normale", "haute"] as const;
+export const HABIT_STATUS_CYCLE = [
   "empty",
   "done",
   "partial",
@@ -24,7 +24,7 @@ export const HABIT_STATUSES = [
 export type HabitCategory = (typeof HABIT_CATEGORIES)[number];
 export type HabitFrequency = (typeof HABIT_FREQUENCIES)[number];
 export type HabitPriority = (typeof HABIT_PRIORITIES)[number];
-export type HabitStatus = (typeof HABIT_STATUSES)[number];
+export type HabitStatus = (typeof HABIT_STATUS_CYCLE)[number];
 
 export const HABIT_STATUS_DEFINITIONS = {
   empty: { label: "Non saisi", score: null, symbol: "·" },
@@ -36,8 +36,6 @@ export const HABIT_STATUS_DEFINITIONS = {
   HabitStatus,
   { label: string; score: number | null; symbol: string }
 >;
-
-export const HABIT_STATUS_CYCLE: readonly HabitStatus[] = HABIT_STATUSES;
 
 function includes<T extends string>(values: readonly T[], value: unknown): value is T {
   return typeof value === "string" && values.includes(value as T);
@@ -53,4 +51,4 @@ export const isHabitPriority = (value: unknown): value is HabitPriority =>
   includes(HABIT_PRIORITIES, value);
 
 export const isHabitStatus = (value: unknown): value is HabitStatus =>
-  includes(HABIT_STATUSES, value);
+  includes(HABIT_STATUS_CYCLE, value);

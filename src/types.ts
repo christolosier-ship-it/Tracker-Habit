@@ -8,8 +8,6 @@ import type { ThemeId } from "./themes/theme-ids";
 
 export type {
   HabitCategory,
-  HabitFrequency,
-  HabitPriority,
   HabitStatus,
 } from "./domain/definitions";
 
@@ -37,20 +35,6 @@ export type UserSettings = {
   compterNonSaisisCommeManques: boolean;
   themeId: ThemeId;
   mascotEnabled: boolean;
-};
-
-export type MonthStats = {
-  mois: number;
-  score: number;
-  tauxReussite: number;
-  joursDisciplines: number;
-};
-
-export type YearStats = {
-  annee: number;
-  score: number;
-  tauxReussite: number;
-  mois: MonthStats[];
 };
 
 export type CategoryStats = {

@@ -7,7 +7,7 @@ export function formatLocalIso(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-export function parseLocalIso(value: string) {
+function parseLocalIso(value: string) {
   if (!ISO_DATE_PATTERN.test(value)) return new Date(Number.NaN);
   const [year, month, day] = value.split("-").map(Number);
   return new Date(year, month - 1, day, 12, 0, 0, 0);
@@ -21,10 +21,6 @@ export function isValidIsoDate(value: unknown): value is string {
 
 export function compareIsoDates(left: string, right: string) {
   return left.localeCompare(right);
-}
-
-export function isIsoDatePast(value: string, now = new Date()) {
-  return compareIsoDates(value, formatLocalIso(now)) < 0;
 }
 
 export function monthPrefix(year: number, month: number) {
@@ -59,7 +55,7 @@ export function getIsoWeekKey(value: string) {
   return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 
-export function addIsoDays(value: string, amount: number) {
+function addIsoDays(value: string, amount: number) {
   const date = parseLocalIso(value);
   date.setDate(date.getDate() + amount);
   return formatLocalIso(date);

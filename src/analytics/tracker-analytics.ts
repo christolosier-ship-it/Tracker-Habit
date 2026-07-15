@@ -25,7 +25,6 @@ import {
 import {
   buildTrackerIndex,
   readTrackerStatus,
-  type TrackerIndex,
 } from "./tracker-index";
 
 const ANTI_PATTERN = /prioritaire|deep work|scrolling|pénible|repoussé/i;
@@ -459,6 +458,3 @@ export function createTrackerAnalytics(
     monthScores,
   };
 }
-
-export type TrackerAnalytics = ReturnType<typeof createTrackerAnalytics>;
-export type { TrackerIndex };

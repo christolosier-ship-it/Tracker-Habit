@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { HabitStatusCard } from "../features/tracking/HabitStatusCard";
@@ -13,8 +11,14 @@ import { readTrackerStatus } from "../analytics/tracker-index";
 
 export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
   const [filter, setFilter] = useState<FilterToday>("Quotidiennes");
-  const date = formatLocalIso(new Date());
-  const dateFr = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
+  const now = new Date();
+  const date = formatLocalIso(now);
+  const dateFr = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(now);
   const tracking = useMemo(
     () =>
       selectDayTracking(

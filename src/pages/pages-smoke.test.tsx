@@ -3,14 +3,12 @@ import { describe, expect, it } from "vitest";
 import { RoamingMascot } from "../features/mascot/RoamingMascot";
 import { demoData } from "../persistence";
 import { resolveTheme } from "../themes/theme-registry";
-import {
-  DashboardPage,
-  HabitsPage,
-  MonthPage,
-  SettingsPage,
-  StatsPage,
-  TodayPage,
-} from "./index";
+import { DashboardPage } from "./DashboardPage";
+import { HabitsPage } from "./HabitsPage";
+import { MonthPage } from "./MonthPage";
+import { SettingsPage } from "./SettingsPage";
+import { StatsPage } from "./StatsPage";
+import { TodayPage } from "./TodayPage";
 
 const data = demoData();
 const theme = resolveTheme(data.settings.themeId);

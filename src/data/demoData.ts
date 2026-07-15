@@ -1,8 +1,6 @@
 import { HABIT_CATEGORIES } from "../domain/definitions";
 import { Habit, HabitCategory, HabitLog, UserSettings } from "../types";
 
-export const categories = HABIT_CATEGORIES;
-
 const categoryByHabit: Record<string, HabitCategory> = {
   'Lever tôt': 'Routine',
   'Coucher avant 23h': 'Routine',
@@ -95,7 +93,9 @@ export const demoHabits: Habit[] = [
   ...daily.map((nom, i) => ({
     id: `d${i + 1}`,
     nom,
-    categorie: categoryByHabit[nom] ?? categories[i % categories.length],
+    categorie:
+      categoryByHabit[nom] ??
+      HABIT_CATEGORIES[i % HABIT_CATEGORIES.length],
     frequence: 'quotidienne' as const,
     objectif: i % 4 === 0 ? 'Avant midi' : i % 3 === 0 ? '60 min' : '1 fois',
     priorite: i % 6 === 0 ? ('haute' as const) : i % 2 ? ('normale' as const) : ('faible' as const),
@@ -106,7 +106,7 @@ export const demoHabits: Habit[] = [
   ...weekly.map((nom, i) => ({
     id: `w${i + 1}`,
     nom,
-    categorie: categories[(i + 3) % categories.length],
+    categorie: HABIT_CATEGORIES[(i + 3) % HABIT_CATEGORIES.length],
     frequence: 'hebdomadaire' as const,
     objectif: '1 fois / semaine',
     priorite: i % 4 === 0 ? ('haute' as const) : ('normale' as const),

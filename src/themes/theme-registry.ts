@@ -30,7 +30,7 @@ export const themes: AppTheme[] = [
 
 export const defaultThemeId: ThemeId = DEFAULT_THEME_ID;
 
-export const themeById = Object.fromEntries(
+const themeById = Object.fromEntries(
   themes.map((theme) => [theme.id, theme]),
 ) as Record<ThemeId, AppTheme>;
 

@@ -1,7 +1,7 @@
 import { Check, Clock, Pause, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { HabitStatus } from "../../types";
-import * as S from "../../lib/stats";
+import { HABIT_STATUS_DEFINITIONS } from "../../domain/definitions";
 
 type StatusButtonProps = {
   status: HabitStatus;
@@ -28,7 +28,7 @@ export function StatusButton({ status, onClick }: StatusButtonProps) {
       variant="status"
     >
       <Icon />
-      {S.statusLabels[status]}
+      {HABIT_STATUS_DEFINITIONS[status].label}
     </Button>
   );
 }

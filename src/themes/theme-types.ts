@@ -3,7 +3,7 @@ import type { ThemeId } from "./theme-ids";
 
 export type { ThemeId } from "./theme-ids";
 
-export type ThemeTypographyVariant =
+type ThemeTypographyVariant =
   | "terminal"
   | "friendly-rounded"
   | "bold-geometric"
@@ -17,7 +17,7 @@ export type ThemeTypographyVariant =
   | "comic-display"
   | "future-rounded";
 
-export type ThemeFrameVariant =
+type ThemeFrameVariant =
   | "hud"
   | "candy"
   | "memphis"
@@ -31,7 +31,7 @@ export type ThemeFrameVariant =
   | "comic"
   | "liquid";
 
-export type ThemeNavigationVariant =
+type ThemeNavigationVariant =
   | "terminal"
   | "candy"
   | "color-block"
@@ -45,7 +45,7 @@ export type ThemeNavigationVariant =
   | "comic"
   | "liquid";
 
-export type ThemeCellVariant =
+type ThemeCellVariant =
   | "neon-square"
   | "candy-dot"
   | "memphis-shape"
@@ -59,7 +59,7 @@ export type ThemeCellVariant =
   | "comic-token"
   | "liquid-bubble";
 
-export type ThemeStyle =
+type ThemeStyle =
   | "pop"
   | "neon"
   | "memphis"

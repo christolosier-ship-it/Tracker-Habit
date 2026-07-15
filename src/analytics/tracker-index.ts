@@ -8,7 +8,7 @@ export type TrackerIndex = {
   byHabitWeek: Map<string, HabitLog[]>;
 };
 
-export function logKey(habitId: string, date: string) {
+function logKey(habitId: string, date: string) {
   return `${habitId}|${date}`;
 }
 

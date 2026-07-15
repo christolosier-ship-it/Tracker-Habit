@@ -1,4 +1,4 @@
-import { AppTheme, ChartCategoryName } from "../../themes/theme-types";
+import { AppTheme } from "../../themes/theme-types";
 import { HabitStatus } from "../../types";
 
 export type ChartVariant =
@@ -20,19 +20,8 @@ export const statusOrder: HabitStatus[] = [
   "empty",
 ];
 
-export function getStatusColor(theme: AppTheme, status: HabitStatus) {
-  return theme.charts.status[status];
-}
-
 export function getStatusChartColors(theme: AppTheme) {
   return statusOrder.map((status) => theme.charts.status[status]);
-}
-
-export function getCategoryColor(theme: AppTheme, category: string) {
-  return (
-    theme.charts.category[category as ChartCategoryName] ??
-    theme.charts.hexPalette[0]
-  );
 }
 
 export function getScoreBand(score: number): ScoreBand {

@@ -7,7 +7,7 @@ import { PeriodControls } from "../features/period/PeriodControls";
 import { daysInMonth } from "../lib/date-utils";
 import { monthLongLabels, statusSymbol } from "../app/constants";
 import { MonthPageProps } from "./page-types";
-import * as S from "../lib/stats";
+import { HABIT_STATUS_DEFINITIONS } from "../domain/definitions";
 import { selectMonthTracking } from "../lib/tracking-selectors";
 import { readTrackerStatus } from "../analytics/tracker-index";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -111,7 +111,7 @@ export function MonthPage({
                 <ThemeCalendarCell
                   theme={theme}
                   status={status}
-                  title={`${habit.nom} · ${S.statusLabels[status]}`}
+                  title={`${habit.nom} · ${HABIT_STATUS_DEFINITIONS[status].label}`}
                   onClick={() => cycle(habit.id, date)}
                   key={date}
                 >

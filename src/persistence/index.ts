@@ -4,5 +4,4 @@ export {
   SCHEMA_VERSION,
   validateImport,
   type AppData,
-  type ImportableAppData,
 } from "./schema";
