@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 const root = process.cwd();
 const failures = [];
@@ -8,7 +8,8 @@ const requiredPaths = [
   "src/analytics/tracker-index.ts",
   "src/domain/definitions.ts",
   "src/domain/evaluation.ts",
-  "src/domain/tracker-reducer.ts",
+  "src/domain/tracker-types.ts",
+  "src/app/tracker-reducer.ts",
   "src/persistence/schema.ts",
   "src/persistence/migrations.ts",
   "src/persistence/local-storage.ts",
@@ -64,12 +65,80 @@ const forbiddenFragments = [
   "dashboard-mascot",
   "theme-identity-layer",
   "window.gsap",
+  "shortName:",
+  "compactLabels:",
+  "showDecorativeStatus:",
+  "heatmapVariant:",
+  "data-chart-theme",
 ];
 for (const file of sourceFiles) {
   const content = readFileSync(file, "utf8");
   for (const fragment of forbiddenFragments) {
     if (content.includes(fragment)) {
       failures.push(`${fragment} encore présent dans ${relative(root, file)}`);
+    }
+  }
+}
+
+const forbiddenLayerDependencies = {
+  "src/domain/": [
+    "src/analytics/",
+    "src/app/",
+    "src/components/",
+    "src/features/",
+    "src/hooks/",
+    "src/pages/",
+    "src/persistence/",
+    "src/themes/",
+  ],
+  "src/analytics/": [
+    "src/app/",
+    "src/components/",
+    "src/features/",
+    "src/hooks/",
+    "src/pages/",
+    "src/persistence/",
+    "src/themes/",
+  ],
+  "src/persistence/": [
+    "src/app/",
+    "src/components/",
+    "src/features/",
+    "src/hooks/",
+    "src/pages/",
+  ],
+  "src/themes/": [
+    "src/analytics/",
+    "src/app/",
+    "src/components/",
+    "src/features/",
+    "src/hooks/",
+    "src/pages/",
+    "src/persistence/",
+  ],
+};
+
+for (const file of sourceFiles.filter(
+  (path) => /\.tsx?$/.test(path) && !path.includes(".test."),
+)) {
+  const importer = relative(root, file).replaceAll("\\", "/");
+  const rule = Object.entries(forbiddenLayerDependencies).find(([prefix]) =>
+    importer.startsWith(prefix),
+  );
+  if (!rule) continue;
+  const source = readFileSync(file, "utf8");
+  const imports = [
+    ...source.matchAll(/(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']/g),
+  ].map((match) => match[1]);
+  for (const specifier of imports) {
+    if (!specifier.startsWith(".")) continue;
+    const dependency = relative(root, resolve(dirname(file), specifier))
+      .replaceAll("\\", "/");
+    const forbiddenPrefix = rule[1].find((prefix) => dependency.startsWith(prefix));
+    if (forbiddenPrefix) {
+      failures.push(
+        `Dépendance de couche interdite : ${importer} -> ${dependency} (${forbiddenPrefix})`,
+      );
     }
   }
 }
@@ -83,6 +152,7 @@ for (const dependency of [
   "date-fns",
   "class-variance-authority",
   "clsx",
+  "recharts",
 ]) {
   if (
     packageJson.dependencies?.[dependency] ||
@@ -103,5 +173,5 @@ if (failures.length) {
 }
 
 console.log(
-  "Architecture conforme : domaine, analytics, persistance, pages, thèmes et styles sont séparés.",
+  "Architecture conforme : frontières et sens des dépendances sont contrôlés.",
 );

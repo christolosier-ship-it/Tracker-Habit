@@ -83,6 +83,7 @@ describe("persistance locale", () => {
     const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(loadData()).toEqual(backup);
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify(backup));
     expect(warning).toHaveBeenCalledOnce();
   });
 
@@ -120,7 +121,7 @@ describe("persistance locale", () => {
     vi.stubGlobal("localStorage", storage);
     const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-    expect(() => saveData(fixture())).not.toThrow();
+    expect(saveData(fixture())).toBe(false);
     expect(warning).toHaveBeenCalledOnce();
   });
 

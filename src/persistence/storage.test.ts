@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AppData } from "./schema";
+import { SCHEMA_VERSION, type AppData } from "./schema";
 import { migrateData } from "./migrations";
 import { validateImport } from "./schema";
 
@@ -33,7 +33,7 @@ describe("migration du stockage", () => {
     delete (legacy.settings as Partial<AppData["settings"]>).mascotEnabled;
     expect(validateImport(legacy)).toBe(true);
     const migrated = migrateData(legacy);
-    expect(migrated.schemaVersion).toBe(5);
+    expect(migrated.schemaVersion).toBe(SCHEMA_VERSION);
     expect(migrated.settings.mascotEnabled).toBe(true);
     expect(migrated.habits).toHaveLength(1);
     expect(migrated.logs).toEqual(v3.logs);
@@ -81,5 +81,49 @@ describe("migration du stockage", () => {
     expect(migrated.logs).toEqual([
       { habitId: "h1", date: "2026-01-02", status: "partial" },
     ]);
+  });
+
+  it("nettoie les champs historiques et les logs hors durée de vie", () => {
+    const migrated = migrateData({
+      ...v3,
+      habits: [
+        {
+          ...v3.habits[0],
+          active: false,
+          couleur: "#fff",
+        } as AppData["habits"][number],
+      ],
+      logs: [
+        { habitId: "h1", date: "2025-12-31", status: "done" },
+        { habitId: "h1", date: "2026-01-02", status: "partial" },
+      ],
+    });
+
+    expect(migrated.habits[0].archivedAt).toBe("2026-01-02");
+    expect("couleur" in migrated.habits[0]).toBe(false);
+    expect(migrated.logs).toEqual([
+      { habitId: "h1", date: "2026-01-02", status: "partial" },
+    ]);
+  });
+
+  it("conserve les périodes inactives et retire les logs qui s’y trouvent", () => {
+    const migrated = migrateData({
+      ...v3,
+      habits: [
+        {
+          ...v3.habits[0],
+          inactiveRanges: [{ start: "2026-01-03", end: "2026-01-05" }],
+        },
+      ],
+      logs: [
+        ...v3.logs,
+        { habitId: "h1", date: "2026-01-04", status: "done" },
+      ],
+    });
+
+    expect(migrated.habits[0].inactiveRanges).toEqual([
+      { start: "2026-01-03", end: "2026-01-05" },
+    ]);
+    expect(migrated.logs).toEqual(v3.logs);
   });
 });

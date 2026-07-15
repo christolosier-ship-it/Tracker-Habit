@@ -9,6 +9,8 @@ export default defineConfig({
         "src/analytics/**/*.ts",
         "src/domain/**/*.ts",
         "src/persistence/**/*.ts",
+        "src/app/tracker-{events,reducer}.ts",
+        "src/components/stats/stats-display-utils.ts",
       ],
       exclude: ["src/**/*.test.ts"],
       reporter: ["text", "json-summary"],
