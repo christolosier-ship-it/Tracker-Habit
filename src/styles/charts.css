@@ -113,6 +113,20 @@
   min-height: 190px;
 }
 
+.status-breakdown.status-breakdown-vertical {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.status-breakdown-vertical .status-breakdown-chart {
+  width: min(100%, 280px);
+  justify-self: center;
+}
+
+.status-breakdown-vertical .status-legend {
+  width: 100%;
+}
+
 .themed-donut-chart {
   min-width: 0;
 }
