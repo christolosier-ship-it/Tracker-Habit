@@ -1,7 +1,7 @@
 import { CycleStatus } from "../../app/tracker-actions";
 import { Badge } from "../../components/ui/badge";
 import { Card } from "../../components/ui/card";
-import { AppData } from "../../lib/storage";
+import { AppData } from "../../persistence";
 import { Habit } from "../../types";
 import * as S from "../../lib/stats";
 import { StatusButton } from "./StatusButton";

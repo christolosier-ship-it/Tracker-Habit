@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { RoamingMascot } from "../features/mascot/RoamingMascot";
 import { selectDashboardStats } from "../lib/dashboard-selectors";
-import { demoData } from "../lib/storage";
+import { demoData } from "../persistence";
 import { resolveTheme } from "../themes/theme-registry";
 import {
   DashboardPage,

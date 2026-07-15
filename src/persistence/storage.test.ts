@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { AppData, migrateData, validateImport } from "./storage";
+import type { AppData } from "./schema";
+import { migrateData } from "./migrations";
+import { validateImport } from "./schema";
 
 const v3: AppData = {
   schemaVersion: 3,
@@ -25,9 +27,9 @@ const v3: AppData = {
   },
 };
 
-describe("migration stockage mascotte", () => {
-  it("migre une sauvegarde V3 sans mascotEnabled avec true sans perdre les données", () => {
-    const legacy = { ...v3, settings: { ...v3.settings } } as unknown as AppData;
+describe("migration du stockage", () => {
+  it("migre une sauvegarde V3 sans mascotEnabled sans perdre les données", () => {
+    const legacy = { ...v3, settings: { ...v3.settings } };
     delete (legacy.settings as Partial<AppData["settings"]>).mascotEnabled;
     expect(validateImport(legacy)).toBe(true);
     const migrated = migrateData(legacy);
@@ -37,8 +39,12 @@ describe("migration stockage mascotte", () => {
     expect(migrated.logs).toEqual(v3.logs);
   });
 
-  it("conserve false en V4", () => {
-    const migrated = migrateData({ ...v3, schemaVersion: 4, settings: { ...v3.settings, mascotEnabled: false } });
+  it("conserve false depuis une sauvegarde V4", () => {
+    const migrated = migrateData({
+      ...v3,
+      schemaVersion: 4,
+      settings: { ...v3.settings, mascotEnabled: false },
+    });
     expect(migrated.settings.mascotEnabled).toBe(false);
   });
 

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { selectDashboardStats } from "../lib/dashboard-selectors";
-import { loadData } from "../lib/storage";
+import { loadData } from "../persistence";
 import { useDebouncedSave } from "../hooks/useDebouncedSave";
 import { resolveTheme } from "../themes/theme-registry";
 import { UserSettings } from "../types";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { demoData } from "../lib/storage";
+import { demoData } from "../persistence";
 import { selectDashboardStats } from "../lib/dashboard-selectors";
 import type { Habit, HabitLog, UserSettings } from "../types";
 import { createTrackerAnalytics } from "./tracker-analytics";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AppData, saveData } from "../lib/storage";
+import { AppData, saveData } from "../persistence";
 
 export function useDebouncedSave(data: AppData, delay = 350) {
   useEffect(() => {

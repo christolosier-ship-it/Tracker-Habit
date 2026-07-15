@@ -9,7 +9,7 @@ import {
   migrateData,
   resetData,
   validateImport,
-} from "../../lib/storage";
+} from "../../persistence";
 
 type DataTransferPanelProps = {
   data: AppData;

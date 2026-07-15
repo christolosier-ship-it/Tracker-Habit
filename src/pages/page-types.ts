@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { CycleStatus, SetSettings } from "../app/tracker-actions";
 import { DashboardStats } from "../lib/dashboard-selectors";
-import { AppData } from "../lib/storage";
+import { AppData } from "../persistence";
 import { AppTheme } from "../themes/theme-types";
 
 export type DashboardPageProps = {

@@ -1,6 +1,6 @@
 import { monthShortLabels } from "../app/constants";
 import { createTrackerAnalytics } from "../analytics/tracker-analytics";
-import type { AppData } from "./storage";
+import type { AppData } from "../persistence";
 
 export function selectDashboardStats(data: AppData, now = new Date()) {
   return createTrackerAnalytics(
