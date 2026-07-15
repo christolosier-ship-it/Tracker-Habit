@@ -11,7 +11,7 @@ npm run check
 npm run preview
 ```
 
-`npm run check` vérifie l’architecture, le CSS, les cycles, le code mort, ESLint, la couverture Vitest, TypeScript et les budgets du build Vite.
+`npm run check` vérifie l’architecture, le CSS, les cycles, le code mort, ESLint, la couverture Vitest, le budget de performance isolé, TypeScript et les budgets du build Vite.
 
 ## Fonctionnalités
 
@@ -180,6 +180,7 @@ La CI vérifie :
 - l’installation reproductible avec `npm ci` ;
 - le lint ESLint ;
 - les tests Vitest et leurs seuils de couverture ;
+- le benchmark isolé du sélecteur Dashboard ;
 - la compilation TypeScript ;
 - le build Vite ;
 - un parcours Chrome : navigation, changement de statut, persistance, thème et mobile.

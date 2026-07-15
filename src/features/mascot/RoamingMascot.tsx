@@ -26,6 +26,8 @@ const EDGE_MARGIN = 14;
 const RESUME_DELAY_MS = 1100;
 const MIN_TRAVEL_MS = 4200;
 const MAX_TRAVEL_MS = 7800;
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), Math.max(min, max));
@@ -125,7 +127,7 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
     scheduleRoamRef.current = scheduleRoam;
   }, [scheduleRoam]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const handle = handleRef.current;
     if (!handle) return;
     const rect = handle.getBoundingClientRect();

@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { demoData } from "../persistence";
-import { selectDashboardStats } from "../lib/dashboard-selectors";
 import type { Habit, HabitLog, UserSettings } from "../types";
 import { createTrackerAnalytics } from "./tracker-analytics";
 
@@ -91,16 +89,5 @@ describe("moteur analytique indexé", () => {
       Array.from({ length: 12 }, (_, index) => String(index + 1)),
     );
     expect(dashboard.fragileHabits).toEqual([{ nom: "tracked", score: 0 }]);
-  });
-
-  it("reste sous le budget de 50 ms en médiane sur la démo", () => {
-    const data = demoData();
-    const samples = Array.from({ length: 7 }, () => {
-      const start = performance.now();
-      selectDashboardStats(data, new Date());
-      return performance.now() - start;
-    }).sort((left, right) => left - right);
-
-    expect(samples[Math.floor(samples.length / 2)]).toBeLessThan(50);
   });
 });
