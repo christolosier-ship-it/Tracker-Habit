@@ -1,200 +1,181 @@
-# Discipline Dashboard
+<div align="center">
+  <img src="./public/habit-tracker-icon-512.png" width="168" alt="Logo de Discipline Dashboard" />
 
-Application React, TypeScript et Vite de suivi d’habitudes en français. Elle fonctionne sans compte ni serveur et conserve les données dans le navigateur.
+  <h1>Discipline Dashboard</h1>
 
-## Commandes
+  <p><strong>Le tracker d’habitudes local, vivant et honnête.</strong></p>
+  <p>Transforme tes routines en progrès visibles, sans compte, sans serveur et sans sacrifier ta vie privée.</p>
 
-```bash
-npm ci
-npm run dev
-npm run check
-npm run preview
+  <p>
+    <a href="https://christolosier-ship-it.github.io/Tracker-Habit/">
+      <img src="https://img.shields.io/badge/OUVRIR_L%27APPLICATION-0B3D2E?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Ouvrir l’application" />
+    </a>
+    <a href="https://github.com/christolosier-ship-it/Tracker-Habit/actions/workflows/deploy.yml">
+      <img src="https://github.com/christolosier-ship-it/Tracker-Habit/actions/workflows/deploy.yml/badge.svg?branch=main" alt="État des vérifications et du déploiement" />
+    </a>
+  </p>
+
+  <p>
+    <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=111827" alt="React 18" />
+    <img src="https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white" alt="TypeScript 6" />
+    <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" alt="Vite 8" />
+    <img src="https://img.shields.io/badge/données-100%25_locales-C96A3D" alt="Données entièrement locales" />
+  </p>
+</div>
+
+---
+
+Discipline Dashboard est une application web responsive de suivi d’habitudes quotidiennes et hebdomadaires. Elle associe une saisie rapide, des statistiques qui distinguent réellement le vide de l’échec, douze identités visuelles et une mascotte réactive par univers.
+
+Les données restent dans le navigateur. L’application ne possède ni compte utilisateur, ni backend, ni télémétrie : elle est utilisable immédiatement et fonctionne entièrement côté client.
+
+<div align="center">
+  <img src="./docs/readme/theme-showcase.svg" width="100%" alt="Mosaïque des douze univers graphiques de Discipline Dashboard" />
+</div>
+
+## Tout ce qu’il faut pour tenir dans la durée
+
+| Vue | Rôle véritable |
+| --- | --- |
+| **Dashboard** | Synthétise le score global, le mois courant, les séries, les habitudes fortes ou fragiles et la matrice annuelle. |
+| **Aujourd’hui** | Affiche uniquement les habitudes pertinentes du jour et permet de faire évoluer leur statut en un geste. |
+| **Mois** | Croise habitudes et jours dans une grille mensuelle éditable, avec un affichage mobile recentré sur la date choisie. |
+| **Habitudes** | Crée, modifie, suspend, réactive ou supprime les habitudes tout en préservant correctement leur historique. |
+| **Statistiques** | Explore les tendances mensuelles, catégories, statuts et indicateurs anti-procrastination avec des graphiques SVG natifs. |
+| **Paramètres** | Choisit le thème et la mascotte, règle le traitement des non-saisis et gère l’import/export des données. |
+
+### Une mesure qui ne triche pas
+
+Chaque saisie suit le même cycle métier :
+
+```text
+Non saisi  →  Accompli  →  Partiel  →  Manqué  →  Repos  →  Non saisi
 ```
 
-`npm run check` vérifie l’architecture, le CSS, les cycles, le code mort, ESLint, la couverture Vitest, le budget de performance isolé, TypeScript et les budgets du build Vite.
+| Statut | Symbole | Valeur dans les scores |
+| --- | :---: | :---: |
+| Non saisi | `·` | Ignoré, ou compté comme manqué selon le réglage |
+| Accompli | `✓` | 100 % |
+| Partiel | `◐` | 50 % |
+| Manqué | `×` | 0 % |
+| Repos | `Ⅱ` | Neutre |
 
-## Fonctionnalités
+Les habitudes quotidiennes sont évaluées date par date. Les habitudes hebdomadaires sont agrégées sur leur semaine ISO, sans gonfler artificiellement le nombre d’occasions. Les dates futures et les périodes d’inactivité restent hors calcul.
 
-- suivi d’habitudes quotidiennes et hebdomadaires ;
-- saisie rapide des statuts ;
-- vue mensuelle habitudes × jours ;
-- matrice annuelle ;
-- indicateurs de discipline et d’anti-procrastination ;
-- statistiques par mois, catégorie et statut ;
-- douze thèmes visuels ;
-- import et export JSON ;
-- sauvegarde locale débouncée et migration des anciens schémas.
+### Une interface qui a de la personnalité
+
+- **12 thèmes complets** : palette, typographie, surfaces, graphiques et effets sont pilotés par les mêmes tokens.
+- **12 mascottes animées** : une créature propre à chaque thème, chargée à la demande et sensible à l’heure, au score et aux réussites.
+- **Des réactions utiles** : journée parfaite, nouveau record de série et habitude accomplie déclenchent des retours visuels ciblés.
+- **Une expérience responsive** : navigation, cartes, matrices et formulaires sont adaptés aux grands écrans comme aux mobiles.
+- **Le mouvement reste optionnel** : les préférences système de réduction des animations sont respectées.
 
 ## Architecture
 
-```text
-src/
-  app/
-    App.tsx                    shell et navigation
-    AppErrorBoundary.tsx       écran de secours React
-    constants.ts               constantes d’interface
-    tracker-actions.ts         contrats des actions applicatives
-    useTrackerController.ts    orchestration React et commandes
+Le projet sépare l’interface, l’orchestration, les règles métier, les calculs et le stockage. Le composant racine assemble ces briques ; il ne porte ni les agrégations statistiques ni les mutations de données.
 
-  domain/
-    definitions.ts             catégories, statuts et valeurs canoniques
-    evaluation.ts              règle unique quotidien / hebdomadaire
-    tracker-reducer.ts         transitions d’état pures
+```mermaid
+flowchart LR
+  subgraph UI[Interface React]
+    App[App et navigation]
+    Pages[6 pages chargées à la demande]
+    Features[Fonctionnalités]
+    Components[UI et graphiques SVG]
+    App --> Pages --> Features --> Components
+  end
 
-  analytics/
-    tracker-index.ts           index par clé, date, habitude et semaine
-    tracker-analytics.ts       agrégations par période en une passe
-
-  pages/
-    DashboardPage.tsx
-    TodayPage.tsx
-    MonthPage.tsx
-    HabitsPage.tsx
-    StatsPage.tsx
-    SettingsPage.tsx
-    page-types.ts              contrats ciblés de chaque page
-
-  features/
-    analytics/                 panneaux et analyses
-    dashboard/                 KPI et matrice annuelle
-    period/                    sélection année / mois
-    settings/                  thèmes, options, import et export
-    tracking/                  cartes et boutons de statut
-
-  components/
-    charts/                    graphiques Recharts et SVG thémés
-    effects/                   fond et conteneurs visuels
-    stats/                     composants propres aux statistiques
-    theme-identity/            cellules, cadres et aperçus thématiques
-    ui/                        Button, Card et Badge locaux
-
-  lib/
-    dashboard-selectors.ts     sélecteurs de vues
-    tracking-selectors.ts      instantanés jour et mois
-    date-utils.ts              dates locales
-    stats.ts                   façade de compatibilité testée
-
-  persistence/
-    schema.ts                  validation stricte du JSON
-    migrations.ts              migration V3/V4 vers le schéma courant
-    local-storage.ts           lecture, backup et sauvegarde locale
-
-  themes/
-    define-theme.ts            fabrique commune des graphiques
-    theme-registry.ts          registre court des douze thèmes
-    theme-types.ts             contrats réellement consommés
-    presets/                   une définition complète par thème
-
-  styles/
-    index.css                  ordre explicite des couches
-    foundations.css            reset, tokens et ambiance
-    layout.css                 shell et grilles
-    components.css             composants applicatifs
-    charts.css                 Recharts et SVG
-    themes.css                 12 identités via variables
-    responsive.css             tablette, mobile et mouvement réduit
+  App --> Controller[Contrôleur applicatif]
+  Controller --> Reducer[Reducer et événements]
+  Controller --> Analytics[Moteur analytique indexé]
+  Reducer --> Domain[Règles métier pures]
+  Analytics --> Domain
+  Controller --> Persistence[Persistance et migrations V6]
+  Persistence --> Storage[(localStorage + backup)]
+  Themes[12 presets de thème] --> App
+  Themes --> Components
+  App --> Mascots[12 mascottes lazy-loadées]
 ```
 
-`main.tsx` ne contient que le montage React, le CSS et la frontière d’erreur. Les anciens monolithes `app/pages.tsx` et `app/shared.tsx` ont été supprimés.
+### Responsabilités des couches
 
-## Dépendances entre couches
+| Couche | Responsabilité |
+| --- | --- |
+| `src/app` | Monte l’application, orchestre les commandes, centralise les transitions d’état et traduit les accomplissements en événements visuels. |
+| `src/domain` | Définit les statuts, catégories, fréquences et règles d’évaluation sans dépendre de React. |
+| `src/analytics` | Construit un index des journaux puis expose les agrégations jour, mois, année, série et anti-procrastination. |
+| `src/pages` | Compose les six écrans et ne reçoit que les contrats nécessaires à chacun. |
+| `src/features` | Regroupe les blocs fonctionnels : saisie, statistiques, dashboard, réglages, périodes et mascottes. |
+| `src/components` | Fournit l’UI réutilisable, l’identité thématique et les graphiques SVG natifs. |
+| `src/persistence` | Valide, migre, sauvegarde, restaure et remplace les données sérialisées au schéma V6. |
+| `src/themes` | Déclare les tokens et comportements visuels des douze univers à partir d’un contrat commun. |
 
-- `pages` compose les fonctionnalités ;
-- `features` utilise les composants et les commandes applicatives ;
-- `components` ne connaît pas les pages ;
-- `themes` ne dépend pas du stockage ;
-- `analytics` dépend du domaine, jamais de React ;
-- `persistence` conserve le format sérialisé sans contaminer le domaine.
+Le moteur analytique et le reducer restent testables sans DOM. Les pages et les mascottes sont séparées en chunks afin de limiter le JavaScript chargé au démarrage. Les scripts du dépôt interdisent aussi les cycles, les dépendances de couches non autorisées et le retour d’anciens monolithes.
 
-Les scripts de qualité refusent les anciens monolithes, cycles, fichiers/exports morts, dépendances inutiles, couches CSS historiques et dépassements de bundle.
+## Stack technique
 
-## Règles métier
+| Outil | Usage |
+| --- | --- |
+| [React](https://react.dev/) 18 | Interface, composition et chargement différé des écrans |
+| [TypeScript](https://www.typescriptlang.org/) 6 | Contrats stricts entre domaine, application et présentation |
+| [Vite](https://vite.dev/) 8 | Développement, découpage des chunks et build de production |
+| [Vitest](https://vitest.dev/) 4 | Tests unitaires, couverture et garde-fou de performance |
+| [GSAP](https://gsap.com/) | Animations et réactions des mascottes |
+| [Lucide](https://lucide.dev/) | Icônes de l’interface |
+| SVG natif | Aires, barres, anneaux, donuts et graphiques cartésiens sans bibliothèque de charting |
 
-Statuts disponibles :
+## Lancer le projet
 
-- Non saisi
-- Accompli
-- Partiel
-- Manqué
-- Repos
+### Prérequis
 
-Valeurs utilisées pour les scores :
+- [Node.js](https://nodejs.org/) 22 recommandé ;
+- npm, fourni avec Node.js.
 
-- Accompli = 1
-- Partiel = 0,5
-- Manqué = 0
-- Repos = exclu
-- Non saisi = exclu par défaut, ou compté comme manqué lorsque l’option est active
+### Installation
 
-Les habitudes hebdomadaires sont évaluées une fois par semaine, rattachées au dimanche de cette semaine et ne pénalisent pas chaque journée sans saisie. Tous les KPI du Dashboard utilisent l’année sélectionnée.
+```bash
+git clone https://github.com/christolosier-ship-it/Tracker-Habit.git
+cd Tracker-Habit
+npm ci
+npm run dev
+```
 
-## Graphiques
+Vite affiche ensuite l’adresse locale de l’application. Le dépôt contient déjà un jeu de démonstration généré au premier lancement ; aucune configuration ni clé d’API n’est nécessaire.
 
-Les graphiques principaux utilisent Recharts ou des composants SVG/CSS locaux :
+## Commandes utiles
 
-- `ThemedAreaChart`
-- `ThemedBarChart`
-- `ThemedDonutChart`
-- `ThemedBarList`
-- `ThemedProgressRing`
+| Commande | Effet |
+| --- | --- |
+| `npm run dev` | Démarre le serveur de développement accessible sur le réseau local. |
+| `npm run test:unit` | Exécute les tests unitaires hors benchmark analytique. |
+| `npm run test:performance` | Vérifie isolément le budget de performance du moteur analytique. |
+| `npm run test:coverage` | Exécute la suite avec la couverture V8. |
+| `npm run lint` | Contrôle les règles ESLint et React. |
+| `npm run build` | Vérifie TypeScript, produit le bundle et contrôle son budget. |
+| `npm run preview` | Sert localement le build de production. |
+| `npm run check` | Lance en une passe l’architecture, le CSS, les cycles, le code mort, le lint, les tests, la couverture, la performance et le build. |
 
-Les palettes utilisent uniquement les couleurs hexadécimales et sémantiques de `AppTheme.charts`. Les champs et helpers Tremor ont été retirés.
+## Données et confidentialité
 
-## Thèmes
+- Le stockage principal utilise `localStorage` sous la clé `discipline-dashboard-v2`.
+- Avant chaque nouvelle écriture, la version précédente est conservée dans une clé de secours.
+- Les imports JSON sont validés puis migrés vers le **schéma V6** avant d’entrer dans l’état applicatif.
+- L’export JSON permet de sauvegarder ou transférer manuellement l’ensemble des habitudes, journaux et réglages.
+- Aucun événement d’usage ni contenu personnel n’est envoyé à un service distant.
 
-Les douze styles disponibles sont :
+> Effacer les données du site dans le navigateur supprime aussi le suivi local. Pense à exporter régulièrement un fichier JSON si cet historique est important.
 
-1. Dopamine Pop
-2. Neon Cyberpunk Matrix
-3. Memphis Productivity
-4. Aurora Glassmorphism
-5. Tropical Festival
-6. Retro Arcade
-7. Cosmic Dreamscape
-8. Kawaii Maximalist
-9. Brutalist Color Clash
-10. Editorial Fashion Tech
-11. Comic Book Energy
-12. Liquid Gradient Future
+## Qualité et livraison
 
-Chaque thème est défini dans son propre fichier `themes/presets/`. Le registre central ne contient plus les palettes et les centaines de lignes de configuration.
+Chaque pull request vers `main` déclenche la chaîne complète de contrôles, puis un test de fumée dans un navigateur réel. Une fois fusionnée, la même GitHub Action construit et publie automatiquement l’application sur GitHub Pages.
 
-Les thèmes pilotent uniquement les propriétés réellement consommées : couleurs, typographie, cadres, navigation, cellules de calendrier, rayons, effets et graphiques.
+Le projet assume volontairement un périmètre **local-first** : pas de compte, pas de synchronisation cloud, pas de backend et pas de notification distante. Ce choix garde l’application rapide, portable et indépendante d’un service tiers.
 
-## Stockage
+---
 
-- stockage principal : `localStorage` ;
-- schéma actuel : V5 ;
-- sauvegarde différée uniquement après une modification ;
-- validation de l’import JSON ;
-- migration et déduplication des anciennes données ;
-- aucune synchronisation cloud.
-
-## Qualité
-
-La CI vérifie :
-
-- l’architecture attendue ;
-- l’absence de cycles, de fichiers et d’exports morts ;
-- les budgets CSS et du graphe bundle complet ;
-- l’installation reproductible avec `npm ci` ;
-- le lint ESLint ;
-- les tests Vitest et leurs seuils de couverture ;
-- le benchmark isolé du sélecteur Dashboard ;
-- la compilation TypeScript ;
-- le build Vite ;
-- un parcours Chrome : navigation, changement de statut, persistance, thème et mobile.
-
-La suite de tests couvre notamment la différence quotidienne/hebdomadaire, les vrais non-saisis, les séries, les habitudes à 0 %, les tâches prioritaires sans identifiant codé en dur et l’intégrité des douze thèmes.
-
-
-## Déploiement
-
-Le build utilise `base: "/Tracker-Habit/"` et est publié par `.github/workflows/deploy.yml` sur GitHub Pages après fusion dans `main`.
-
-## Limites actuelles
-
-- stockage uniquement local ;
-- pas de synchronisation multi-appareil ;
-- pas d’export Excel ;
-- pas de notifications PWA.
+<div align="center">
+  <strong>Construis une discipline visible, un jour à la fois.</strong>
+  <br /><br />
+  <a href="https://christolosier-ship-it.github.io/Tracker-Habit/">Essayer Discipline Dashboard</a>
+  ·
+  <a href="https://github.com/christolosier-ship-it/Tracker-Habit/issues">Signaler un problème</a>
+</div>
