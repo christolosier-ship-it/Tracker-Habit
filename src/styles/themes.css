@@ -1,0 +1,188 @@
+[data-theme-style="pop"] {
+  --panel-background: linear-gradient(145deg, var(--surface), var(--surface-soft));
+  --panel-border: 2px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+  --panel-radius: max(24px, var(--radius-card));
+  --panel-shadow: 0 18px 44px color-mix(in srgb, var(--primary) 17%, transparent);
+  --control-background: color-mix(in srgb, var(--surface) 88%, var(--primary-soft));
+}
+
+[data-theme-style="neon"] {
+  --panel-background: color-mix(in srgb, var(--surface) 91%, transparent);
+  --panel-border: 1px solid color-mix(in srgb, var(--primary) 78%, var(--border));
+  --panel-radius: 8px;
+  --panel-shadow:
+    0 0 0 1px color-mix(in srgb, var(--secondary) 22%, transparent),
+    0 0 26px color-mix(in srgb, var(--primary) 24%, transparent);
+  --control-background: color-mix(in srgb, var(--bg) 80%, var(--surface));
+}
+
+[data-theme-style="memphis"] {
+  --panel-background: var(--surface);
+  --panel-border: 3px solid var(--text);
+  --panel-radius: 5px;
+  --panel-shadow: 8px 8px 0 var(--text);
+  --control-border: 2px solid var(--text);
+  --control-radius: 3px;
+}
+
+[data-theme-style="aurora"] {
+  --panel-background: color-mix(in srgb, var(--surface) 58%, transparent);
+  --panel-border: 1px solid color-mix(in srgb, white 44%, var(--border));
+  --panel-radius: max(22px, var(--radius-card));
+  --panel-shadow: inset 0 1px 0 color-mix(in srgb, white 45%, transparent), var(--shadow);
+  --panel-filter: blur(18px) saturate(1.15);
+  --control-background: color-mix(in srgb, var(--surface) 50%, transparent);
+}
+
+[data-theme-style="tropical"] {
+  --panel-background: linear-gradient(150deg, var(--surface), var(--surface-soft));
+  --panel-border: 2px solid color-mix(in srgb, var(--success) 46%, var(--border));
+  --panel-radius: 28px 10px 28px 10px;
+  --panel-shadow: 0 16px 36px color-mix(in srgb, var(--success) 16%, transparent);
+}
+
+[data-theme-style="arcade"] {
+  --panel-background: var(--surface);
+  --panel-border: 4px double var(--primary);
+  --panel-radius: 0;
+  --panel-shadow: 0 0 0 2px color-mix(in srgb, var(--secondary) 24%, transparent);
+  --control-border: 3px double var(--secondary);
+  --control-radius: 0;
+}
+
+[data-theme-style="cosmic"] {
+  --panel-background: radial-gradient(circle at 80% 5%, var(--primary-soft), var(--surface) 58%);
+  --panel-border: 1px solid color-mix(in srgb, var(--primary) 62%, var(--border));
+  --panel-radius: 26px;
+  --panel-shadow: 0 0 38px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+[data-theme-style="kawaii"] {
+  --panel-background: linear-gradient(145deg, var(--surface), var(--surface-soft));
+  --panel-border: 4px solid color-mix(in srgb, white 84%, var(--border));
+  --panel-radius: 30px;
+  --panel-shadow: 0 12px 0 color-mix(in srgb, var(--primary) 26%, transparent);
+  --control-radius: 18px;
+}
+
+[data-theme-style="brutalist"] {
+  --panel-background: var(--surface);
+  --panel-border: 3px solid var(--text);
+  --panel-radius: 0;
+  --panel-shadow: 9px 9px 0 var(--text);
+  --control-border: 3px solid var(--text);
+  --control-radius: 0;
+}
+
+[data-theme-style="editorial"] {
+  --panel-background: var(--surface);
+  --panel-border: 1px solid color-mix(in srgb, var(--accent) 62%, var(--border));
+  --panel-radius: 0;
+  --panel-shadow: none;
+  --control-radius: 0;
+}
+
+[data-theme-style="comic"] {
+  --panel-background: var(--surface);
+  --panel-border: 4px solid var(--text);
+  --panel-radius: 12px;
+  --panel-shadow: 7px 7px 0 var(--text);
+  --control-border: 3px solid var(--text);
+  --control-radius: 8px;
+}
+
+[data-theme-style="liquid"] {
+  --panel-background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--primary) 16%, var(--surface)),
+    color-mix(in srgb, var(--secondary) 14%, var(--surface))
+  );
+  --panel-border: 1px solid color-mix(in srgb, white 34%, var(--border));
+  --panel-radius: 30px 18px 32px 20px;
+  --panel-shadow: 0 22px 56px color-mix(in srgb, var(--primary) 22%, transparent);
+  --panel-filter: blur(18px) saturate(1.18);
+  --control-background: color-mix(in srgb, var(--surface) 52%, transparent);
+}
+
+[data-theme-style="neon"] .brand,
+[data-theme-style="neon"] .eyebrow,
+[data-theme-style="neon"] .theme-navigation-status {
+  text-shadow: 0 0 9px currentColor;
+}
+
+[data-theme-style="arcade"] *,
+[data-theme-style="arcade"] .theme-calendar-cell {
+  image-rendering: pixelated;
+}
+
+[data-theme-style="brutalist"] .spotlight-card:nth-child(3n + 1) {
+  background: var(--primary);
+}
+
+[data-theme-style="brutalist"] .spotlight-card:nth-child(3n + 2) {
+  background: var(--secondary);
+}
+
+[data-theme-style="comic"] .ui-card-title,
+[data-theme-style="comic"] .stats-insight-value {
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+[data-theme-style="editorial"] .eyebrow,
+[data-theme-style="editorial"] .ui-card-description {
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.theme-calendar-cell[data-cell-variant="neon-square"] {
+  color: var(--primary);
+  border-radius: 2px;
+  box-shadow: inset 0 0 10px color-mix(in srgb, var(--primary) 18%, transparent);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.theme-calendar-cell[data-cell-variant="candy-dot"],
+.theme-calendar-cell[data-cell-variant="star-orbit"],
+.theme-calendar-cell[data-cell-variant="kawaii-sticker"],
+.theme-calendar-cell[data-cell-variant="gold-dot"],
+.theme-calendar-cell[data-cell-variant="comic-token"],
+.theme-calendar-cell[data-cell-variant="liquid-bubble"] {
+  border-radius: 50%;
+}
+
+.theme-calendar-cell[data-cell-variant="memphis-shape"] {
+  border: 2px solid var(--text);
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 var(--text);
+}
+
+.theme-calendar-cell[data-cell-variant="glass-tile"] {
+  border-color: color-mix(in srgb, white 50%, var(--border));
+  background: color-mix(in srgb, var(--surface) 46%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.theme-calendar-cell[data-cell-variant="tropical-seed"] {
+  border-radius: 70% 30% 70% 30%;
+}
+
+.theme-calendar-cell[data-cell-variant="pixel-tile"] {
+  border: 3px double var(--primary);
+  border-radius: 0;
+}
+
+.theme-calendar-cell[data-cell-variant="brutal-block"] {
+  border: 2px solid var(--text);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--text);
+}
+
+.theme-calendar-cell[data-cell-variant="comic-token"] {
+  border: 3px solid var(--text);
+}
+
+.theme-calendar-cell[data-cell-variant="liquid-bubble"] {
+  border-color: color-mix(in srgb, white 46%, var(--border));
+  background: linear-gradient(135deg, var(--primary-soft), var(--surface));
+}
