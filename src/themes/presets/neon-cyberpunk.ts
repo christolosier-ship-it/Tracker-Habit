@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const neonCyberpunkTheme = defineTheme({
   id: "neon-cyberpunk-matrix",
   name: "Neon Cyberpunk Matrix",
-  description: "Dark. Electric. Relentless.",
+  description: "Sombre, électrique et déterminé, sans relâche.",
   personality: "Matrice sombre, néons cyan, rose, violet et lime.",
   previewEmoji: "⚡",
   tokens: {

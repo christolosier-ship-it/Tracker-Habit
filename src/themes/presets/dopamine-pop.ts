@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const dopaminePopTheme = defineTheme({
   id: "dopamine-pop",
   name: "Dopamine Pop",
-  description: "Bright. Happy. Feel-good progress.",
+  description: "Lumineux, joyeux et pensé pour rendre chaque progrès gratifiant.",
   personality: "Candy premium, joyeux, tactile et ultra motivant.",
   previewEmoji: "🌈",
   tokens: {

@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const liquidGradientFutureTheme = defineTheme({
   id: "liquid-gradient-future",
   name: "Liquid Gradient Future",
-  description: "Fluid, futuristic, colorful.",
+  description: "Fluide, futuriste et intensément coloré.",
   personality: "Dégradés liquides cyan, violet, rose et bleu.",
   previewEmoji: "🌀",
   tokens: {

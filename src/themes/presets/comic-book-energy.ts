@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const comicBookEnergyTheme = defineTheme({
   id: "comic-book-energy",
   name: "Comic Book Energy",
-  description: "Level up your life!",
+  description: "Fais passer ta vie au niveau supérieur.",
   personality: "Pop art, trames, bulles et action.",
   previewEmoji: "💬",
   tokens: {

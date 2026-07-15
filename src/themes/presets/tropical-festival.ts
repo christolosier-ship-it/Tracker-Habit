@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const tropicalFestivalTheme = defineTheme({
   id: "tropical-festival",
   name: "Tropical Festival",
-  description: "Vibrant nature. Good vibes. Consistency blooms.",
+  description: "Nature vibrante, énergie solaire et régularité florissante.",
   personality: "Solaire, végétal, chaud et festival.",
   previewEmoji: "🌺",
   tokens: {

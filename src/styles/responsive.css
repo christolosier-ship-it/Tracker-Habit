@@ -90,6 +90,10 @@
     justify-content: stretch;
   }
 
+  .period-controls .hero-controls {
+    width: 100%;
+  }
+
   .hero-controls label {
     flex: 1 1 140px;
   }
@@ -159,6 +163,10 @@
 
   .hero-card {
     min-height: 76px;
+  }
+
+  .period-controls .hero-controls {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .kpi-grid {

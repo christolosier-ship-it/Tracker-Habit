@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const editorialFashionTechTheme = defineTheme({
   id: "editorial-fashion-tech",
   name: "Editorial Fashion Tech",
-  description: "Discipline is the new luxury.",
+  description: "La discipline devient un luxe quotidien.",
   personality: "Noir, or, luxe éditorial et magazine.",
   previewEmoji: "🥂",
   tokens: {

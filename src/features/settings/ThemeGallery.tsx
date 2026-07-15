@@ -49,6 +49,7 @@ export function ThemeGallery({
                   "--preview-secondary": theme.tokens.secondary,
                   "--preview-accent": theme.tokens.accent,
                   "--preview-border": theme.tokens.border,
+                  background: `linear-gradient(135deg, ${theme.tokens.background}, ${theme.tokens.surface})`,
                 } as React.CSSProperties
               }
             >

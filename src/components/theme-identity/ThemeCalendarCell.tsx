@@ -56,13 +56,13 @@ export function ThemeCalendarCell({
   }
 
   return (
-    <span
+    <div
       className={className}
       data-cell-variant={theme.identity.cells.variant}
       style={style}
       title={title}
     >
       {content}
-    </span>
+    </div>
   );
 }

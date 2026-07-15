@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const kawaiiMaximalistTheme = defineTheme({
   id: "kawaii-maximalist",
   name: "Kawaii Maximalist",
-  description: "Habit Party!",
+  description: "Une fête pastel pour chaque habitude accomplie.",
   personality: "Pastel maximaliste, stickers, cute et joyeux.",
   previewEmoji: "🐰",
   tokens: {

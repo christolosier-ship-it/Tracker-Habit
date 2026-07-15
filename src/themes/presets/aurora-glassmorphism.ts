@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const auroraGlassmorphismTheme = defineTheme({
   id: "aurora-glassmorphism",
   name: "Aurora Glassmorphism",
-  description: "Soft glass. Fluid gradients. Dreamy focus.",
+  description: "Verre doux, dégradés fluides et concentration apaisée.",
   personality: "Verre doux, gradients fluides, focus onirique.",
   previewEmoji: "🫧",
   tokens: {

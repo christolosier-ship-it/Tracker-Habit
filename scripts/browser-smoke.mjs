@@ -40,12 +40,94 @@ async function clickNavigation(label) {
   if (!clicked) throw new Error(`Navigation introuvable : ${label}`);
 }
 
+async function assertStickyColumn({ container, label, name }) {
+  await page.$eval(container, (element) => {
+    element.scrollLeft = element.scrollWidth;
+  });
+  await wait(80);
+  const state = await page.$eval(
+    container,
+    (element, labelSelector) => {
+      const stickyLabel = element.querySelector(labelSelector);
+      if (!stickyLabel) return { error: "colonne figée introuvable" };
+      const rect = stickyLabel.getBoundingClientRect();
+      const hit = globalThis.document.elementFromPoint(
+        Math.min(rect.right - 4, rect.left + 20),
+        rect.top + rect.height / 2,
+      );
+      return {
+        scrollLeft: element.scrollLeft,
+        hitIsLabel: hit === stickyLabel || stickyLabel.contains(hit),
+        labelTag: stickyLabel.tagName,
+      };
+    },
+    label,
+  );
+  if (state.error || state.scrollLeft <= 0 || !state.hitIsLabel) {
+    throw new Error(`${name} invalide : ${JSON.stringify(state)}`);
+  }
+}
+
 try {
   await page.setViewport({ width: 1440, height: 1000, deviceScaleFactor: 1 });
   await page.goto(url, { waitUntil: "networkidle0" });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: "networkidle0" });
   await page.waitForSelector(".app-shell");
+  await page.waitForSelector(".annual-matrix");
+
+  const periodHeight = await page.$eval(
+    ".period-controls",
+    (element) => element.getBoundingClientRect().height,
+  );
+  if (periodHeight > 90) {
+    throw new Error(`Contrôles de période trop hauts : ${periodHeight}px`);
+  }
+
+  await assertStickyColumn({
+    container: ".annual-matrix-card .ui-card-content",
+    label: ".annual-matrix > span",
+    name: "Colonne Habitude du dashboard",
+  });
+
+  await clickNavigation("Mois");
+  await page.waitForSelector(".month-grid");
+  const monthCellTags = await page.$$eval(
+    ".month-grid > .theme-calendar-cell",
+    (cells) => [...new Set(cells.map((cell) => cell.tagName))],
+  );
+  if (monthCellTags.includes("SPAN")) {
+    throw new Error(
+      `Les cellules mensuelles non interactives utilisent encore un span : ${monthCellTags.join(", ")}`,
+    );
+  }
+  await assertStickyColumn({
+    container: ".month-grid",
+    label: ".month-grid > span",
+    name: "Colonne Habitude de la vue Mois",
+  });
+
+  await clickNavigation("Statistiques");
+  await page.waitForSelector(".status-breakdown-vertical");
+  const statusLayout = await page.$eval(".status-breakdown-vertical", (element) => {
+    const chart = element.querySelector(".status-breakdown-chart");
+    const legend = element.querySelector(".status-legend");
+    if (!chart || !legend) return { error: "graphique ou légende introuvable" };
+    const chartRect = chart.getBoundingClientRect();
+    const legendRect = legend.getBoundingClientRect();
+    return {
+      chartBottom: chartRect.bottom,
+      legendTop: legendRect.top,
+      legendInside: legendRect.right <= element.getBoundingClientRect().right + 1,
+    };
+  });
+  if (
+    statusLayout.error ||
+    statusLayout.legendTop < statusLayout.chartBottom ||
+    !statusLayout.legendInside
+  ) {
+    throw new Error(`Répartition des statuts tronquée : ${JSON.stringify(statusLayout)}`);
+  }
 
   await clickNavigation("Aujourd’hui");
   await page.waitForSelector(".status-button");
@@ -81,6 +163,23 @@ try {
   await page.waitForSelector(".theme-card");
   if (await page.$(".period-controls")) {
     throw new Error("Les paramètres exposent encore des contrôles de période inutiles.");
+  }
+  const themePreviewState = await page.$$eval(".theme-card", (cards) => {
+    const aurora = cards[3];
+    const descriptions = cards.map(
+      (card) => card.querySelector(".theme-card-copy span")?.textContent?.trim() ?? "",
+    );
+    return {
+      descriptions,
+      auroraBackground: aurora?.style.background ?? "",
+    };
+  });
+  if (
+    themePreviewState.descriptions.some((description) => !description) ||
+    !themePreviewState.descriptions[3]?.startsWith("Verre doux") ||
+    !themePreviewState.auroraBackground
+  ) {
+    throw new Error(`Aperçus de thèmes invalides : ${JSON.stringify(themePreviewState)}`);
   }
   const previousTheme = await page.$eval(".app-shell", (shell) => shell.getAttribute("data-theme"));
   await page.$$eval(".theme-card", (cards) => {
@@ -121,7 +220,7 @@ try {
   }
 
   console.log(
-    "Smoke navigateur conforme : navigation, persistance, pages ciblées, thème, mascotte et mobile.",
+    "Smoke navigateur conforme : navigation, persistance, colonnes figées, statistiques, thèmes, mascotte et mobile.",
   );
 } finally {
   await browser.close();
