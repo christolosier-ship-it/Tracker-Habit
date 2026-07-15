@@ -1,1 +1,162 @@
-.mascot-editorial-pro .editorial-rig{transform-box:fill-box;transform-origin:center;animation:editorial-float 4.8s ease-in-out infinite}.mascot-editorial-pro .editorial-body{transform-box:fill-box;transform-origin:center bottom;animation:editorial-breathe 3.4s ease-in-out infinite}.mascot-editorial-pro .editorial-head{transform-box:fill-box;transform-origin:center bottom;animation:editorial-head 5.2s ease-in-out infinite}.mascot-editorial-pro .editorial-ear-left{transform-box:fill-box;transform-origin:bottom right;animation:editorial-ear 4.1s ease-in-out infinite}.mascot-editorial-pro .editorial-ear-right{transform-box:fill-box;transform-origin:bottom left;animation:editorial-ear 4.1s ease-in-out infinite reverse}.mascot-editorial-pro .editorial-tail{transform-box:fill-box;transform-origin:left bottom;animation:editorial-tail 3.2s ease-in-out infinite}.mascot-editorial-pro .editorial-jewel{transform-box:fill-box;transform-origin:center;animation:editorial-jewel 2.1s ease-in-out infinite}.mascot-editorial-pro .editorial-eye-shine{animation:editorial-shine 3.8s ease-in-out infinite}.mascot-editorial-pro .editorial-face{display:none}.mascot-editorial-pro[data-mood="idle"] .editorial-face-neutral,.mascot-editorial-pro[data-mood="happy"] .editorial-face-happy,.mascot-editorial-pro[data-mood="celebrate"] .editorial-face-celebrate,.mascot-editorial-pro[data-mood="worried"] .editorial-face-worried,.mascot-editorial-pro[data-mood="sleepy"] .editorial-face-sleepy{display:block}.mascot-editorial-pro[data-mood="worried"] .editorial-rig{animation:editorial-worry .22s linear infinite}.mascot-editorial-pro[data-mood="sleepy"] .editorial-rig{animation-duration:7s}.editorial-burst-particle{opacity:0;visibility:hidden}@keyframes editorial-float{0%,100%{transform:translateY(1px)}50%{transform:translateY(-4px)}}@keyframes editorial-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.018,.988)}}@keyframes editorial-head{0%,100%{transform:rotate(0)}40%{transform:rotate(-1.8deg)}70%{transform:rotate(1.2deg)}}@keyframes editorial-ear{0%,88%,100%{transform:rotate(0)}92%{transform:rotate(-7deg)}}@keyframes editorial-tail{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(7deg)}}@keyframes editorial-jewel{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.12);filter:brightness(1.35)}}@keyframes editorial-shine{0%,82%,100%{opacity:1}88%{opacity:.25}}@keyframes editorial-worry{0%,100%{transform:translateX(-1px)}50%{transform:translateX(1px)}}@media (prefers-reduced-motion:reduce){.mascot-editorial-pro *{animation:none!important}.editorial-burst-particle{display:none!important}}
+.mascot-editorial-pro .editorial-rig {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: editorial-float 4.8s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-body {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: editorial-breathe 3.4s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-head {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: editorial-head 5.2s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-ear-left {
+  transform-box: fill-box;
+  transform-origin: bottom right;
+  animation: editorial-ear 4.1s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-ear-right {
+  transform-box: fill-box;
+  transform-origin: bottom left;
+  animation: editorial-ear 4.1s ease-in-out infinite reverse;
+}
+
+.mascot-editorial-pro .editorial-tail {
+  transform-box: fill-box;
+  transform-origin: left bottom;
+  animation: editorial-tail 3.2s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-jewel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: editorial-jewel 2.1s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-eye-shine {
+  animation: editorial-shine 3.8s ease-in-out infinite;
+}
+
+.mascot-editorial-pro .editorial-face {
+  display: none;
+}
+
+.mascot-editorial-pro[data-mood="idle"] .editorial-face-neutral,.mascot-editorial-pro[data-mood="happy"] .editorial-face-happy,.mascot-editorial-pro[data-mood="celebrate"] .editorial-face-celebrate,.mascot-editorial-pro[data-mood="worried"] .editorial-face-worried,.mascot-editorial-pro[data-mood="sleepy"] .editorial-face-sleepy {
+  display: block;
+}
+
+.mascot-editorial-pro[data-mood="worried"] .editorial-rig {
+  animation: editorial-worry .22s linear infinite;
+}
+
+.mascot-editorial-pro[data-mood="sleepy"] .editorial-rig {
+  animation-duration: 7s;
+}
+
+.editorial-burst-particle {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes editorial-float {
+  0%,100% {
+    transform: translateY(1px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes editorial-breathe {
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.018,.988);
+  }
+}
+
+@keyframes editorial-head {
+  0%,100% {
+    transform: rotate(0);
+  }
+
+  40% {
+    transform: rotate(-1.8deg);
+  }
+
+  70% {
+    transform: rotate(1.2deg);
+  }
+}
+
+@keyframes editorial-ear {
+  0%,88%,100% {
+    transform: rotate(0);
+  }
+
+  92% {
+    transform: rotate(-7deg);
+  }
+}
+
+@keyframes editorial-tail {
+  0%,100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes editorial-jewel {
+  0%,100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+    filter: brightness(1.35);
+  }
+}
+
+@keyframes editorial-shine {
+  0%,82%,100% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: .25;
+  }
+}
+
+@keyframes editorial-worry {
+  0%,100% {
+    transform: translateX(-1px);
+  }
+
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .mascot-editorial-pro * {
+    animation: none!important;
+  }
+
+  .editorial-burst-particle {
+    display: none!important;
+  }
+}

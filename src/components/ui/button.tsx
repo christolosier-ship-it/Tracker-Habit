@@ -1,17 +1,15 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 
-type ButtonVariant = "default" | "secondary" | "ghost" | "danger" | "status";
-type ButtonSize = "default" | "sm" | "lg";
+type ButtonVariant = "default" | "secondary" | "danger" | "status";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
-  size?: ButtonSize;
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant = "default", size = "default", ...props },
+    { className, variant = "default", ...props },
     ref,
   ) => (
     <button
@@ -19,7 +17,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className={cn(
         "ui-button",
         `ui-button-${variant}`,
-        `ui-button-${size === "default" ? "md" : size}`,
         className,
       )}
       {...props}

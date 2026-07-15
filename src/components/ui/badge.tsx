@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 
-type BadgeVariant = "default" | "warm" | "success" | "danger" | "muted";
+type BadgeVariant = "default" | "warm" | "success" | "danger";
 type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & {
   variant?: BadgeVariant;
 };

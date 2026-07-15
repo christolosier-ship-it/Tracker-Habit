@@ -1,6 +1,8 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { AppTheme, ChartCategoryName } from "../../themes/theme-types";
-import { CategoryStats, StatusStats } from "../../types";
+import type {
+  CategoryStats,
+  StatusStats,
+} from "../../analytics/tracker-analytics";
+import type { AppTheme, ChartCategoryName } from "../../themes/theme-types";
 import {
   chartCssVars,
   getStatusChartColors,
@@ -30,6 +32,9 @@ type ChartSlice = {
   color: string;
 };
 
+const RADIUS = 66;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
 export function ThemedDonutChart(props: StatusProps | CategoryProps) {
   const slices: ChartSlice[] =
     props.variant === "status"
@@ -53,65 +58,64 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
 
   const total = slices.reduce((sum, item) => sum + item.value, 0);
   const visibleSlices = slices.filter((item) => item.value > 0);
-  const chartData =
-    visibleSlices.length > 0
-      ? visibleSlices
-      : [
-          {
-            key: "empty",
-            label: "Aucune donnée",
-            value: 1,
-            color: props.theme.charts.status.empty,
-          },
-        ];
-  const chartHeight = props.compact ? 190 : 248;
-  const outerRadius = props.compact ? 70 : 92;
-  const innerRadius = props.compact ? 46 : 62;
-
+  const chartData: ChartSlice[] = visibleSlices.length
+    ? visibleSlices
+    : [{
+        key: "empty",
+        label: "Aucune donnée",
+        value: 1,
+        color: props.theme.charts.status.empty,
+      }];
+  const chartTotal = Math.max(1, chartData.reduce((sum, item) => sum + item.value, 0));
+  const gap = chartData.length > 1 ? 4 : 0;
+  const segments = chartData.map((item, index) => {
+    const length = (item.value / chartTotal) * CIRCUMFERENCE;
+    const offset = chartData
+      .slice(0, index)
+      .reduce(
+        (sum, precedingItem) =>
+          sum + (precedingItem.value / chartTotal) * CIRCUMFERENCE,
+        0,
+      );
+    return {
+      ...item,
+      dash: Math.max(0, length - gap),
+      offset: -offset,
+    };
+  });
   return (
     <div
       className={`themed-chart-panel themed-donut donut-${props.theme.charts.visual.donutVariant} ${props.compact ? "compact" : ""}`}
-      data-chart-theme={props.theme.effects.backgroundStyle}
       style={chartCssVars(props.theme, props.variant)}
     >
       <div className="themed-donut-chart" aria-label={`Répartition de ${total} éléments`}>
-        <ResponsiveContainer width="100%" height={chartHeight}>
-          <PieChart>
-            <Tooltip
-              formatter={(value) => {
-                const numericValue = Number(value);
-                return props.valueFormatter
-                  ? props.valueFormatter(numericValue)
-                  : `${numericValue}`;
-              }}
-              contentStyle={{
-                background: props.theme.tokens.surface,
-                border: `1px solid ${props.theme.tokens.border}`,
-                borderRadius: props.theme.charts.visual.cornerRadius,
-                color: props.theme.tokens.text,
-              }}
-              labelStyle={{ color: props.theme.tokens.text }}
-            />
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="label"
-              cx="50%"
-              cy="50%"
-              innerRadius={innerRadius}
-              outerRadius={outerRadius}
-              paddingAngle={visibleSlices.length > 1 ? 3 : 0}
-              cornerRadius={props.theme.charts.visual.cornerRadius}
-              stroke={props.theme.tokens.surface}
-              strokeWidth={3}
-              isAnimationActive={false}
+        <svg
+          className="native-donut-chart"
+          viewBox="0 0 200 200"
+          role="img"
+          aria-label={`Répartition de ${total} éléments`}
+        >
+          {segments.map((segment) => (
+            <circle
+              className="native-donut-segment"
+              key={segment.key}
+              cx="100"
+              cy="100"
+              r={RADIUS}
+              fill="none"
+              stroke={segment.color}
+              strokeWidth="34"
+              strokeLinecap="butt"
+              strokeDasharray={`${segment.dash} ${CIRCUMFERENCE - segment.dash}`}
+              strokeDashoffset={segment.offset}
+              transform="rotate(-90 100 100)"
             >
-              {chartData.map((item) => (
-                <Cell key={item.key} fill={item.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
+              <title>
+                {`${segment.label} : ${props.valueFormatter?.(segment.value) ?? segment.value}`}
+              </title>
+            </circle>
+          ))}
+        </svg>
       </div>
       <div className="themed-donut-center" aria-hidden="true">
         <strong>{total}</strong>

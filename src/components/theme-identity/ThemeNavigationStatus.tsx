@@ -7,9 +7,7 @@ type ThemeNavigationStatusProps = {
 export function ThemeNavigationStatus({
   theme,
 }: ThemeNavigationStatusProps) {
-  if (!theme.identity.navigation.showDecorativeStatus) return null;
-
-  if (theme.identity.navigation.variant === "terminal") {
+  if (theme.identity.navigation.status === "terminal") {
     return (
       <div className="theme-navigation-status terminal">
         <span />
@@ -19,7 +17,7 @@ export function ThemeNavigationStatus({
     );
   }
 
-  if (theme.identity.navigation.variant === "arcade") {
+  if (theme.identity.navigation.status === "arcade") {
     return (
       <div className="theme-navigation-status arcade">
         <b>PLAYER 1</b>
