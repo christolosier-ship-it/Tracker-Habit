@@ -6,7 +6,6 @@ export type ChartVariant =
   | "status"
   | "category"
   | "fragile"
-  | "streak"
   | "antiProcrastination"
   | "topHabits";
 
@@ -47,7 +46,7 @@ export function getChartPalette(theme: AppTheme, variant: ChartVariant) {
       theme.charts.status.done,
     ];
   }
-  if (variant === "topHabits" || variant === "streak") {
+  if (variant === "topHabits") {
     return [theme.charts.status.done, theme.charts.gradients.progressTo];
   }
   return theme.charts.hexPalette;

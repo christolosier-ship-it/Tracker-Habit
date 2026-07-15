@@ -1,20 +1,18 @@
 import { ThemedProgressRing } from "../../components/charts/ThemedProgressRing";
-import { DashboardStats } from "../../lib/dashboard-selectors";
+import type { DashboardAnalytics } from "../../analytics/tracker-analytics";
 import { AppTheme } from "../../themes/theme-types";
 
 type AntiProcrastinationPanelProps = {
   theme: AppTheme;
-  stats: DashboardStats;
+  stats: DashboardAnalytics;
 };
 
 export function AntiProcrastinationPanel({
   theme,
   stats,
 }: AntiProcrastinationPanelProps) {
-  const top = stats.topHabits.find((habit) =>
-    /deep|prioritaire|projet|inbox|admin/i.test(habit.nom),
-  );
-  const fragile = stats.fragileHabits[0];
+  const top = stats.antiTopHabit;
+  const fragile = stats.antiFragileHabit;
 
   return (
     <section className="anti-panel">

@@ -1,5 +1,5 @@
 import { HABIT_CATEGORIES } from "../domain/definitions";
-import { Habit, HabitCategory, HabitLog, UserSettings } from "../types";
+import type { Habit, HabitCategory, HabitLog, UserSettings } from "../types";
 
 const categoryByHabit: Record<string, HabitCategory> = {
   'Lever tôt': 'Routine',
@@ -85,11 +85,10 @@ const weekly = [
   'Préparer lundi',
 ];
 
-const now = new Date();
-const demoYear = now.getFullYear();
-const isoDate = `${demoYear}-01-01`;
-
-export const demoHabits: Habit[] = [
+export function createDemoHabits(current = new Date()): Habit[] {
+  const demoYear = current.getFullYear();
+  const isoDate = `${demoYear}-01-01`;
+  return [
   ...daily.map((nom, i) => ({
     id: `d${i + 1}`,
     nom,
@@ -100,7 +99,6 @@ export const demoHabits: Habit[] = [
     objectif: i % 4 === 0 ? 'Avant midi' : i % 3 === 0 ? '60 min' : '1 fois',
     priorite: i % 6 === 0 ? ('haute' as const) : i % 2 ? ('normale' as const) : ('faible' as const),
     active: true,
-    couleur: ['#0B3D2E', '#1F6B4E', '#C96A3A', '#B98A3B'][i % 4],
     dateCreation: isoDate,
   })),
   ...weekly.map((nom, i) => ({
@@ -111,18 +109,20 @@ export const demoHabits: Habit[] = [
     objectif: '1 fois / semaine',
     priorite: i % 4 === 0 ? ('haute' as const) : ('normale' as const),
     active: true,
-    couleur: '#B98A3B',
     dateCreation: isoDate,
   })),
-];
+  ];
+}
 
-export const defaultSettings: UserSettings = {
-  anneeActive: demoYear,
-  moisActif: now.getMonth(),
-  compterNonSaisisCommeManques: false,
-  themeId: 'dopamine-pop',
-  mascotEnabled: true,
-};
+export function createDefaultSettings(current = new Date()): UserSettings {
+  return {
+    anneeActive: current.getFullYear(),
+    moisActif: current.getMonth(),
+    compterNonSaisisCommeManques: false,
+    themeId: 'dopamine-pop',
+    mascotEnabled: true,
+  };
+}
 
 function weightedDemoStatus(day: number, month: number, habitIndex: number) {
   const rhythm = (day * 3 + month * 5 + habitIndex * 7) % 100;
@@ -134,16 +134,20 @@ function weightedDemoStatus(day: number, month: number, habitIndex: number) {
   return 'empty';
 }
 
-export function createDemoLogs() {
+export function createDemoLogs(
+  current = new Date(),
+  habits = createDemoHabits(current),
+) {
   const logs: HabitLog[] = [];
-  const currentMonth = now.getMonth();
-  const currentDay = now.getDate();
+  const demoYear = current.getFullYear();
+  const currentMonth = current.getMonth();
+  const currentDay = current.getDate();
 
   for (let month = 0; month <= currentMonth; month += 1) {
     const daysInMonth = new Date(demoYear, month + 1, 0).getDate();
     const maxDay = month === currentMonth ? currentDay : daysInMonth;
 
-    for (const habit of demoHabits) {
+    for (const habit of habits) {
       const habitIndex = Number(habit.id.slice(1));
 
       for (let day = 1; day <= maxDay; day += 1) {

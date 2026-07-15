@@ -8,13 +8,13 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { ThemeCalendarCell } from "../../components/theme-identity/ThemeCalendarCell";
-import { DashboardStats } from "../../lib/dashboard-selectors";
+import type { DashboardAnalytics } from "../../analytics/tracker-analytics";
 import { AppTheme } from "../../themes/theme-types";
 import { monthShortLabels } from "../../app/constants";
 
 type AnnualHabitMatrixProps = {
   theme: AppTheme;
-  rates: DashboardStats["annualRates"];
+  rates: DashboardAnalytics["annualRates"];
 };
 
 export function AnnualHabitMatrix({
@@ -34,9 +34,7 @@ export function AnnualHabitMatrix({
         <Badge variant="warm">12 mois</Badge>
       </CardHeader>
       <CardContent>
-        <div
-          className={`annual-matrix themed-heatmap heatmap-${theme.charts.visual.heatmapVariant}`}
-        >
+        <div className="annual-matrix themed-heatmap">
           <strong>Habitude</strong>
           {monthShortLabels.map((label) => (
             <strong key={label}>{label}</strong>
@@ -51,10 +49,9 @@ export function AnnualHabitMatrix({
                 <ThemeCalendarCell
                   theme={theme}
                   score={value}
-                  active={value >= 65}
                   key={`${habit.id}-${index}`}
                 >
-                  {value < 0 ? "—" : `${value}%`}
+                  {value === null ? "—" : `${value}%`}
                 </ThemeCalendarCell>
               ))}
             </React.Fragment>

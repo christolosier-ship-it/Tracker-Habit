@@ -1,10 +1,11 @@
-import type { HabitLog, HabitStatus } from "../types";
+import type { HabitLog, TrackerLogReader } from "../domain/tracker-types";
+import type { HabitStatus } from "../domain/definitions";
 import { getIsoWeekKey } from "../lib/date-utils";
 
-export type TrackerIndex = {
+export type TrackerIndex = TrackerLogReader & {
   byKey: Map<string, HabitStatus>;
+  positionByKey: Map<string, number>;
   byDate: Map<string, HabitLog[]>;
-  byHabit: Map<string, HabitLog[]>;
   byHabitWeek: Map<string, HabitLog[]>;
 };
 
@@ -22,22 +23,38 @@ function append(
   else map.set(key, [log]);
 }
 
-export function buildTrackerIndex(logs: HabitLog[]): TrackerIndex {
+export function buildTrackerIndex(
+  logs: HabitLog[],
+  weeklyHabitIds: ReadonlySet<string>,
+): TrackerIndex {
   const index: TrackerIndex = {
     byKey: new Map(),
+    positionByKey: new Map(),
     byDate: new Map(),
-    byHabit: new Map(),
     byHabitWeek: new Map(),
+    readStatus: (habitId, date) => index.byKey.get(logKey(habitId, date)) ?? "empty",
+    readWeekLogs: (habitId, dateInWeek) =>
+      index.byHabitWeek.get(`${habitId}|${getIsoWeekKey(dateInWeek)}`) ?? [],
   };
 
-  for (const log of logs) {
+  for (const [position, log] of logs.entries()) {
     index.byKey.set(logKey(log.habitId, log.date), log.status);
+    index.positionByKey.set(logKey(log.habitId, log.date), position);
     append(index.byDate, log.date, log);
-    append(index.byHabit, log.habitId, log);
-    append(index.byHabitWeek, `${log.habitId}|${getIsoWeekKey(log.date)}`, log);
+    if (weeklyHabitIds.has(log.habitId)) {
+      append(index.byHabitWeek, `${log.habitId}|${getIsoWeekKey(log.date)}`, log);
+    }
   }
 
   return index;
+}
+
+export function readTrackerLogPosition(
+  index: TrackerIndex,
+  habitId: string,
+  date: string,
+) {
+  return index.positionByKey.get(logKey(habitId, date));
 }
 
 export function readTrackerStatus(
@@ -45,13 +62,5 @@ export function readTrackerStatus(
   habitId: string,
   date: string,
 ) {
-  return index.byKey.get(logKey(habitId, date)) ?? "empty";
-}
-
-export function readHabitWeekLogs(
-  index: TrackerIndex,
-  habitId: string,
-  dateInWeek: string,
-) {
-  return index.byHabitWeek.get(`${habitId}|${getIsoWeekKey(dateInWeek)}`) ?? [];
+  return index.readStatus(habitId, date);
 }

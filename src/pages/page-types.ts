@@ -6,6 +6,7 @@ import type {
   SetSettings,
   UpdateHabit,
 } from "../app/tracker-actions";
+import type { TrackerAnalytics } from "../analytics/tracker-analytics";
 import type { AppData } from "../persistence";
 import type { AppTheme } from "../themes/theme-types";
 
@@ -13,19 +14,23 @@ export type DashboardPageProps = {
   data: AppData;
   theme: AppTheme;
   setSettings: SetSettings;
+  analytics: TrackerAnalytics;
 };
 
 export type TodayPageProps = {
   data: AppData;
-  setSettings: SetSettings;
+  analytics: TrackerAnalytics;
+  today: string;
   cycle: CycleStatus;
 };
 
-export type MonthPageProps = TodayPageProps & { theme: AppTheme };
+export type MonthPageProps = Omit<TodayPageProps, "today"> & {
+  theme: AppTheme;
+  setSettings: SetSettings;
+};
 
 export type HabitsPageProps = {
   data: AppData;
-  setSettings: SetSettings;
   addHabit: AddHabit;
   updateHabit: UpdateHabit;
   deleteHabit: DeleteHabit;

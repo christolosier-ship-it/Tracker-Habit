@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { AppTheme } from "../../themes/theme-types";
 import { HabitStatus } from "../../types";
+import { getScoreColor } from "../charts/chart-theme-utils";
 
 type ThemeCalendarCellProps = {
   theme: AppTheme;
   status?: HabitStatus;
-  score?: number;
-  active?: boolean;
+  score?: number | null;
   children: ReactNode;
   onClick?: () => void;
   title?: string;
@@ -24,7 +24,6 @@ export function ThemeCalendarCell({
   theme,
   status,
   score,
-  active,
   children,
   onClick,
   title,
@@ -34,14 +33,19 @@ export function ThemeCalendarCell({
       ? kawaiiSymbols[status]
       : children;
   const className = `theme-calendar-cell ${status ?? ""}`.trim();
+  const style = score === undefined
+    ? undefined
+    : ({
+        "--cell-score-color":
+          score === null ? theme.charts.status.empty : getScoreColor(theme, score),
+      } as React.CSSProperties);
 
   if (onClick) {
     return (
       <button
         className={className}
         data-cell-variant={theme.identity.cells.variant}
-        data-score={score}
-        data-active={active}
+        style={style}
         title={title}
         onClick={onClick}
         type="button"
@@ -55,8 +59,7 @@ export function ThemeCalendarCell({
     <span
       className={className}
       data-cell-variant={theme.identity.cells.variant}
-      data-score={score}
-      data-active={active}
+      style={style}
       title={title}
     >
       {content}

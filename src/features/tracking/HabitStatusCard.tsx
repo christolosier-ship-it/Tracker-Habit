@@ -9,6 +9,7 @@ type HabitStatusCardProps = {
   date: string;
   status: HabitStatus;
   cycle: CycleStatus;
+  canEdit?: boolean;
 };
 
 export function HabitStatusCard({
@@ -16,6 +17,7 @@ export function HabitStatusCard({
   date,
   status,
   cycle,
+  canEdit = true,
 }: HabitStatusCardProps) {
   return (
     <Card className="habit-card">
@@ -36,7 +38,11 @@ export function HabitStatusCard({
           {habit.objectif} · {habit.frequence} · priorité {habit.priorite}
         </p>
       </div>
-      <StatusButton status={status} onClick={() => cycle(habit.id, date)} />
+      <StatusButton
+        status={status}
+        onClick={() => cycle(habit.id, date)}
+        disabled={!canEdit}
+      />
     </Card>
   );
 }

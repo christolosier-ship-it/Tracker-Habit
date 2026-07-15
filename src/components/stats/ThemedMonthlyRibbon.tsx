@@ -21,12 +21,14 @@ export function ThemedMonthlyRibbon({
             style={
               {
                 "--month-color": color,
-                "--month-score": item.score,
+                "--month-score": item.score ?? 0,
               } as React.CSSProperties
             }
           >
             <span className="monthly-ribbon-month">{item.mois}</span>
-            <strong className="monthly-ribbon-score">{item.score}%</strong>
+            <strong className="monthly-ribbon-score">
+              {item.score === null ? "—" : `${item.score}%`}
+            </strong>
           </div>
         );
       })}

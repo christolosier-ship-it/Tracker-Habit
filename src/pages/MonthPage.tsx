@@ -8,13 +8,14 @@ import { daysInMonth } from "../lib/date-utils";
 import { monthLongLabels, statusSymbol } from "../app/constants";
 import { MonthPageProps } from "./page-types";
 import { HABIT_STATUS_DEFINITIONS } from "../domain/definitions";
-import { selectMonthTracking } from "../lib/tracking-selectors";
 import { readTrackerStatus } from "../analytics/tracker-index";
 import { useMediaQuery } from "../hooks/useMediaQuery";
+import { habitExistsOnDate } from "../domain/evaluation";
 
 export function MonthPage({
   data,
   theme,
+  analytics,
   setSettings,
   cycle,
 }: MonthPageProps) {
@@ -26,26 +27,20 @@ export function MonthPage({
   const month = data.settings.moisActif;
   const dayCount = daysInMonth(year, month);
   const isCompact = useMediaQuery("(max-width: 720px)");
-  const activeHabits = useMemo(
-    () => data.habits.filter((habit) => habit.active),
-    [data.habits],
-  );
-  const tracking = useMemo(
+  const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+  const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayCount).padStart(2, "0")}`;
+  const visibleHabits = useMemo(
     () =>
-      selectMonthTracking(
-        data.habits,
-        data.logs,
-        data.settings.compterNonSaisisCommeManques,
-        year,
-        month,
+      data.habits.filter(
+        (habit) =>
+          habit.dateCreation <= monthEnd &&
+          (!habit.archivedAt || habit.archivedAt >= monthStart),
       ),
-    [
-      data.habits,
-      data.logs,
-      data.settings.compterNonSaisisCommeManques,
-      year,
-      month,
-    ],
+    [data.habits, monthEnd, monthStart],
+  );
+  const scores = useMemo(
+    () => analytics.monthScores(year, month),
+    [analytics, month, year],
   );
   const safeSelectedDay = Math.min(selectedDay, dayCount);
   const currentDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(safeSelectedDay).padStart(2, "0")}`;
@@ -101,18 +96,24 @@ export function MonthPage({
           <b key={index + 1}>{index + 1}</b>
         ))}
         <b>Score</b>
-        {activeHabits.map((habit) => (
+        {visibleHabits.map((habit) => (
           <React.Fragment key={habit.id}>
             <span>{habit.nom}</span>
             {Array.from({ length: dayCount }, (_, index) => {
               const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(index + 1).padStart(2, "0")}`;
-              const status = readTrackerStatus(tracking.index, habit.id, date);
+              const status = readTrackerStatus(analytics.index, habit.id, date);
               return (
                 <ThemeCalendarCell
                   theme={theme}
                   status={status}
                   title={`${habit.nom} · ${HABIT_STATUS_DEFINITIONS[status].label}`}
-                  onClick={() => cycle(habit.id, date)}
+                  onClick={
+                    habit.active &&
+                    habitExistsOnDate(habit, date) &&
+                    date <= analytics.today
+                      ? () => cycle(habit.id, date)
+                      : undefined
+                  }
                   key={date}
                 >
                   {statusSymbol(status)}
@@ -120,9 +121,9 @@ export function MonthPage({
               );
             })}
             <strong>
-              {(tracking.scores.get(habit.id) ?? -1) < 0
+              {scores.get(habit.id) === null || scores.get(habit.id) === undefined
                 ? "—"
-                : `${tracking.scores.get(habit.id)}%`}
+                : `${scores.get(habit.id)}%`}
             </strong>
           </React.Fragment>
         ))}
@@ -133,15 +134,20 @@ export function MonthPage({
           <h2>
             {safeSelectedDay} {monthLongLabels[month]}
           </h2>
-          <Badge variant="warm">{activeHabits.length} habitudes actives</Badge>
+          <Badge variant="warm">{visibleHabits.length} habitudes suivies</Badge>
         </div>
         <div className="habit-card-grid">
-          {activeHabits.map((habit) => (
+          {visibleHabits.map((habit) => (
             <HabitStatusCard
               habit={habit}
               date={currentDate}
-              status={readTrackerStatus(tracking.index, habit.id, currentDate)}
+              status={readTrackerStatus(analytics.index, habit.id, currentDate)}
               cycle={cycle}
+              canEdit={
+                currentDate <= analytics.today &&
+                habit.active &&
+                habitExistsOnDate(habit, currentDate)
+              }
               key={habit.id}
             />
           ))}

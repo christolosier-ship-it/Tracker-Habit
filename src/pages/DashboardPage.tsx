@@ -15,9 +15,14 @@ import { useDashboardStats } from "../hooks/useDashboardStats";
 export function DashboardPage({
   data,
   theme,
+  analytics,
   setSettings,
 }: DashboardPageProps) {
-  const stats = useDashboardStats(data);
+  const stats = useDashboardStats(
+    analytics,
+    data.settings.anneeActive,
+    data.settings.moisActif,
+  );
   return (
     <>
       <PeriodControls
@@ -69,7 +74,7 @@ export function DashboardPage({
         </ChartPanel>
         <ChartPanel
           title="Répartition par catégorie"
-          description="Volume de suivis enregistrés"
+          description="Volume d’opportunités évaluées"
         >
           <ThemedDonutChart
             theme={theme}

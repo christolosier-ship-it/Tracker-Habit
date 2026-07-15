@@ -1,6 +1,6 @@
 import { ThemedDonutChart } from "../charts/ThemedDonutChart";
 import { AppTheme } from "../../themes/theme-types";
-import { StatusStats } from "../../types";
+import type { StatusStats } from "../../analytics/tracker-analytics";
 import { statusLegendOrder } from "./stats-display-utils";
 
 type ThemedStatusBreakdownProps = { theme: AppTheme; data: StatusStats[] };

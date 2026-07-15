@@ -3,7 +3,7 @@ import { ChartVariant, chartCssVars, getScoreColor } from "./chart-theme-utils";
 
 type Props = {
   theme: AppTheme;
-  value: number;
+  value: number | null;
   variant: ChartVariant;
   size?: "sm" | "lg";
   label?: string;
@@ -15,7 +15,7 @@ export function ThemedProgressRing({
   size = "sm",
   label,
 }: Props) {
-  const clamped = Math.max(0, Math.min(100, value));
+  const clamped = value === null ? 0 : Math.max(0, Math.min(100, value));
   const radius = size === "lg" ? 52 : 34;
   const stroke =
     size === "lg"
@@ -25,14 +25,14 @@ export function ThemedProgressRing({
   const color = getScoreColor(theme, clamped);
   return (
     <div
-      className={`themed-progress-ring ring-${theme.charts.visual.donutVariant} ${size}`}
+      className={`themed-progress-ring ${size}`}
       style={
         {
           ...chartCssVars(theme, variant),
           "--ring-color": color,
         } as React.CSSProperties
       }
-      aria-label={label ?? `Score ${clamped}%`}
+      aria-label={label ?? (value === null ? "Score non disponible" : `Score ${clamped}%`)}
     >
       <svg viewBox="0 0 140 140" role="img">
         <circle
@@ -52,7 +52,9 @@ export function ThemedProgressRing({
           strokeDashoffset={circumference - (clamped / 100) * circumference}
         />
       </svg>
-      <span className="themed-progress-ring-inner">{Math.round(clamped)}%</span>
+      <span className="themed-progress-ring-inner">
+        {value === null ? "—" : `${Math.round(clamped)}%`}
+      </span>
     </div>
   );
 }
