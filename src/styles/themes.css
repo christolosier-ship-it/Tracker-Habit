@@ -186,3 +186,273 @@
   border-color: color-mix(in srgb, white 46%, var(--border));
   background: linear-gradient(135deg, var(--primary-soft), var(--surface));
 }
+
+/* Theme gallery: one reusable stage, decorated through the existing theme identity. */
+.theme-preview .preview-bg {
+  min-height: 176px;
+  padding: 8px;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      circle at 50% 92%,
+      color-mix(in srgb, var(--preview-primary) 30%, transparent),
+      transparent 44%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--preview-bg) 92%, white),
+      color-mix(in srgb, var(--preview-surface) 88%, var(--preview-secondary))
+    );
+}
+
+.theme-preview .preview-bg::before,
+.theme-preview .preview-bg::after {
+  position: absolute;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.theme-preview-mascot {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px color-mix(in srgb, var(--preview-primary) 26%, transparent));
+  user-select: none;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+}
+
+.theme-card:hover .theme-preview-mascot,
+.theme-card.active .theme-preview-mascot {
+  filter: drop-shadow(0 15px 18px color-mix(in srgb, var(--preview-primary) 38%, transparent));
+  transform: translateY(-3px) scale(1.035);
+}
+
+.identity-preview[data-preview-style="pop"] .preview-bg::before {
+  inset: 12px;
+  background:
+    radial-gradient(circle at 12% 24%, var(--preview-accent) 0 7px, transparent 8px),
+    radial-gradient(circle at 88% 32%, var(--preview-secondary) 0 10px, transparent 11px),
+    radial-gradient(circle at 22% 82%, var(--preview-primary) 0 6px, transparent 7px),
+    radial-gradient(circle at 76% 78%, var(--preview-accent) 0 5px, transparent 6px);
+  opacity: 0.68;
+}
+
+.identity-preview[data-preview-style="pop"] .preview-bg::after {
+  right: 14px;
+  bottom: 10px;
+  width: 58px;
+  height: 58px;
+  border: 8px solid color-mix(in srgb, var(--preview-secondary) 44%, transparent);
+  border-radius: 50%;
+}
+
+.identity-preview[data-preview-style="neon"] .preview-bg::before {
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--preview-primary) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--preview-secondary) 18%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, transparent, black 28%, black);
+}
+
+.identity-preview[data-preview-style="neon"] .preview-bg::after {
+  inset: 14px;
+  border: 1px solid color-mix(in srgb, var(--preview-primary) 76%, transparent);
+  box-shadow:
+    inset 0 0 22px color-mix(in srgb, var(--preview-secondary) 24%, transparent),
+    0 0 14px color-mix(in srgb, var(--preview-primary) 30%, transparent);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.identity-preview[data-preview-style="memphis"] .preview-bg::before {
+  inset: 8px;
+  background:
+    linear-gradient(36deg, transparent 45%, var(--preview-primary) 46% 54%, transparent 55%) 10% 18% / 34px 34px no-repeat,
+    radial-gradient(circle, var(--preview-accent) 0 9px, transparent 10px) 88% 20% / 38px 38px no-repeat,
+    linear-gradient(var(--preview-secondary), var(--preview-secondary)) 14% 80% / 34px 10px no-repeat;
+  transform: rotate(-4deg);
+}
+
+.identity-preview[data-preview-style="memphis"] .preview-bg::after {
+  right: 20px;
+  bottom: 18px;
+  width: 44px;
+  height: 44px;
+  border: 6px solid var(--preview-text);
+  transform: rotate(14deg);
+}
+
+.identity-preview[data-preview-style="aurora"] .preview-bg::before {
+  inset: 10px;
+  background:
+    radial-gradient(circle at 25% 35%, color-mix(in srgb, var(--preview-primary) 72%, transparent), transparent 34%),
+    radial-gradient(circle at 76% 62%, color-mix(in srgb, var(--preview-secondary) 68%, transparent), transparent 38%);
+  filter: blur(16px);
+  opacity: 0.8;
+}
+
+.identity-preview[data-preview-style="aurora"] .preview-bg::after {
+  inset: 16px;
+  border: 1px solid color-mix(in srgb, white 56%, transparent);
+  border-radius: 46% 54% 58% 42%;
+  box-shadow: inset 0 0 18px color-mix(in srgb, white 24%, transparent);
+  transform: rotate(-7deg);
+}
+
+.identity-preview[data-preview-style="tropical"] .preview-bg::before {
+  inset: -12px;
+  background:
+    radial-gradient(ellipse at 8% 92%, var(--preview-primary) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 92% 86%, var(--preview-secondary) 0 16%, transparent 17%),
+    radial-gradient(circle at 84% 14%, var(--preview-accent) 0 10%, transparent 11%);
+  opacity: 0.38;
+}
+
+.identity-preview[data-preview-style="tropical"] .preview-bg::after {
+  top: 14px;
+  right: 18px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--preview-accent) 48%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--preview-accent) 42%, transparent);
+}
+
+.identity-preview[data-preview-style="arcade"] .preview-bg::before {
+  inset: 0;
+  background:
+    linear-gradient(45deg, color-mix(in srgb, var(--preview-primary) 16%, transparent) 25%, transparent 25%) 0 0 / 20px 20px,
+    linear-gradient(-45deg, color-mix(in srgb, var(--preview-secondary) 15%, transparent) 25%, transparent 25%) 0 0 / 20px 20px;
+}
+
+.identity-preview[data-preview-style="arcade"] .preview-bg::after {
+  inset: 12px;
+  border: 4px double var(--preview-primary);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--preview-secondary) 38%, transparent);
+}
+
+.identity-preview[data-preview-style="arcade"] .theme-preview-mascot {
+  image-rendering: pixelated;
+}
+
+.identity-preview[data-preview-style="cosmic"] .preview-bg::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, white 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 18%, white 0 2px, transparent 3px),
+    radial-gradient(circle at 88% 68%, var(--preview-accent) 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 76%, var(--preview-secondary) 0 2px, transparent 3px);
+  background-size: 72px 64px, 94px 88px, 82px 76px, 112px 96px;
+  opacity: 0.8;
+}
+
+.identity-preview[data-preview-style="cosmic"] .preview-bg::after {
+  left: 50%;
+  top: 50%;
+  width: 168px;
+  height: 66px;
+  border: 2px solid color-mix(in srgb, var(--preview-accent) 54%, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+}
+
+.identity-preview[data-preview-style="kawaii"] .preview-bg::before {
+  inset: 8px;
+  background:
+    radial-gradient(circle at 13% 26%, color-mix(in srgb, white 76%, var(--preview-primary)) 0 12px, transparent 13px),
+    radial-gradient(circle at 88% 36%, color-mix(in srgb, white 68%, var(--preview-secondary)) 0 16px, transparent 17px),
+    radial-gradient(circle at 20% 82%, color-mix(in srgb, white 72%, var(--preview-accent)) 0 9px, transparent 10px);
+  opacity: 0.7;
+}
+
+.identity-preview[data-preview-style="kawaii"] .preview-bg::after {
+  right: 14px;
+  bottom: 12px;
+  width: 70px;
+  height: 34px;
+  border-radius: 50px;
+  background: color-mix(in srgb, white 56%, var(--preview-primary));
+  box-shadow:
+    -24px 3px 0 color-mix(in srgb, white 62%, var(--preview-primary)),
+    20px 5px 0 color-mix(in srgb, white 66%, var(--preview-secondary));
+  opacity: 0.48;
+}
+
+.identity-preview[data-preview-style="brutalist"] .preview-bg::before {
+  inset: 0;
+  background: linear-gradient(126deg, var(--preview-primary) 0 22%, transparent 22% 64%, var(--preview-secondary) 64% 82%, transparent 82%);
+  opacity: 0.22;
+}
+
+.identity-preview[data-preview-style="brutalist"] .preview-bg::after {
+  left: 16px;
+  bottom: 14px;
+  width: 54px;
+  height: 54px;
+  border: 5px solid var(--preview-text);
+  box-shadow: 7px 7px 0 var(--preview-accent);
+}
+
+.identity-preview[data-preview-style="editorial"] .preview-bg::before {
+  inset: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--preview-accent) 72%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--preview-accent) 72%, transparent);
+  background: linear-gradient(90deg, transparent 49.7%, color-mix(in srgb, var(--preview-accent) 38%, transparent) 50%, transparent 50.3%);
+}
+
+.identity-preview[data-preview-style="editorial"] .preview-bg::after {
+  top: 18px;
+  right: 22px;
+  width: 52px;
+  height: 52px;
+  border: 1px solid color-mix(in srgb, var(--preview-accent) 78%, transparent);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--preview-accent) 10%, transparent);
+}
+
+.identity-preview[data-preview-style="comic"] .preview-bg::before {
+  inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--preview-text) 24%, transparent) 1.2px, transparent 1.2px);
+  background-size: 9px 9px;
+  opacity: 0.48;
+}
+
+.identity-preview[data-preview-style="comic"] .preview-bg::after {
+  right: -24px;
+  top: -28px;
+  width: 128px;
+  height: 128px;
+  background: repeating-conic-gradient(var(--preview-accent) 0 8deg, transparent 8deg 17deg);
+  border-radius: 50%;
+  opacity: 0.32;
+}
+
+.identity-preview[data-preview-style="liquid"] .preview-bg::before {
+  inset: 10px;
+  border-radius: 38% 62% 56% 44% / 56% 36% 64% 44%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--preview-primary) 42%, transparent),
+    color-mix(in srgb, var(--preview-secondary) 36%, transparent)
+  );
+  filter: blur(3px);
+  opacity: 0.52;
+  transform: rotate(-8deg);
+}
+
+.identity-preview[data-preview-style="liquid"] .preview-bg::after {
+  left: 18px;
+  top: 18px;
+  width: 58px;
+  height: 58px;
+  border: 2px solid color-mix(in srgb, white 56%, transparent);
+  border-radius: 50% 42% 58% 46%;
+  box-shadow:
+    118px 76px 0 -12px color-mix(in srgb, var(--preview-accent) 30%, transparent),
+    134px 10px 0 -18px color-mix(in srgb, white 28%, transparent);
+}

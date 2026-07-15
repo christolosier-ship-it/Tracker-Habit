@@ -13,6 +13,7 @@ export function ThemePreview({ theme, active }: ThemePreviewProps) {
     theme.tokens.accent2,
     theme.tokens.success,
   ];
+  const mascotSrc = `${import.meta.env.BASE_URL}mascots/previews/${theme.id}.webp`;
 
   return (
     <div
@@ -20,11 +21,13 @@ export function ThemePreview({ theme, active }: ThemePreviewProps) {
       data-preview-style={theme.effects.backgroundStyle}
     >
       <div className="preview-bg">
-        <span className="theme-preview-signature">{theme.previewEmoji}</span>
-        <i className="preview-frame" />
-        <i
-          className="preview-cell"
-          data-cell-variant={theme.identity.cells.variant}
+        <img
+          className="theme-preview-mascot"
+          src={mascotSrc}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          draggable={false}
         />
       </div>
       <div className="theme-swatches">
