@@ -12,7 +12,7 @@ export function ThemedStatusBreakdown({
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const byStatus = new Map(data.map((item) => [item.status, item]));
   return (
-    <div className="status-breakdown">
+    <div className="status-breakdown status-breakdown-vertical">
       <div className="status-breakdown-chart">
         <ThemedDonutChart
           theme={theme}
