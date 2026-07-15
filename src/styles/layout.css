@@ -167,6 +167,24 @@
   flex-wrap: wrap;
 }
 
+.period-controls {
+  min-height: 78px;
+  padding: 10px 18px;
+}
+
+.period-controls .hero-controls {
+  display: grid;
+  width: min(100%, 360px);
+  grid-template-columns: minmax(120px, 0.9fr) minmax(150px, 1.1fr);
+  align-items: end;
+}
+
+.app-shell .period-controls .hero-controls input,
+.app-shell .period-controls .hero-controls select {
+  width: 100%;
+  min-height: 38px;
+}
+
 .kpi-grid {
   display: grid;
   margin-bottom: 18px;
