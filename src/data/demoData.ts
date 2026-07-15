@@ -1,17 +1,7 @@
-import { Habit, HabitCategory, HabitLog, UserSettings } from '../types';
+import { HABIT_CATEGORIES } from "../domain/definitions";
+import { Habit, HabitCategory, HabitLog, UserSettings } from "../types";
 
-export const categories: HabitCategory[] = [
-  'Routine',
-  'Santé',
-  'Productivité',
-  'Anti-procrastination',
-  'Maison',
-  'Famille',
-  'Développement',
-  'Finances',
-  'Projet perso',
-  'Autre',
-];
+export const categories = HABIT_CATEGORIES;
 
 const categoryByHabit: Record<string, HabitCategory> = {
   'Lever tôt': 'Routine',
@@ -159,6 +149,7 @@ export function createDemoLogs() {
       for (let day = 1; day <= maxDay; day += 1) {
         if (habit.frequence === 'hebdomadaire' && ![1, 8, 15, 22, 29].includes(day)) continue;
         const status = weightedDemoStatus(day, month, habitIndex) as HabitLog['status'];
+        if (status === "empty") continue;
         logs.push({
           habitId: habit.id,
           date: `${demoYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,

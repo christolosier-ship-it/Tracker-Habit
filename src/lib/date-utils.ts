@@ -13,12 +13,18 @@ export function parseLocalIso(value: string) {
   return new Date(year, month - 1, day, 12, 0, 0, 0);
 }
 
+export function isValidIsoDate(value: unknown): value is string {
+  if (typeof value !== "string" || !ISO_DATE_PATTERN.test(value)) return false;
+  const parsed = parseLocalIso(value);
+  return !Number.isNaN(parsed.getTime()) && formatLocalIso(parsed) === value;
+}
+
 export function compareIsoDates(left: string, right: string) {
   return left.localeCompare(right);
 }
 
-export function isIsoDatePast(value: string) {
-  return compareIsoDates(value, formatLocalIso(new Date())) < 0;
+export function isIsoDatePast(value: string, now = new Date()) {
+  return compareIsoDates(value, formatLocalIso(now)) < 0;
 }
 
 export function monthPrefix(year: number, month: number) {

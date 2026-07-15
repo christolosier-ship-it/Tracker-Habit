@@ -1,8 +1,15 @@
 import { Habit, HabitLog, UserSettings } from "../types";
 import { createDemoLogs, defaultSettings, demoHabits } from "../data/demoData";
 import { defaultThemeId, resolveTheme } from "../themes/theme-registry";
+import {
+  isHabitCategory,
+  isHabitFrequency,
+  isHabitPriority,
+  isHabitStatus,
+} from "../domain/definitions";
+import { isValidIsoDate } from "./date-utils";
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 const KEY = "discipline-dashboard-v2";
 const BACKUP_KEY = `${KEY}-backup`;
 
@@ -29,12 +36,13 @@ function isHabit(value: unknown): value is Habit {
   return (
     typeof value.id === "string" &&
     typeof value.nom === "string" &&
-    typeof value.categorie === "string" &&
-    ["quotidienne", "hebdomadaire"].includes(String(value.frequence)) &&
+    isHabitCategory(value.categorie) &&
+    isHabitFrequency(value.frequence) &&
     typeof value.objectif === "string" &&
-    ["faible", "normale", "haute"].includes(String(value.priorite)) &&
+    isHabitPriority(value.priorite) &&
     typeof value.active === "boolean" &&
-    typeof value.dateCreation === "string"
+    isValidIsoDate(value.dateCreation) &&
+    (value.couleur === undefined || typeof value.couleur === "string")
   );
 }
 
@@ -42,10 +50,8 @@ function isLog(value: unknown): value is HabitLog {
   if (!isRecord(value)) return false;
   return (
     typeof value.habitId === "string" &&
-    typeof value.date === "string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(value.date) &&
-    typeof value.status === "string" &&
-    ["empty", "done", "partial", "missed", "rest"].includes(value.status)
+    isValidIsoDate(value.date) &&
+    isHabitStatus(value.status)
   );
 }
 
@@ -53,12 +59,15 @@ function isSettings(value: unknown): value is UserSettings {
   if (!isRecord(value)) return false;
   return (
     typeof value.anneeActive === "number" &&
-    Number.isFinite(value.anneeActive) &&
+    Number.isInteger(value.anneeActive) &&
+    value.anneeActive >= 1970 &&
+    value.anneeActive <= 2200 &&
     typeof value.moisActif === "number" &&
     Number.isInteger(value.moisActif) &&
     value.moisActif >= 0 &&
     value.moisActif <= 11 &&
     typeof value.compterNonSaisisCommeManques === "boolean" &&
+    (value.themeId === undefined || typeof value.themeId === "string") &&
     (value.mascotEnabled === undefined ||
       typeof value.mascotEnabled === "boolean")
   );
@@ -67,6 +76,10 @@ function isSettings(value: unknown): value is UserSettings {
 export function validateImport(value: unknown): value is AppData {
   if (!isRecord(value)) return false;
   return (
+    (value.schemaVersion === undefined ||
+      (Number.isInteger(value.schemaVersion) &&
+        Number(value.schemaVersion) >= 1 &&
+        Number(value.schemaVersion) <= SCHEMA_VERSION)) &&
     Array.isArray(value.habits) &&
     value.habits.every(isHabit) &&
     Array.isArray(value.logs) &&
@@ -77,7 +90,12 @@ export function validateImport(value: unknown): value is AppData {
 
 export function migrateData(data: AppData): AppData {
   const themeId = resolveTheme(data.settings.themeId).id ?? defaultThemeId;
-  const knownHabitIds = new Set(data.habits.map((habit) => habit.id));
+  const uniqueHabits = new Map<string, Habit>();
+  for (const habit of data.habits) {
+    if (!uniqueHabits.has(habit.id)) uniqueHabits.set(habit.id, habit);
+  }
+  const habits = [...uniqueHabits.values()];
+  const knownHabitIds = new Set(habits.map((habit) => habit.id));
   const deduplicatedLogs = new Map<string, HabitLog>();
   for (const log of data.logs) {
     if (!knownHabitIds.has(log.habitId) || log.status === "empty") continue;
@@ -85,7 +103,7 @@ export function migrateData(data: AppData): AppData {
   }
   return {
     schemaVersion: SCHEMA_VERSION,
-    habits: data.habits,
+    habits,
     logs: [...deduplicatedLogs.values()],
     settings: { ...defaultSettings, ...data.settings, themeId, mascotEnabled: data.settings.mascotEnabled ?? true },
   };

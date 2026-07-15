@@ -1,21 +1,8 @@
 import {
   AppTheme,
-  ChartCategoryName,
   ThemeCharts,
 } from "./theme-types";
-
-const categories: ChartCategoryName[] = [
-  "Routine",
-  "Santé",
-  "Productivité",
-  "Anti-procrastination",
-  "Maison",
-  "Famille",
-  "Développement",
-  "Finances",
-  "Projet perso",
-  "Autre",
-];
+import { HABIT_CATEGORIES } from "../domain/definitions";
 
 export type ChartSeed = {
   hexPalette: string[];
@@ -39,12 +26,12 @@ export function createCharts({
       good: score?.good ?? status.done,
       great: score?.great ?? hexPalette[0],
     },
-    category: categories.reduce(
+    category: HABIT_CATEGORIES.reduce(
       (accumulator, category, index) => ({
         ...accumulator,
         [category]: hexPalette[index % hexPalette.length],
       }),
-      {} as Record<ChartCategoryName, string>,
+      {} as ThemeCharts["category"],
     ),
     gradients: {
       progressFrom: hexPalette[0],

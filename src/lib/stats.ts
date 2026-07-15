@@ -7,6 +7,10 @@ import {
   UserSettings,
 } from "../types";
 import {
+  HABIT_STATUS_CYCLE,
+  HABIT_STATUS_DEFINITIONS,
+} from "../domain/definitions";
+import {
   compareIsoDates,
   daysInMonth,
   formatLocalIso,
@@ -18,29 +22,14 @@ import {
 } from "./date-utils";
 import { buildLogIndex, LogIndex } from "./log-index";
 
-const scoreMap: Record<HabitStatus, number | null> = {
-  done: 1,
-  partial: 0.5,
-  missed: 0,
-  rest: null,
-  empty: null,
-};
+export const statusLabels = Object.fromEntries(
+  HABIT_STATUS_CYCLE.map((status) => [
+    status,
+    HABIT_STATUS_DEFINITIONS[status].label,
+  ]),
+) as Record<HabitStatus, string>;
 
-export const statusLabels: Record<HabitStatus, string> = {
-  empty: "Non saisi",
-  done: "Accompli",
-  partial: "Partiel",
-  missed: "Manqué",
-  rest: "Repos",
-};
-
-export const statusCycle: HabitStatus[] = [
-  "empty",
-  "done",
-  "partial",
-  "missed",
-  "rest",
-];
+export const statusCycle = [...HABIT_STATUS_CYCLE];
 
 export function getStatusScore(
   status: HabitStatus,
@@ -48,7 +37,7 @@ export function getStatusScore(
   past = false,
 ) {
   if (status === "empty" && countEmpty && past) return 0;
-  return scoreMap[status];
+  return HABIT_STATUS_DEFINITIONS[status].score;
 }
 
 export function logFor(
@@ -131,7 +120,7 @@ function weeklyScoreForPeriod(
     );
     const numericScores = weekLogs
       .map((log) => getStatusScore(log.status))
-      .filter((score): score is number => score !== null);
+      .filter((score): score is 0 | 0.5 | 1 => score !== null);
 
     if (numericScores.length) {
       got += Math.max(...numericScores);

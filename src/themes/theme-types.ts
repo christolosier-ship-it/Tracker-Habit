@@ -1,16 +1,7 @@
-export type ThemeId =
-  | "dopamine-pop"
-  | "neon-cyberpunk-matrix"
-  | "memphis-productivity"
-  | "aurora-glassmorphism"
-  | "tropical-festival"
-  | "retro-arcade"
-  | "cosmic-dreamscape"
-  | "kawaii-maximalist"
-  | "brutalist-color-clash"
-  | "editorial-fashion-tech"
-  | "comic-book-energy"
-  | "liquid-gradient-future";
+import type { HabitCategory } from "../domain/definitions";
+import type { ThemeId } from "./theme-ids";
+
+export type { ThemeId } from "./theme-ids";
 
 export type ThemeTypographyVariant =
   | "terminal"
@@ -82,17 +73,7 @@ export type ThemeStyle =
   | "comic"
   | "liquid";
 
-export type ChartCategoryName =
-  | "Routine"
-  | "Santé"
-  | "Productivité"
-  | "Anti-procrastination"
-  | "Maison"
-  | "Famille"
-  | "Développement"
-  | "Finances"
-  | "Projet perso"
-  | "Autre";
+export type ChartCategoryName = HabitCategory;
 
 export type ThemeCharts = {
   hexPalette: string[];
