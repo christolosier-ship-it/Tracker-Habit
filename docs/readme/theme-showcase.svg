@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title description">
+  <title id="title">Les douze univers visuels de Discipline Dashboard</title>
+  <desc id="description">Une mosaïque des douze thèmes de l’application avec leurs couleurs principales.</desc>
+  <defs>
+    <linearGradient id="backdrop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090716" />
+      <stop offset="0.52" stop-color="#17102d" />
+      <stop offset="1" stop-color="#28113c" />
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="0" r="85%">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.32" />
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000" flood-opacity="0.28" />
+    </filter>
+    <symbol id="check" viewBox="0 0 64 64">
+      <path d="M10 34 25 49 55 16" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+  </defs>
+
+  <rect width="1200" height="680" rx="34" fill="url(#backdrop)" />
+  <rect width="1200" height="680" rx="34" fill="url(#halo)" />
+  <circle cx="1080" cy="52" r="128" fill="#ff5c8a" opacity="0.08" />
+  <circle cx="105" cy="650" r="155" fill="#22d3ee" opacity="0.07" />
+
+  <text x="42" y="53" fill="#ffffff" font-family="Inter, Segoe UI, sans-serif" font-size="30" font-weight="800">12 thèmes. 12 mascottes. Une seule discipline.</text>
+  <text x="43" y="81" fill="#c9bddc" font-family="Inter, Segoe UI, sans-serif" font-size="15">Chaque univers adapte les couleurs, la typographie, les graphiques et les réactions visuelles.</text>
+
+  <!-- Dopamine Pop -->
+  <g transform="translate(25 112)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="24" fill="#fff4e8" stroke="#ff5c8a" stroke-width="3" />
+    <text x="22" y="35" fill="#2d2230" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="800">Dopamine Pop</text>
+    <text x="22" y="59" fill="#806c7d" font-family="Inter, Segoe UI, sans-serif" font-size="12">Candy premium · joyeux · tactile</text>
+    <circle cx="29" cy="112" r="12" fill="#ff5c8a" /><circle cx="61" cy="112" r="12" fill="#ffd166" /><circle cx="93" cy="112" r="12" fill="#6ec5ff" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#57cc99" />
+  </g>
+
+  <!-- Neon Cyberpunk -->
+  <g transform="translate(318 112)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="18" fill="#060914" stroke="#00e5ff" stroke-width="3" />
+    <text x="22" y="35" fill="#e9fbff" font-family="Inter, Segoe UI, sans-serif" font-size="17" font-weight="800">Neon Cyberpunk Matrix</text>
+    <text x="22" y="59" fill="#8ab8c4" font-family="Inter, Segoe UI, sans-serif" font-size="12">Matrice sombre · néons électriques</text>
+    <circle cx="29" cy="112" r="12" fill="#00e5ff" /><circle cx="61" cy="112" r="12" fill="#ff2bd6" /><circle cx="93" cy="112" r="12" fill="#b6ff00" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#00ffb3" />
+  </g>
+
+  <!-- Memphis -->
+  <g transform="translate(611 112)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="18" fill="#fff8e8" stroke="#111111" stroke-width="3" />
+    <text x="22" y="35" fill="#111111" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="900">Memphis Productivity</text>
+    <text x="22" y="59" fill="#4b4b4b" font-family="Inter, Segoe UI, sans-serif" font-size="12">Formes franches · énergie pop</text>
+    <circle cx="29" cy="112" r="12" fill="#ff3b30" /><rect x="49" y="100" width="24" height="24" rx="3" fill="#ffd60a" /><path d="M93 99 107 124H79Z" fill="#0a84ff" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#34c759" />
+  </g>
+
+  <!-- Aurora -->
+  <g transform="translate(904 112)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="28" fill="#1c1b4b" stroke="#a78bfa" stroke-width="3" />
+    <text x="22" y="35" fill="#f8f7ff" font-family="Inter, Segoe UI, sans-serif" font-size="17" font-weight="800">Aurora Glassmorphism</text>
+    <text x="22" y="59" fill="#d8d3f7" font-family="Inter, Segoe UI, sans-serif" font-size="12">Verre doux · gradients fluides</text>
+    <circle cx="29" cy="112" r="12" fill="#a78bfa" /><circle cx="61" cy="112" r="12" fill="#67e8f9" /><circle cx="93" cy="112" r="12" fill="#f9a8d4" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#5eead4" />
+  </g>
+
+  <!-- Tropical -->
+  <g transform="translate(25 286)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="28" fill="#fff3c7" stroke="#087f5b" stroke-width="3" />
+    <text x="22" y="35" fill="#104235" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="800">Tropical Festival</text>
+    <text x="22" y="59" fill="#487466" font-family="Inter, Segoe UI, sans-serif" font-size="12">Solaire · végétal · chaleureux</text>
+    <circle cx="29" cy="112" r="12" fill="#087f5b" /><circle cx="61" cy="112" r="12" fill="#ffb703" /><circle cx="93" cy="112" r="12" fill="#f97316" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#2f9e44" />
+  </g>
+
+  <!-- Retro Arcade -->
+  <g transform="translate(318 286)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="10" fill="#12071f" stroke="#6d28d9" stroke-width="3" />
+    <text x="22" y="35" fill="#f7ecff" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="800">Retro Arcade</text>
+    <text x="22" y="59" fill="#bda5d6" font-family="Inter, Segoe UI, sans-serif" font-size="12">Pixels · XP · séries · quêtes</text>
+    <rect x="17" y="100" width="24" height="24" fill="#ff2bd6" /><rect x="49" y="100" width="24" height="24" fill="#00f5d4" /><rect x="81" y="100" width="24" height="24" fill="#fee440" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#00ff85" />
+  </g>
+
+  <!-- Cosmic -->
+  <g transform="translate(611 286)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="26" fill="#08051a" stroke="#8b5cf6" stroke-width="3" />
+    <text x="22" y="35" fill="#f4eeff" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="800">Cosmic Dreamscape</text>
+    <text x="22" y="59" fill="#c9b9e8" font-family="Inter, Segoe UI, sans-serif" font-size="12">Galaxie · indigo · violet · rose</text>
+    <circle cx="29" cy="112" r="12" fill="#8b5cf6" /><circle cx="61" cy="112" r="12" fill="#ec4899" /><circle cx="93" cy="112" r="12" fill="#22d3ee" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#a3e635" />
+  </g>
+
+  <!-- Kawaii -->
+  <g transform="translate(904 286)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="32" fill="#fff0fa" stroke="#ff8acd" stroke-width="3" />
+    <text x="22" y="35" fill="#5b345b" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="800">Kawaii Maximalist</text>
+    <text x="22" y="59" fill="#9b6f9b" font-family="Inter, Segoe UI, sans-serif" font-size="12">Pastel · stickers · ultra joyeux</text>
+    <circle cx="29" cy="112" r="12" fill="#ff8acd" /><circle cx="61" cy="112" r="12" fill="#8bd3ff" /><circle cx="93" cy="112" r="12" fill="#fff176" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#63cfa2" />
+  </g>
+
+  <!-- Brutalist -->
+  <g transform="translate(25 460)" filter="url(#shadow)">
+    <rect width="270" height="154" fill="#050505" stroke="#ffffff" stroke-width="3" />
+    <text x="22" y="35" fill="#ffffff" font-family="Inter, Segoe UI, sans-serif" font-size="17" font-weight="900">Brutalist Color Clash</text>
+    <text x="22" y="59" fill="#d0d0d0" font-family="Inter, Segoe UI, sans-serif" font-size="12">Hot pink · cobalt · jaune acide</text>
+    <rect x="17" y="100" width="24" height="24" fill="#ff0a7a" /><rect x="49" y="100" width="24" height="24" fill="#0057ff" /><rect x="81" y="100" width="24" height="24" fill="#f9ff00" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#00ff94" />
+  </g>
+
+  <!-- Editorial -->
+  <g transform="translate(318 460)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="4" fill="#090806" stroke="#c9a227" stroke-width="2" />
+    <text x="22" y="35" fill="#f8efd9" font-family="Georgia, serif" font-size="17" font-weight="700">Editorial Fashion Tech</text>
+    <text x="22" y="59" fill="#bdaf8c" font-family="Inter, Segoe UI, sans-serif" font-size="12">Noir · or · luxe éditorial</text>
+    <circle cx="29" cy="112" r="12" fill="#c9a227" /><circle cx="61" cy="112" r="12" fill="#f5d76e" /><circle cx="93" cy="112" r="12" fill="#846a2d" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#d6b85a" />
+  </g>
+
+  <!-- Comic -->
+  <g transform="translate(611 460)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="16" fill="#ffe8d6" stroke="#111111" stroke-width="4" />
+    <text x="22" y="35" fill="#111111" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="900">Comic Book Energy</text>
+    <text x="22" y="59" fill="#4b362d" font-family="Inter, Segoe UI, sans-serif" font-size="12">Pop art · trames · action</text>
+    <circle cx="29" cy="112" r="12" fill="#ef233c" stroke="#111" stroke-width="2" /><circle cx="61" cy="112" r="12" fill="#ffd500" stroke="#111" stroke-width="2" /><circle cx="93" cy="112" r="12" fill="#0077ff" stroke="#111" stroke-width="2" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#06a880" />
+  </g>
+
+  <!-- Liquid -->
+  <g transform="translate(904 460)" filter="url(#shadow)">
+    <rect width="270" height="154" rx="30" fill="#12103a" stroke="#38bdf8" stroke-width="3" />
+    <text x="22" y="35" fill="#f8faff" font-family="Inter, Segoe UI, sans-serif" font-size="17" font-weight="800">Liquid Gradient Future</text>
+    <text x="22" y="59" fill="#c9d4ff" font-family="Inter, Segoe UI, sans-serif" font-size="12">Fluide · futuriste · coloré</text>
+    <circle cx="29" cy="112" r="12" fill="#38bdf8" /><circle cx="61" cy="112" r="12" fill="#a855f7" /><circle cx="93" cy="112" r="12" fill="#f472b6" />
+    <use href="#check" x="198" y="82" width="52" height="52" color="#34d399" />
+  </g>
+
+  <text x="600" y="649" text-anchor="middle" fill="#b8abc9" font-family="Inter, Segoe UI, sans-serif" font-size="13">Les palettes sont issues directement des presets de l’application.</text>
+</svg>
