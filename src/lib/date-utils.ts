@@ -58,3 +58,18 @@ export function getIsoWeekKey(value: string) {
   const week = 1 + Math.round((target.getTime() - firstThursday.getTime()) / 604800000);
   return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
 }
+
+export function addIsoDays(value: string, amount: number) {
+  const date = parseLocalIso(value);
+  date.setDate(date.getDate() + amount);
+  return formatLocalIso(date);
+}
+
+export function getIsoWeekBounds(value: string) {
+  const date = parseLocalIso(value);
+  const dayFromMonday = (date.getDay() + 6) % 7;
+  return {
+    start: addIsoDays(value, -dayFromMonday),
+    end: addIsoDays(value, 6 - dayFromMonday),
+  };
+}
