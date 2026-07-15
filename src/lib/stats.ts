@@ -14,7 +14,6 @@ import type {
 } from "../types";
 import { monthShortLabels } from "../app/constants";
 import { parseLocalIso, monthPrefix } from "./date-utils";
-import { buildLogIndex, type LogIndex } from "./log-index";
 
 export const statusLabels = Object.fromEntries(
   HABIT_STATUS_CYCLE.map((status) => [
@@ -32,33 +31,6 @@ export function getStatusScore(
 ) {
   if (status === "empty" && countEmpty && past) return 0;
   return HABIT_STATUS_DEFINITIONS[status].score;
-}
-
-export function logFor(
-  logs: HabitLog[] | LogIndex,
-  habitId: string,
-  date: string,
-): HabitStatus {
-  const index = logs instanceof Map ? logs : buildLogIndex(logs);
-  return index.get(`${habitId}|${date}`) ?? "empty";
-}
-
-export function setLog(
-  logs: HabitLog[],
-  habitId: string,
-  date: string,
-  status: HabitStatus,
-) {
-  const index = logs.findIndex(
-    (log) => log.habitId === habitId && log.date === date,
-  );
-  if (index >= 0) {
-    const next = [...logs];
-    if (status === "empty") next.splice(index, 1);
-    else next[index] = { habitId, date, status };
-    return next;
-  }
-  return status === "empty" ? logs : [...logs, { habitId, date, status }];
 }
 
 export function calculateDayScore(

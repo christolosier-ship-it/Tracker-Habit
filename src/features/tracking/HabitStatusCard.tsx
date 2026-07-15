@@ -1,26 +1,22 @@
 import { CycleStatus } from "../../app/tracker-actions";
 import { Badge } from "../../components/ui/badge";
 import { Card } from "../../components/ui/card";
-import { AppData } from "../../persistence";
-import { Habit } from "../../types";
-import * as S from "../../lib/stats";
+import type { Habit, HabitStatus } from "../../types";
 import { StatusButton } from "./StatusButton";
 
 type HabitStatusCardProps = {
   habit: Habit;
   date: string;
-  data: AppData;
+  status: HabitStatus;
   cycle: CycleStatus;
 };
 
 export function HabitStatusCard({
   habit,
   date,
-  data,
+  status,
   cycle,
 }: HabitStatusCardProps) {
-  const status = S.logFor(data.logs, habit.id, date);
-
   return (
     <Card className="habit-card">
       <div>

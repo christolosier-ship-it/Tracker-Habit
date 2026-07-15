@@ -1,31 +1,22 @@
 import { monthShortLabels } from "../app/constants";
 import { createTrackerAnalytics } from "../analytics/tracker-analytics";
 import type { AppData } from "../persistence";
-import type { Habit, HabitLog, UserSettings } from "../types";
-
-type DashboardPeriod = Pick<
-  UserSettings,
-  "anneeActive" | "moisActif" | "compterNonSaisisCommeManques"
->;
-
-function analyticsSettings(period: DashboardPeriod): UserSettings {
-  return {
-    ...period,
-    themeId: "dopamine-pop",
-    mascotEnabled: true,
-  };
-}
+import type { Habit, HabitLog } from "../types";
+import {
+  createAnalyticsSettings,
+  type AnalyticsPeriod,
+} from "../analytics/analytics-settings";
 
 export function selectDashboardStatsForPeriod(
   habits: Habit[],
   logs: HabitLog[],
-  period: DashboardPeriod,
+  period: AnalyticsPeriod,
   now = new Date(),
 ) {
   return createTrackerAnalytics(
     habits,
     logs,
-    analyticsSettings(period),
+    createAnalyticsSettings(period, now),
     now,
   ).dashboard(period.anneeActive, period.moisActif, monthShortLabels);
 }
@@ -48,11 +39,11 @@ export function selectMascotStats(
   return createTrackerAnalytics(
     habits,
     logs,
-    analyticsSettings({
+    createAnalyticsSettings({
       anneeActive: now.getFullYear(),
       moisActif: now.getMonth(),
       compterNonSaisisCommeManques: countMissingAsMissed,
-    }),
+    }, now),
     now,
   ).mascot();
 }

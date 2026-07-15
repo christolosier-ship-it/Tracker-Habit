@@ -8,7 +8,7 @@ import {
 import { MascotRenderer } from "./MascotRenderer";
 import type { MascotMood, MascotReactionEvent } from "./mascot.types";
 import type { ThemeId } from "../../themes/theme-types";
-import { useMotionPreference } from "./useMotionPreference";
+import { useMotionPreference } from "../../hooks/useMotionPreference";
 import "./roaming-mascot.css";
 
 type Point = { x: number; y: number };

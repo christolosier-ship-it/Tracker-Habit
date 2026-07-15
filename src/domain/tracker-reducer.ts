@@ -5,7 +5,10 @@ import type { MascotReactionEvent } from "../features/mascot/mascot.types";
 import { formatLocalIso, isValidIsoDate } from "../lib/date-utils";
 import { migrateData, type AppData } from "../persistence";
 import type { Habit, UserSettings } from "../types";
-import { logFor, setLog } from "../lib/stats";
+import {
+  buildTrackerIndex,
+  readTrackerStatus,
+} from "../analytics/tracker-index";
 
 export type TrackerState = {
   data: AppData;
@@ -75,13 +78,26 @@ function cycleLog(state: TrackerState, action: Extract<TrackerAction, { type: "l
     return state;
   }
 
-  const currentStatus = logFor(data.logs, habit.id, action.date);
+  const currentStatus = readTrackerStatus(
+    buildTrackerIndex(data.logs),
+    habit.id,
+    action.date,
+  );
   const nextStatus =
     HABIT_STATUS_CYCLE[
       (HABIT_STATUS_CYCLE.indexOf(currentStatus) + 1) %
         HABIT_STATUS_CYCLE.length
     ];
-  const logs = setLog(data.logs, habit.id, action.date, nextStatus);
+  const logIndex = data.logs.findIndex(
+    (log) => log.habitId === habit.id && log.date === action.date,
+  );
+  const logs = [...data.logs];
+  if (logIndex >= 0 && nextStatus === "empty") logs.splice(logIndex, 1);
+  else if (logIndex >= 0) {
+    logs[logIndex] = { habitId: habit.id, date: action.date, status: nextStatus };
+  } else if (nextStatus !== "empty") {
+    logs.push({ habitId: habit.id, date: action.date, status: nextStatus });
+  }
   if (logs === data.logs) return state;
 
   const nextData = { ...data, logs };
