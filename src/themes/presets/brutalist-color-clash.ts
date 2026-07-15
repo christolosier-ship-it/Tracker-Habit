@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const brutalistColorClashTheme = defineTheme({
   id: "brutalist-color-clash",
   name: "Brutalist Color Clash",
-  description: "No excuses. Only progress.",
+  description: "Pas d’excuse, seulement du progrès.",
   personality: "Hot pink, cobalt, jaune acide, noir.",
   previewEmoji: "💥",
   tokens: {
