@@ -97,6 +97,10 @@ export function createTrackerAnalytics(
   const index = buildTrackerIndex(logs);
   const evaluationsByYear = new Map<number, TrackerEvaluation[]>();
   const dayScoreCache = new Map<string, { score: number; tracked: boolean }>();
+  const disciplineScoreCache = new Map<
+    string,
+    { score: number; tracked: boolean }
+  >();
 
   function evaluationsForYear(year: number) {
     const cached = evaluationsByYear.get(year);
@@ -190,6 +194,34 @@ export function createTrackerAnalytics(
     return completed > 0;
   }
 
+  function disciplineDayScore(date: string) {
+    const cached = disciplineScoreCache.get(date);
+    if (cached) return cached;
+    const tracked = (index.byDate.get(date) ?? []).some(
+      (log) => activeIds.has(log.habitId) && log.status !== "empty",
+    );
+    if (!tracked) {
+      const result = { score: 0, tracked: false };
+      disciplineScoreCache.set(date, result);
+      return result;
+    }
+
+    let earned = 0;
+    let total = 0;
+    for (const habit of activeHabits) {
+      if (!habitExistsOnDate(habit, date)) continue;
+      const status = readTrackerStatus(index, habit.id, date);
+      if (habit.frequence === "hebdomadaire" && status === "empty") continue;
+      if (status === "rest") continue;
+      const score = HABIT_STATUS_DEFINITIONS[status].score ?? 0;
+      earned += score;
+      total += 1;
+    }
+    const result = { score: percentage(earned, total), tracked };
+    disciplineScoreCache.set(date, result);
+    return result;
+  }
+
   function streaksForYear(year: number) {
     const end = compareIsoDates(`${year}-12-31`, today) > 0
       ? today
@@ -198,7 +230,7 @@ export function createTrackerAnalytics(
     let best = 0;
     let current = 0;
     for (const date of iterateIsoDates(`${year}-01-01`, end)) {
-      const day = dayScore(date);
+      const day = disciplineDayScore(date);
       current = day.tracked && day.score >= 70 ? current + 1 : 0;
       best = Math.max(best, current);
     }
@@ -207,14 +239,14 @@ export function createTrackerAnalytics(
 
   function currentStreak() {
     let cursor = today;
-    if (!dayScore(cursor).tracked) {
+    if (!disciplineDayScore(cursor).tracked) {
       const date = new Date(now);
       date.setDate(date.getDate() - 1);
       cursor = formatLocalIso(date);
     }
     let total = 0;
     for (let day = 0; day < 365; day += 1) {
-      const snapshot = dayScore(cursor);
+      const snapshot = disciplineDayScore(cursor);
       if (!snapshot.tracked || snapshot.score < 70) break;
       total += 1;
       const date = new Date(`${cursor}T12:00:00`);
@@ -228,7 +260,12 @@ export function createTrackerAnalytics(
     const dates = index.byDate.keys();
     let count = 0;
     for (const date of dates) {
-      if (date.startsWith(`${year}-`) && dayScore(date).score >= 70) count += 1;
+      if (
+        date.startsWith(`${year}-`) &&
+        disciplineDayScore(date).score >= 70
+      ) {
+        count += 1;
+      }
     }
     return count;
   }

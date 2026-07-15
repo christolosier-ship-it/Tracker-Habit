@@ -1,7 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { RoamingMascot } from "../features/mascot/RoamingMascot";
-import { selectDashboardStats } from "../lib/dashboard-selectors";
 import { demoData } from "../persistence";
 import { resolveTheme } from "../themes/theme-registry";
 import {
@@ -15,16 +14,17 @@ import {
 
 const data = demoData();
 const theme = resolveTheme(data.settings.themeId);
-const stats = selectDashboardStats(data);
-const setData = () => undefined;
 const setSettings = () => undefined;
 const cycle = () => undefined;
+const addHabit = () => undefined;
+const updateHabit = () => undefined;
+const deleteHabit = () => undefined;
+const replaceData = () => undefined;
 
 const pages = [
   <DashboardPage
     data={data}
     theme={theme}
-    stats={stats}
     setSettings={setSettings}
   />,
   <TodayPage data={data} setSettings={setSettings} cycle={cycle} />,
@@ -34,14 +34,23 @@ const pages = [
     setSettings={setSettings}
     cycle={cycle}
   />,
-  <HabitsPage data={data} setData={setData} setSettings={setSettings} />,
+  <HabitsPage
+    data={data}
+    setSettings={setSettings}
+    addHabit={addHabit}
+    updateHabit={updateHabit}
+    deleteHabit={deleteHabit}
+  />,
   <StatsPage
     data={data}
     theme={theme}
-    stats={stats}
     setSettings={setSettings}
   />,
-  <SettingsPage data={data} setData={setData} setSettings={setSettings} />,
+  <SettingsPage
+    data={data}
+    replaceData={replaceData}
+    setSettings={setSettings}
+  />,
 ];
 
 const themeIds = [

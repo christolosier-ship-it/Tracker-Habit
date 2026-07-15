@@ -1,87 +1,76 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { selectDashboardStats } from "../lib/dashboard-selectors";
-import { loadData } from "../persistence";
+import { useCallback, useMemo, useReducer } from "react";
+import { selectMascotStats } from "../lib/dashboard-selectors";
+import { loadData, type AppData } from "../persistence";
 import { useDebouncedSave } from "../hooks/useDebouncedSave";
 import { resolveTheme } from "../themes/theme-registry";
-import { UserSettings } from "../types";
-import { MascotReactionEvent } from "../features/mascot/mascot.types";
-import * as S from "../lib/stats";
+import type { Habit, UserSettings } from "../types";
+import {
+  createTrackerState,
+  trackerReducer,
+} from "../domain/tracker-reducer";
 
 export function useTrackerController() {
-  const [data, setData] = useState(loadData);
-  const [mascotReaction, setMascotReaction] = useState<MascotReactionEvent | null>(null);
-  const reactionIdRef = useRef(0);
-
+  const [state, dispatch] = useReducer(
+    trackerReducer,
+    undefined,
+    () => createTrackerState(loadData()),
+  );
+  const { data, mascotReaction } = state;
   useDebouncedSave(data);
 
   const theme = useMemo(
     () => resolveTheme(data.settings.themeId),
     [data.settings.themeId],
   );
-
-  const stats = useMemo(() => selectDashboardStats(data), [data]);
+  const mascotStats = useMemo(
+    () =>
+      selectMascotStats(
+        data.habits,
+        data.logs,
+        data.settings.compterNonSaisisCommeManques,
+      ),
+    [
+      data.habits,
+      data.logs,
+      data.settings.compterNonSaisisCommeManques,
+    ],
+  );
 
   const updateSettings = useCallback((patch: Partial<UserSettings>) => {
-    setData((current) => ({
-      ...current,
-      settings: { ...current.settings, ...patch },
-    }));
+    dispatch({ type: "settings/patch", patch });
   }, []);
-
-  const emitMascotReaction = useCallback((type: MascotReactionEvent["type"]) => {
-    reactionIdRef.current += 1;
-    setMascotReaction({ id: reactionIdRef.current, type });
-  }, []);
-
-  const clearMascotReaction = useCallback((reactionId: number) => {
-    setMascotReaction((current) =>
-      current?.id === reactionId ? null : current,
-    );
-  }, []);
-
   const cycleHabitStatus = useCallback((habitId: string, date: string) => {
-    setData((current) => {
-      const status = S.logFor(current.logs, habitId, date);
-      const nextStatus =
-        S.statusCycle[
-          (S.statusCycle.indexOf(status) + 1) % S.statusCycle.length
-        ];
-      if (nextStatus === status) return current;
-
-      const previousScore = S.calculateDayScore(
-        current.habits,
-        current.logs,
-        date,
-        current.settings,
-      );
-      const logs = S.setLog(current.logs, habitId, date, nextStatus);
-      const nextScore = S.calculateDayScore(
-        current.habits,
-        logs,
-        date,
-        current.settings,
-      );
-
-      if (nextScore === 100 && previousScore !== 100) {
-        emitMascotReaction("perfect-day");
-      } else if (nextStatus === "done") {
-        emitMascotReaction("habit-done");
-      }
-
-      return {
-        ...current,
-        logs,
-      };
-    });
-  }, [emitMascotReaction]);
+    dispatch({ type: "log/cycle", habitId, date, now: new Date() });
+  }, []);
+  const addHabit = useCallback((habit: Habit) => {
+    dispatch({ type: "habit/add", habit });
+  }, []);
+  const updateHabit = useCallback(
+    (habitId: string, patch: Partial<Omit<Habit, "id">>) => {
+      dispatch({ type: "habit/update", habitId, patch });
+    },
+    [],
+  );
+  const deleteHabit = useCallback((habitId: string) => {
+    dispatch({ type: "habit/delete", habitId });
+  }, []);
+  const replaceData = useCallback((nextData: AppData) => {
+    dispatch({ type: "data/replace", data: nextData });
+  }, []);
+  const clearMascotReaction = useCallback((reactionId: number) => {
+    dispatch({ type: "reaction/clear", reactionId });
+  }, []);
 
   return {
     data,
-    setData,
     theme,
-    stats,
+    mascotStats,
     updateSettings,
     cycleHabitStatus,
+    addHabit,
+    updateHabit,
+    deleteHabit,
+    replaceData,
     mascotReaction,
     clearMascotReaction,
   };

@@ -10,22 +10,15 @@ import { HabitsPageProps } from "./page-types";
 
 export function HabitsPage({
   data,
-  setData,
   setSettings,
+  addHabit: onAddHabit,
+  updateHabit,
+  deleteHabit: onDeleteHabit,
 }: HabitsPageProps) {
   const [filter, setFilter] = useState("Toutes");
   const filteredHabits = data.habits.filter(
     (habit) => filter === "Toutes" || habit.categorie === filter,
   );
-
-  const updateHabit = (habitId: string, patch: Partial<Habit>) => {
-    setData((current) => ({
-      ...current,
-      habits: current.habits.map((habit) =>
-        habit.id === habitId ? { ...habit, ...patch } : habit,
-      ),
-    }));
-  };
 
   const addHabit = () => {
     const newHabit: Habit = {
@@ -40,10 +33,7 @@ export function HabitsPage({
       dateCreation: formatLocalIso(new Date()),
     };
 
-    setData((current) => ({
-      ...current,
-      habits: [...current.habits, newHabit],
-    }));
+    onAddHabit(newHabit);
   };
 
   const deleteHabit = (habit: Habit) => {
@@ -52,11 +42,7 @@ export function HabitsPage({
     );
     if (!confirmed) return;
 
-    setData((current) => ({
-      ...current,
-      habits: current.habits.filter((candidate) => candidate.id !== habit.id),
-      logs: current.logs.filter((log) => log.habitId !== habit.id),
-    }));
+    onDeleteHabit(habit.id);
   };
 
   return (

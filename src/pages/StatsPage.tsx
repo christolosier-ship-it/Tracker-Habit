@@ -8,13 +8,14 @@ import { AntiProcrastinationPanel } from "../features/analytics/AntiProcrastinat
 import { PeriodControls } from "../features/period/PeriodControls";
 import { formatPercent } from "../app/constants";
 import { StatsPageProps } from "./page-types";
+import { useDashboardStats } from "../hooks/useDashboardStats";
 
 export function StatsPage({
   data,
   theme,
-  stats,
   setSettings,
 }: StatsPageProps) {
+  const stats = useDashboardStats(data);
   return (
     <>
       <PeriodControls

@@ -10,13 +10,14 @@ import { AnnualHabitMatrix } from "../features/dashboard/AnnualHabitMatrix";
 import { KpiRail } from "../features/dashboard/KpiRail";
 import { formatPercent } from "../app/constants";
 import { DashboardPageProps } from "./page-types";
+import { useDashboardStats } from "../hooks/useDashboardStats";
 
 export function DashboardPage({
   data,
   theme,
-  stats,
   setSettings,
 }: DashboardPageProps) {
+  const stats = useDashboardStats(data);
   return (
     <>
       <PeriodControls

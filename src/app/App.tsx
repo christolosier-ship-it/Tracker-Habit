@@ -34,30 +34,35 @@ export function App() {
   const currentHour = useCurrentHour();
   const {
     data,
-    setData,
     theme,
-    stats,
+    mascotStats,
     updateSettings,
     cycleHabitStatus,
+    addHabit,
+    updateHabit,
+    deleteHabit,
+    replaceData,
     mascotReaction,
     clearMascotReaction,
   } = useTrackerController();
 
   const mascotMood = selectMascotMood({
     enabled: data.settings.mascotEnabled,
-    todayScore: stats.todayScore,
-    monthScore: stats.currentMonth,
-    fragileHabitCount: stats.fragileHabits.length,
+    todayScore: mascotStats.todayScore,
+    monthScore: mascotStats.currentMonthScore,
+    fragileHabitCount: mascotStats.fragileHabitCount,
     currentHour,
   });
 
   const pageProps = {
     data,
     theme,
-    stats,
-    setData,
-     setSettings: updateSettings,
+    setSettings: updateSettings,
     cycle: cycleHabitStatus,
+    addHabit,
+    updateHabit,
+    deleteHabit,
+    replaceData,
   };
 
   return (
@@ -100,7 +105,6 @@ export function App() {
           <DashboardPage
             data={data}
             theme={theme}
-            stats={stats}
             setSettings={updateSettings}
           />
         )}

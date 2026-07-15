@@ -6,8 +6,8 @@ import { SettingsPageProps } from "./page-types";
 
 export function SettingsPage({
   data,
-  setData,
   setSettings,
+  replaceData,
 }: SettingsPageProps) {
   return (
     <>
@@ -26,7 +26,7 @@ export function SettingsPage({
         mascotEnabled={data.settings.mascotEnabled}
         setSettings={setSettings}
       />
-      <DataTransferPanel data={data} setData={setData} />
+      <DataTransferPanel data={data} replaceData={replaceData} />
     </>
   );
 }

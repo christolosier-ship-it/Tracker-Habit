@@ -1,13 +1,17 @@
-import type { Dispatch, SetStateAction } from "react";
-import { CycleStatus, SetSettings } from "../app/tracker-actions";
-import { DashboardStats } from "../lib/dashboard-selectors";
-import { AppData } from "../persistence";
-import { AppTheme } from "../themes/theme-types";
+import type {
+  AddHabit,
+  CycleStatus,
+  DeleteHabit,
+  ReplaceData,
+  SetSettings,
+  UpdateHabit,
+} from "../app/tracker-actions";
+import type { AppData } from "../persistence";
+import type { AppTheme } from "../themes/theme-types";
 
 export type DashboardPageProps = {
   data: AppData;
   theme: AppTheme;
-  stats: DashboardStats;
   setSettings: SetSettings;
 };
 
@@ -17,28 +21,20 @@ export type TodayPageProps = {
   cycle: CycleStatus;
 };
 
-export type MonthPageProps = {
-  data: AppData;
-  theme: AppTheme;
-  setSettings: SetSettings;
-  cycle: CycleStatus;
-};
+export type MonthPageProps = TodayPageProps & { theme: AppTheme };
 
 export type HabitsPageProps = {
   data: AppData;
-  setData: Dispatch<SetStateAction<AppData>>;
   setSettings: SetSettings;
+  addHabit: AddHabit;
+  updateHabit: UpdateHabit;
+  deleteHabit: DeleteHabit;
 };
 
-export type StatsPageProps = {
-  data: AppData;
-  theme: AppTheme;
-  stats: DashboardStats;
-  setSettings: SetSettings;
-};
+export type StatsPageProps = DashboardPageProps;
 
 export type SettingsPageProps = {
   data: AppData;
-  setData: Dispatch<SetStateAction<AppData>>;
   setSettings: SetSettings;
+  replaceData: ReplaceData;
 };
