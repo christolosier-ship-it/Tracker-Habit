@@ -1,6 +1,7 @@
 import { useEffect, type RefObject } from "react";
 import { gsap } from "gsap";
 import type { MascotReaction } from "./mascot.types";
+import { prefersReducedMotion } from "../../hooks/useMotionPreference";
 
 export { gsap };
 
@@ -15,14 +16,6 @@ export type GsapReactionDefinition = {
   play: PlayGsapReaction;
   reset: ResetGsapReaction;
 };
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
 
 export function useGsapReactionRuntime(
   svgRef: RefObject<SVGSVGElement | null>,

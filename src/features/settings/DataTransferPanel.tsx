@@ -1,4 +1,4 @@
-import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { Download, RotateCcw, Upload, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
@@ -9,14 +9,15 @@ import {
   migrateData,
   resetData,
   validateImport,
-} from "../../lib/storage";
+} from "../../persistence";
+import type { ReplaceData } from "../../app/tracker-actions";
 
 type DataTransferPanelProps = {
   data: AppData;
-  setData: Dispatch<SetStateAction<AppData>>;
+  replaceData: ReplaceData;
 };
 
-export function DataTransferPanel({ data, setData }: DataTransferPanelProps) {
+export function DataTransferPanel({ data, replaceData }: DataTransferPanelProps) {
   const [message, setMessage] = useState("");
 
   const exportJson = () => {
@@ -39,7 +40,7 @@ export function DataTransferPanel({ data, setData }: DataTransferPanelProps) {
       .then((text) => {
         const imported: unknown = JSON.parse(text);
         if (validateImport(imported)) {
-          setData(migrateData(imported));
+          replaceData(migrateData(imported));
           setMessage("Import réussi.");
         } else {
           setMessage("JSON invalide : structure non reconnue.");
@@ -54,7 +55,7 @@ export function DataTransferPanel({ data, setData }: DataTransferPanelProps) {
     );
     if (confirmation === "RESET") {
       resetData();
-      setData(demoData());
+      replaceData(demoData());
       setMessage("Données réinitialisées.");
     }
   };
@@ -75,7 +76,7 @@ export function DataTransferPanel({ data, setData }: DataTransferPanelProps) {
         </label>
         <Button
           variant="secondary"
-          onClick={() => setData(demoData())}
+          onClick={() => replaceData(demoData())}
           type="button"
         >
           <RotateCcw /> Recharger la démo

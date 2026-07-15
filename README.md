@@ -11,7 +11,7 @@ npm run check
 npm run preview
 ```
 
-`npm run check` exécute le contrôle d’architecture, ESLint, Vitest, TypeScript et le build Vite.
+`npm run check` vérifie l’architecture, le CSS, les cycles, le code mort, ESLint, la couverture Vitest, le budget de performance isolé, TypeScript et les budgets du build Vite.
 
 ## Fonctionnalités
 
@@ -34,7 +34,16 @@ src/
     AppErrorBoundary.tsx       écran de secours React
     constants.ts               constantes d’interface
     tracker-actions.ts         contrats des actions applicatives
-    useTrackerController.ts    état, persistance et actions
+    useTrackerController.ts    orchestration React et commandes
+
+  domain/
+    definitions.ts             catégories, statuts et valeurs canoniques
+    evaluation.ts              règle unique quotidien / hebdomadaire
+    tracker-reducer.ts         transitions d’état pures
+
+  analytics/
+    tracker-index.ts           index par clé, date, habitude et semaine
+    tracker-analytics.ts       agrégations par période en une passe
 
   pages/
     DashboardPage.tsx
@@ -60,11 +69,15 @@ src/
     ui/                        Button, Card et Badge locaux
 
   lib/
-    dashboard-selectors.ts     agrégation des données
+    dashboard-selectors.ts     sélecteurs de vues
+    tracking-selectors.ts      instantanés jour et mois
     date-utils.ts              dates locales
-    log-index.ts               index des journaux
-    stats.ts                   règles métier et calculs
-    storage.ts                 lecture, migration et sauvegarde
+    stats.ts                   façade de compatibilité testée
+
+  persistence/
+    schema.ts                  validation stricte du JSON
+    migrations.ts              migration V3/V4 vers le schéma courant
+    local-storage.ts           lecture, backup et sauvegarde locale
 
   themes/
     define-theme.ts            fabrique commune des graphiques
@@ -73,7 +86,13 @@ src/
     presets/                   une définition complète par thème
 
   styles/
-    index.css                  feuille consolidée dans l’ordre validé
+    index.css                  ordre explicite des couches
+    foundations.css            reset, tokens et ambiance
+    layout.css                 shell et grilles
+    components.css             composants applicatifs
+    charts.css                 Recharts et SVG
+    themes.css                 12 identités via variables
+    responsive.css             tablette, mobile et mouvement réduit
 ```
 
 `main.tsx` ne contient que le montage React, le CSS et la frontière d’erreur. Les anciens monolithes `app/pages.tsx` et `app/shared.tsx` ont été supprimés.
@@ -81,12 +100,13 @@ src/
 ## Dépendances entre couches
 
 - `pages` compose les fonctionnalités ;
-- `features` utilise les composants et les règles métier ;
+- `features` utilise les composants et les commandes applicatives ;
 - `components` ne connaît pas les pages ;
 - `themes` ne dépend pas du stockage ;
-- les calculs de `lib/stats.ts` ne dépendent pas de React.
+- `analytics` dépend du domaine, jamais de React ;
+- `persistence` conserve le format sérialisé sans contaminer le domaine.
 
-Le script `scripts/check-architecture.mjs` refuse les anciens monolithes, les presets vides et plusieurs reliquats supprimés.
+Les scripts de qualité refusent les anciens monolithes, cycles, fichiers/exports morts, dépendances inutiles, couches CSS historiques et dépassements de bundle.
 
 ## Règles métier
 
@@ -106,7 +126,7 @@ Valeurs utilisées pour les scores :
 - Repos = exclu
 - Non saisi = exclu par défaut, ou compté comme manqué lorsque l’option est active
 
-Les habitudes hebdomadaires sont évaluées une fois par semaine et ne pénalisent pas chaque journée sans saisie.
+Les habitudes hebdomadaires sont évaluées une fois par semaine, rattachées au dimanche de cette semaine et ne pénalisent pas chaque journée sans saisie. Tous les KPI du Dashboard utilisent l’année sélectionnée.
 
 ## Graphiques
 
@@ -144,8 +164,8 @@ Les thèmes pilotent uniquement les propriétés réellement consommées : coule
 ## Stockage
 
 - stockage principal : `localStorage` ;
-- schéma actuel : V3 ;
-- sauvegarde différée ;
+- schéma actuel : V5 ;
+- sauvegarde différée uniquement après une modification ;
 - validation de l’import JSON ;
 - migration et déduplication des anciennes données ;
 - aucune synchronisation cloud.
@@ -155,11 +175,15 @@ Les thèmes pilotent uniquement les propriétés réellement consommées : coule
 La CI vérifie :
 
 - l’architecture attendue ;
+- l’absence de cycles, de fichiers et d’exports morts ;
+- les budgets CSS et du graphe bundle complet ;
 - l’installation reproductible avec `npm ci` ;
 - le lint ESLint ;
-- les tests Vitest ;
+- les tests Vitest et leurs seuils de couverture ;
+- le benchmark isolé du sélecteur Dashboard ;
 - la compilation TypeScript ;
-- le build Vite.
+- le build Vite ;
+- un parcours Chrome : navigation, changement de statut, persistance, thème et mobile.
 
 La suite de tests couvre notamment la différence quotidienne/hebdomadaire, les vrais non-saisis, les séries, les habitudes à 0 %, les tâches prioritaires sans identifiant codé en dur et l’intégrité des douze thèmes.
 

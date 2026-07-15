@@ -92,7 +92,7 @@ export function ThemedAreaChart<T extends Record<string, unknown>>({
             fill={`url(#${gradientId})`}
             activeDot={{ r: 5, fill: secondary, stroke: theme.tokens.surface }}
             dot={false}
-            isAnimationActive
+            isAnimationActive={false}
           />
         </AreaChart>
       </ResponsiveContainer>

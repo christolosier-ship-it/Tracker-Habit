@@ -68,44 +68,44 @@
   opacity: 0;
 }
 
-.dashboard-mascot[data-mood="happy"] .mascot-dopamine-pro .dopamine-face-neutral,
-.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-face-neutral,
-.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-face-neutral,
-.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-face-neutral {
+.mascot-dopamine-pro[data-mood="happy"] .dopamine-face-neutral,
+.mascot-dopamine-pro[data-mood="celebrate"] .dopamine-face-neutral,
+.mascot-dopamine-pro[data-mood="worried"] .dopamine-face-neutral,
+.mascot-dopamine-pro[data-mood="sleepy"] .dopamine-face-neutral {
   opacity: 0;
 }
 
-.dashboard-mascot[data-mood="happy"] .mascot-dopamine-pro .dopamine-face-happy {
+.mascot-dopamine-pro[data-mood="happy"] .dopamine-face-happy {
   opacity: 1;
 }
 
-.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-star-eyes,
-.dashboard-mascot[data-mood="celebrate"] .mascot-dopamine-pro .dopamine-face-happy {
+.mascot-dopamine-pro[data-mood="celebrate"] .dopamine-star-eyes,
+.mascot-dopamine-pro[data-mood="celebrate"] .dopamine-face-happy {
   opacity: 1;
 }
 
-.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-face-worried {
+.mascot-dopamine-pro[data-mood="worried"] .dopamine-face-worried {
   opacity: 1;
 }
 
-.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-face-sleepy {
+.mascot-dopamine-pro[data-mood="sleepy"] .dopamine-face-sleepy {
   opacity: 1;
 }
 
-.dashboard-mascot[data-mood="sleepy"] .mascot-dopamine-pro .dopamine-rig {
+.mascot-dopamine-pro[data-mood="sleepy"] .dopamine-rig {
   animation-duration: 5.4s;
 }
 
-.dashboard-mascot[data-mood="worried"] .mascot-dopamine-pro .dopamine-rig {
+.mascot-dopamine-pro[data-mood="worried"] .dopamine-rig {
   animation: dopamine-wobble 1.8s ease-in-out infinite;
 }
 
-.dashboard-mascot[data-reaction="habit-done"] .mascot-dopamine-pro .dopamine-body,
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-dopamine-pro .dopamine-body,
-.dashboard-mascot[data-reaction="streak-record"] .mascot-dopamine-pro .dopamine-body,
-.dashboard-mascot[data-reaction="habit-done"] .mascot-dopamine-pro .dopamine-rig,
-.dashboard-mascot[data-reaction="perfect-day"] .mascot-dopamine-pro .dopamine-rig,
-.dashboard-mascot[data-reaction="streak-record"] .mascot-dopamine-pro .dopamine-rig {
+.mascot-dopamine-pro[data-reaction="habit-done"] .dopamine-body,
+.mascot-dopamine-pro[data-reaction="perfect-day"] .dopamine-body,
+.mascot-dopamine-pro[data-reaction="streak-record"] .dopamine-body,
+.mascot-dopamine-pro[data-reaction="habit-done"] .dopamine-rig,
+.mascot-dopamine-pro[data-reaction="perfect-day"] .dopamine-rig,
+.mascot-dopamine-pro[data-reaction="streak-record"] .dopamine-rig {
   animation-play-state: paused;
 }
 

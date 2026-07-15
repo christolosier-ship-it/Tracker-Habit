@@ -2,67 +2,32 @@
   width: clamp(64px, 8vw, 108px);
   aspect-ratio: 1;
   color: var(--primary);
-  filter: drop-shadow(0 14px 24px color-mix(in srgb, var(--glow) 55%, transparent));
+  filter: drop-shadow(
+    0 14px 24px color-mix(in srgb, var(--glow) 55%, transparent)
+  );
   pointer-events: none;
   user-select: none;
 }
 
-.app-mascot-loading {
+.app-mascot-loading,
+.mascot-svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.mascot-svg { width: 100%; height: 100%; overflow: visible; }
-.mascot-creature { transform-box: fill-box; transform-origin: center bottom; animation: mascot-float 4s ease-in-out infinite; }
-.mascot-body { transform-box: fill-box; transform-origin: center bottom; animation: mascot-breathe 3.6s ease-in-out infinite; }
-.mascot-eye { fill: var(--text); transform-box: fill-box; transform-origin: center; animation: mascot-blink 5.8s infinite; }
-.mascot-fill { fill: color-mix(in srgb, currentColor 78%, var(--surface)); stroke: var(--text); stroke-width: 2.2; }
-.mascot-mouth,.mascot-limb,.mascot-crack,.mascot-branch,.mascot-tail,.mascot-ring,.mascot-pattern { fill: none; stroke: var(--text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.mascot-cheek,.mascot-sparkle,.mascot-pixel,.mascot-jewel { fill: var(--accent); }
-.mascot-shape,.mascot-beak,.mascot-cape,.mascot-mask { fill: var(--secondary); stroke: var(--text); stroke-width: 2; }
-.mascot-shape.accent,.mascot-wing,.mascot-ear,.mascot-glint,.mascot-blob,.mascot-moon { fill: var(--accent-2); stroke: var(--text); stroke-width: 2; opacity: .88; }
-.mascot-halo { fill: color-mix(in srgb, var(--primary) 18%, transparent); stroke: var(--accent-2); stroke-width: 1.5; opacity: .55; }
-.mascot-eye-core { fill: var(--accent); stroke: var(--secondary); stroke-width: 3; }
-.mascot-scan { stroke: var(--accent-2); stroke-width: 2; opacity: 0; }
-.mascot-pow { fill: var(--accent); stroke: var(--text); stroke-width: .8; font-size: 12px; font-weight: 900; opacity: 0; }
-.pixel { shape-rendering: crispEdges; rx: 0; }
-.brutal { rx: 0; }
+.mascot-svg {
+  overflow: visible;
+}
 
-.app-mascot[data-mood="happy"] .mascot-creature { animation-duration: 2.8s; transform: translateY(-2px); }
-.app-mascot[data-mood="celebrate"] .mascot-sparkle,
-.app-mascot[data-mood="celebrate"] .mascot-pixel { animation: mascot-celebrate 1.6s ease both infinite; }
-.app-mascot[data-mood="sleepy"] .mascot-creature { animation: mascot-sleep 5.4s ease-in-out infinite; }
-.app-mascot[data-mood="worried"] .mascot-creature { animation: mascot-worry 1.8s ease-in-out infinite; }
-.app-mascot[data-mood="worried"] .mascot-mouth { transform: translateY(5px) scaleY(-1); transform-box: fill-box; transform-origin: center; }
-
-.app-mascot[data-reaction="habit-done"] .mascot-body { animation: mascot-hop 720ms ease; }
-.app-mascot[data-reaction="habit-done"] .mascot-cheek,
-.app-mascot[data-reaction="habit-done"] .mascot-sparkle,
-.app-mascot[data-reaction="habit-done"] .mascot-wing { animation: mascot-celebrate 720ms ease; }
-.app-mascot[data-reaction="perfect-day"] .mascot-body,
-.app-mascot[data-reaction="streak-record"] .mascot-body { animation: mascot-celebrate 1400ms ease; }
-.app-mascot[data-reaction="perfect-day"] .mascot-sparkle,
-.app-mascot[data-reaction="perfect-day"] .mascot-pow,
-.app-mascot[data-reaction="streak-record"] .mascot-sparkle { opacity: 1; animation: mascot-celebrate 1400ms ease; }
-.app-mascot[data-reaction="perfect-day"] .mascot-scan { opacity: 1; animation: mascot-scan 900ms ease; }
-.app-mascot[data-theme="retro-arcade"] { image-rendering: pixelated; }
-.app-mascot[data-theme="editorial-fashion-tech"] { color: #111; }
-.app-mascot[data-theme="brutalist-color-clash"] .mascot-fill { stroke-width: 4; }
-.app-mascot[data-theme="aurora-glassmorphism"] .mascot-fill,
-.app-mascot[data-theme="liquid-gradient-future"] .mascot-fill { fill: color-mix(in srgb, var(--primary) 55%, transparent); }
-
-@keyframes mascot-breathe { 0%,100%{ transform: scaleY(1) scaleX(1);} 50%{ transform: scaleY(1.035) scaleX(.985);} }
-@keyframes mascot-float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-4px);} }
-@keyframes mascot-blink { 0%,92%,100%{ transform: scaleY(1);} 95%{ transform: scaleY(.12);} }
-@keyframes mascot-hop { 0%,100%{ transform: translateY(0) scale(1);} 42%{ transform: translateY(-14px) scale(1.04,.96);} 70%{ transform: translateY(2px) scale(.98,1.04);} }
-@keyframes mascot-celebrate { 0%,100%{ transform: translateY(0) rotate(0) scale(1); opacity: 1;} 35%{ transform: translateY(-8px) rotate(-5deg) scale(1.08); opacity: 1;} 70%{ transform: translateY(-3px) rotate(5deg) scale(1.03); opacity: .9;} }
-@keyframes mascot-worry { 0%,100%{ transform: translateX(0) rotate(0);} 35%{ transform: translateX(-2px) rotate(-1.5deg);} 70%{ transform: translateX(2px) rotate(1.5deg);} }
-@keyframes mascot-sleep { 0%,100%{ transform: translateY(0) rotate(-2deg);} 50%{ transform: translateY(3px) rotate(2deg);} }
-@keyframes mascot-scan { from{ transform: translateY(-14px); opacity: .1;} 50%{ opacity: 1;} to{ transform: translateY(14px); opacity: 0;} }
+.app-mascot[data-theme="retro-arcade"] {
+  image-rendering: pixelated;
+}
 
 @media (max-width: 560px) {
-  .app-mascot { width: 64px; }
+  .app-mascot {
+    width: 64px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

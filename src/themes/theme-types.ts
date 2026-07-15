@@ -1,18 +1,9 @@
-export type ThemeId =
-  | "dopamine-pop"
-  | "neon-cyberpunk-matrix"
-  | "memphis-productivity"
-  | "aurora-glassmorphism"
-  | "tropical-festival"
-  | "retro-arcade"
-  | "cosmic-dreamscape"
-  | "kawaii-maximalist"
-  | "brutalist-color-clash"
-  | "editorial-fashion-tech"
-  | "comic-book-energy"
-  | "liquid-gradient-future";
+import type { HabitCategory } from "../domain/definitions";
+import type { ThemeId } from "./theme-ids";
 
-export type ThemeTypographyVariant =
+export type { ThemeId } from "./theme-ids";
+
+type ThemeTypographyVariant =
   | "terminal"
   | "friendly-rounded"
   | "bold-geometric"
@@ -26,7 +17,7 @@ export type ThemeTypographyVariant =
   | "comic-display"
   | "future-rounded";
 
-export type ThemeFrameVariant =
+type ThemeFrameVariant =
   | "hud"
   | "candy"
   | "memphis"
@@ -40,7 +31,7 @@ export type ThemeFrameVariant =
   | "comic"
   | "liquid";
 
-export type ThemeNavigationVariant =
+type ThemeNavigationVariant =
   | "terminal"
   | "candy"
   | "color-block"
@@ -54,7 +45,7 @@ export type ThemeNavigationVariant =
   | "comic"
   | "liquid";
 
-export type ThemeCellVariant =
+type ThemeCellVariant =
   | "neon-square"
   | "candy-dot"
   | "memphis-shape"
@@ -68,7 +59,7 @@ export type ThemeCellVariant =
   | "comic-token"
   | "liquid-bubble";
 
-export type ThemeStyle =
+type ThemeStyle =
   | "pop"
   | "neon"
   | "memphis"
@@ -82,17 +73,7 @@ export type ThemeStyle =
   | "comic"
   | "liquid";
 
-export type ChartCategoryName =
-  | "Routine"
-  | "Santé"
-  | "Productivité"
-  | "Anti-procrastination"
-  | "Maison"
-  | "Famille"
-  | "Développement"
-  | "Finances"
-  | "Projet perso"
-  | "Autre";
+export type ChartCategoryName = HabitCategory;
 
 export type ThemeCharts = {
   hexPalette: string[];

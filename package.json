@@ -8,37 +8,54 @@
     "build": "tsc -b && vite build && npm run check:bundle",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "npm run test:unit && npm run test:performance",
+    "test:unit": "vitest run --exclude src/analytics/tracker-performance.test.ts",
+    "test:coverage": "vitest run --coverage --exclude src/analytics/tracker-performance.test.ts",
+    "test:performance": "vitest run src/analytics/tracker-performance.test.ts --coverage.enabled=false --maxWorkers=1",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "check": "npm run check:architecture && npm run lint && npm run test && npm run build",
+    "check:css": "node scripts/check-css.mjs",
+    "check:cycles": "node scripts/check-cycles.mjs",
+    "check:dead": "knip --reporter compact",
+    "check:browser": "node scripts/browser-smoke.mjs",
+    "check": "npm run check:architecture && npm run check:css && npm run check:cycles && npm run check:dead && npm run lint && npm run test:coverage && npm run test:performance && npm run build",
     "check:bundle": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
-    "class-variance-authority": "0.7.1",
-    "clsx": "2.1.1",
-    "date-fns": "3.6.0",
     "gsap": "3.15.0",
     "lucide-react": "1.24.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "recharts": "3.9.2",
-    "tailwind-merge": "3.6.0"
+    "recharts": "3.9.2"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
     "@vitejs/plugin-react": "6.0.3",
+    "@vitest/coverage-v8": "4.1.10",
     "autoprefixer": "10.5.2",
     "eslint": "10.7.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.3",
     "globals": "17.7.0",
+    "knip": "6.26.0",
     "postcss": "8.5.17",
-    "tailwindcss": "3.4.19",
+    "puppeteer-core": "25.3.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.63.0",
     "vite": "8.1.4",
     "vitest": "4.1.10"
+  },
+  "knip": {
+    "entry": [
+      "src/main.tsx",
+      "src/**/*.test.{ts,tsx}",
+      "scripts/*.mjs"
+    ],
+    "project": [
+      "src/**/*.{ts,tsx}",
+      "scripts/*.mjs",
+      "*.{js,ts}"
+    ]
   }
 }

@@ -1,17 +1,5 @@
-import { Habit, HabitCategory, HabitLog, UserSettings } from '../types';
-
-export const categories: HabitCategory[] = [
-  'Routine',
-  'Santé',
-  'Productivité',
-  'Anti-procrastination',
-  'Maison',
-  'Famille',
-  'Développement',
-  'Finances',
-  'Projet perso',
-  'Autre',
-];
+import { HABIT_CATEGORIES } from "../domain/definitions";
+import { Habit, HabitCategory, HabitLog, UserSettings } from "../types";
 
 const categoryByHabit: Record<string, HabitCategory> = {
   'Lever tôt': 'Routine',
@@ -105,7 +93,9 @@ export const demoHabits: Habit[] = [
   ...daily.map((nom, i) => ({
     id: `d${i + 1}`,
     nom,
-    categorie: categoryByHabit[nom] ?? categories[i % categories.length],
+    categorie:
+      categoryByHabit[nom] ??
+      HABIT_CATEGORIES[i % HABIT_CATEGORIES.length],
     frequence: 'quotidienne' as const,
     objectif: i % 4 === 0 ? 'Avant midi' : i % 3 === 0 ? '60 min' : '1 fois',
     priorite: i % 6 === 0 ? ('haute' as const) : i % 2 ? ('normale' as const) : ('faible' as const),
@@ -116,7 +106,7 @@ export const demoHabits: Habit[] = [
   ...weekly.map((nom, i) => ({
     id: `w${i + 1}`,
     nom,
-    categorie: categories[(i + 3) % categories.length],
+    categorie: HABIT_CATEGORIES[(i + 3) % HABIT_CATEGORIES.length],
     frequence: 'hebdomadaire' as const,
     objectif: '1 fois / semaine',
     priorite: i % 4 === 0 ? ('haute' as const) : ('normale' as const),
@@ -159,6 +149,7 @@ export function createDemoLogs() {
       for (let day = 1; day <= maxDay; day += 1) {
         if (habit.frequence === 'hebdomadaire' && ![1, 8, 15, 22, 29].includes(day)) continue;
         const status = weightedDemoStatus(day, month, habitIndex) as HabitLog['status'];
+        if (status === "empty") continue;
         logs.push({
           habitId: habit.id,
           date: `${demoYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,

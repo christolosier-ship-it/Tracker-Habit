@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { HabitStatusCard } from "../features/tracking/HabitStatusCard";
@@ -8,12 +6,34 @@ import { PeriodControls } from "../features/period/PeriodControls";
 import { FilterToday } from "../app/constants";
 import { formatLocalIso } from "../lib/date-utils";
 import { TodayPageProps } from "./page-types";
-import * as S from "../lib/stats";
+import { selectDayTracking } from "../lib/tracking-selectors";
+import { readTrackerStatus } from "../analytics/tracker-index";
 
 export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
   const [filter, setFilter] = useState<FilterToday>("Quotidiennes");
-  const date = formatLocalIso(new Date());
-  const dateFr = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
+  const now = new Date();
+  const date = formatLocalIso(now);
+  const dateFr = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(now);
+  const tracking = useMemo(
+    () =>
+      selectDayTracking(
+        data.habits,
+        data.logs,
+        data.settings.compterNonSaisisCommeManques,
+        date,
+      ),
+    [
+      data.habits,
+      data.logs,
+      data.settings.compterNonSaisisCommeManques,
+      date,
+    ],
+  );
   const habits = data.habits.filter((habit) => {
     if (!habit.active) return false;
     if (filter === "Quotidiennes") return habit.frequence === "quotidienne";
@@ -41,7 +61,7 @@ export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
         <div className="today-score">
           <span>Score du jour</span>
           <strong>
-            {S.calculateDayScore(data.habits, data.logs, date, data.settings)}%
+            {tracking.score}%
           </strong>
         </div>
       </Card>
@@ -64,7 +84,7 @@ export function TodayPage({ data, setSettings, cycle }: TodayPageProps) {
           <HabitStatusCard
             habit={habit}
             date={date}
-            data={data}
+            status={readTrackerStatus(tracking.index, habit.id, date)}
             cycle={cycle}
             key={habit.id}
           />

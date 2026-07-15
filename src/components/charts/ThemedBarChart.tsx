@@ -76,7 +76,7 @@ export function ThemedBarChart<T extends Record<string, unknown>>({
               0,
               0,
             ]}
-            isAnimationActive
+            isAnimationActive={false}
           >
             {data.map((item, itemIndex) => {
               const value = Number(item[category] ?? 0);

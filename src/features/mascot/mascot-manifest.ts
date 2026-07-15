@@ -1,11 +1,12 @@
 import type { ComponentType } from "react";
 import type { ThemeId } from "../../themes/theme-types";
+import { THEME_IDS } from "../../themes/theme-ids";
 import type { MascotCreatureProps } from "./mascot.types";
 
 type MascotModule = { default: ComponentType<MascotCreatureProps> };
 export type MascotLoader = () => Promise<MascotModule>;
 
-export const mascotLoaders: Record<ThemeId, MascotLoader> = {
+export const mascotLoaders = {
   "dopamine-pop": () => import("./creatures/DopamineMascot").then((module) => ({ default: module.DopamineMascot })),
   "neon-cyberpunk-matrix": () => import("./creatures/CyberpunkMascot").then((module) => ({ default: module.CyberpunkMascot })),
   "memphis-productivity": () => import("./creatures/MemphisMascot").then((module) => ({ default: module.MemphisMascot })),
@@ -18,6 +19,6 @@ export const mascotLoaders: Record<ThemeId, MascotLoader> = {
   "editorial-fashion-tech": () => import("./creatures/EditorialMascot").then((module) => ({ default: module.EditorialMascot })),
   "comic-book-energy": () => import("./creatures/ComicMascot").then((module) => ({ default: module.ComicMascot })),
   "liquid-gradient-future": () => import("./creatures/LiquidMascot").then((module) => ({ default: module.LiquidMascot })),
-};
+} satisfies Record<ThemeId, MascotLoader>;
 
-export const mascotThemeIds = Object.keys(mascotLoaders) as ThemeId[];
+export const mascotThemeIds: readonly ThemeId[] = THEME_IDS;

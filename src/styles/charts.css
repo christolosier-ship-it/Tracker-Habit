@@ -1,0 +1,231 @@
+.chart-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chart-card .ui-card-content,
+.themed-chart-panel {
+  min-width: 0;
+}
+
+.themed-chart-panel {
+  position: relative;
+  width: 100%;
+  color: var(--text);
+}
+
+.themed-chart-panel .recharts-surface {
+  overflow: visible;
+}
+
+.themed-chart-panel .recharts-cartesian-grid line {
+  stroke: color-mix(in srgb, var(--border) 65%, transparent);
+}
+
+.themed-chart-panel .recharts-cartesian-axis-tick-value,
+.themed-chart-panel .recharts-text {
+  fill: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.themed-chart-panel .recharts-tooltip-wrapper {
+  z-index: 8;
+}
+
+.themed-area-chart,
+.themed-bar-chart {
+  min-height: 280px;
+}
+
+.themed-bar-list {
+  display: grid;
+  gap: 12px;
+}
+
+.themed-bar-list-row {
+  display: grid;
+  gap: 7px;
+}
+
+.themed-bar-list-row > div {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.themed-bar-list-row strong {
+  overflow: hidden;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.themed-bar-list-row span {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.themed-bar-list-row > i {
+  display: block;
+  min-width: 6px;
+  height: 8px;
+  border-radius: var(--chart-radius);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--chart-primary) 25%, transparent);
+}
+
+.themed-donut {
+  min-height: 248px;
+}
+
+.themed-donut.compact {
+  min-height: 190px;
+}
+
+.themed-donut-chart {
+  min-width: 0;
+}
+
+.themed-donut-center {
+  position: absolute;
+  top: 124px;
+  left: 50%;
+  display: grid;
+  z-index: 2;
+  place-items: center;
+  color: var(--text);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.themed-donut.compact .themed-donut-center {
+  top: 95px;
+}
+
+.themed-donut-center strong {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.themed-donut-center span {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.themed-donut-legend {
+  display: flex;
+  margin-top: 4px;
+  justify-content: center;
+  gap: 7px 12px;
+  flex-wrap: wrap;
+}
+
+.themed-donut-legend span {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.64rem;
+}
+
+.themed-donut-legend i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.themed-progress-ring {
+  position: relative;
+  display: grid;
+  width: 86px;
+  height: 86px;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.themed-progress-ring.lg {
+  width: 140px;
+  height: 140px;
+}
+
+.themed-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.ring-track,
+.ring-value {
+  fill: none;
+}
+
+.ring-track {
+  stroke: color-mix(in srgb, var(--border) 64%, transparent);
+}
+
+.ring-value {
+  stroke: var(--ring-color);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--ring-color) 45%, transparent));
+}
+
+.themed-progress-ring-inner {
+  position: absolute;
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.themed-progress-ring.lg .themed-progress-ring-inner {
+  font-size: 1.35rem;
+}
+
+.bar-block .recharts-rectangle,
+.bar-pixel .recharts-rectangle,
+.bar-luxury .recharts-rectangle {
+  rx: 0;
+  ry: 0;
+}
+
+.bar-comic .recharts-rectangle {
+  stroke: var(--text);
+  stroke-width: 2px;
+}
+
+.donut-neon .recharts-sector {
+  filter: drop-shadow(0 0 5px var(--chart-primary));
+}
+
+.donut-pixel .recharts-sector,
+.donut-solid .recharts-sector,
+.donut-luxury .recharts-sector {
+  stroke-width: 1px;
+}
+
+.grid-none .recharts-cartesian-grid,
+.grid-none .recharts-cartesian-axis-line {
+  display: none;
+}
+
+.grid-visible .recharts-cartesian-grid line,
+.grid-pixel .recharts-cartesian-grid line,
+.grid-comic .recharts-cartesian-grid line {
+  stroke: color-mix(in srgb, var(--text) 28%, transparent);
+}
+
+.grid-pixel .recharts-cartesian-grid line {
+  stroke-dasharray: 0;
+}
+
+.grid-comic .recharts-cartesian-grid line {
+  stroke-width: 2px;
+}

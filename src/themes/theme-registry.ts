@@ -1,4 +1,5 @@
 import { AppTheme, ThemeId } from "./theme-types";
+import { DEFAULT_THEME_ID } from "./theme-ids";
 import { auroraGlassmorphismTheme } from "./presets/aurora-glassmorphism";
 import { brutalistColorClashTheme } from "./presets/brutalist-color-clash";
 import { comicBookEnergyTheme } from "./presets/comic-book-energy";
@@ -27,9 +28,9 @@ export const themes: AppTheme[] = [
   liquidGradientFutureTheme,
 ];
 
-export const defaultThemeId: ThemeId = "dopamine-pop";
+export const defaultThemeId: ThemeId = DEFAULT_THEME_ID;
 
-export const themeById = Object.fromEntries(
+const themeById = Object.fromEntries(
   themes.map((theme) => [theme.id, theme]),
 ) as Record<ThemeId, AppTheme>;
 

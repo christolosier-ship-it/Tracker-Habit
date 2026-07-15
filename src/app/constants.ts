@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import type { HabitStatus } from "../types";
+import { HABIT_STATUS_DEFINITIONS } from "../domain/definitions";
 
 export type Page =
   | "Dashboard"
@@ -61,9 +62,5 @@ export const pageSpecs: Array<{ name: Page; icon: React.ElementType }> = [
 export const formatPercent = (value: number) => `${Math.round(value)}%`;
 
 export function statusSymbol(status: HabitStatus) {
-  if (status === "done") return "✓";
-  if (status === "partial") return "◐";
-  if (status === "missed") return "×";
-  if (status === "rest") return "Ⅱ";
-  return "·";
+  return HABIT_STATUS_DEFINITIONS[status].symbol;
 }

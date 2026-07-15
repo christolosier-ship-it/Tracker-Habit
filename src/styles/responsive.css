@@ -1,0 +1,244 @@
+@media (max-width: 1180px) {
+  .bento-shell,
+  .dashboard-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats-insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .anti-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .anti-panel ul {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 819px) {
+  .app-shell {
+    --sidebar-width: 0px;
+  }
+
+  .sidebar {
+    inset: auto 0 0;
+    display: grid;
+    width: 100%;
+    min-height: 70px;
+    padding: 8px max(8px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+    overflow: visible;
+    border: 0;
+    border-top: var(--panel-border);
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+    box-shadow: 0 -12px 36px color-mix(in srgb, var(--bg) 38%, transparent);
+  }
+
+  .brand,
+  .theme-navigation-status {
+    display: none;
+  }
+
+  .sidebar > button {
+    display: grid;
+    min-width: 0;
+    min-height: 52px;
+    padding: 4px;
+    place-items: center;
+    gap: 2px;
+    border-radius: 10px;
+    font-size: 0.58rem;
+    text-align: center;
+  }
+
+  .sidebar > button:hover,
+  .sidebar > button.active {
+    box-shadow: inset 0 -3px var(--accent);
+    transform: none;
+  }
+
+  .sidebar > button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .app-shell > main {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+
+  .chart-grid,
+  .stats-grid,
+  .dashboard-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-card {
+    justify-content: stretch;
+  }
+
+  .hero-controls {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .hero-controls label {
+    flex: 1 1 140px;
+  }
+
+  .app-shell .hero-controls input,
+  .app-shell .hero-controls select {
+    width: 100%;
+  }
+
+  .today-summary,
+  .status-breakdown {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .today-score {
+    width: 100%;
+    min-height: 82px;
+  }
+}
+
+@media (max-width: 720px) {
+  .month-grid {
+    display: none;
+  }
+
+  .mobile-month-list {
+    display: block;
+  }
+
+  .month-toolbar > label:first-child,
+  .month-toolbar > strong {
+    display: none;
+  }
+
+  .month-toolbar > label {
+    width: 100%;
+  }
+
+  .anti-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .anti-panel .themed-progress-ring {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    --page-gutter: 12px;
+  }
+
+  .sidebar > button span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero-card,
+  .ui-card,
+  .spotlight-card,
+  .anti-panel,
+  .mobile-month-list {
+    padding: 14px;
+  }
+
+  .hero-card {
+    min-height: 76px;
+  }
+
+  .kpi-grid {
+    grid-auto-columns: 164px;
+  }
+
+  .kpi-card {
+    min-height: 140px;
+  }
+
+  .theme-kpi-frame {
+    grid-template-columns: minmax(0, 1fr) 76px;
+  }
+
+  .themed-progress-ring {
+    width: 76px;
+    height: 76px;
+  }
+
+  .stats-insight-grid,
+  .editor-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section-heading,
+  .month-toolbar,
+  .habit-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-actions,
+  .filter-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-actions .ui-button,
+  .settings-actions .file-button,
+  .filter-row .ui-button {
+    width: 100%;
+  }
+
+  .habit-editor-actions {
+    display: flex;
+  }
+
+  .habit-editor-actions .ui-button:first-child {
+    width: auto;
+    flex: 1;
+  }
+
+  .habit-editor-actions .habit-delete-button {
+    width: 42px;
+    flex: 0 0 42px;
+  }
+
+  .category-score-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .category-score-meta {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .themed-area-chart,
+  .themed-bar-chart {
+    min-height: 250px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell,
+  .app-shell *,
+  .app-shell *::before,
+  .app-shell *::after {
+    scroll-behavior: auto;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

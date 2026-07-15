@@ -104,7 +104,7 @@ export function ThemedDonutChart(props: StatusProps | CategoryProps) {
               cornerRadius={props.theme.charts.visual.cornerRadius}
               stroke={props.theme.tokens.surface}
               strokeWidth={3}
-              isAnimationActive
+              isAnimationActive={false}
             >
               {chartData.map((item) => (
                 <Cell key={item.key} fill={item.color} />
