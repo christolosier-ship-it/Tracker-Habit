@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const memphisProductivityTheme = defineTheme({
   id: "memphis-productivity",
   name: "Memphis Productivity",
-  description: "Bold shapes. Quirky vibes. Get things done.",
+  description: "Formes franches, énergie décalée et passage à l’action.",
   personality: "Graphique, formes vives, productivité pop arty.",
   previewEmoji: "🔺",
   tokens: {
