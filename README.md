@@ -163,6 +163,7 @@ La CI vérifie :
 
 La suite de tests couvre notamment la différence quotidienne/hebdomadaire, les vrais non-saisis, les séries, les habitudes à 0 %, les tâches prioritaires sans identifiant codé en dur et l’intégrité des douze thèmes.
 
+
 ## Déploiement
 
 Le build utilise `base: "/Tracker-Habit/"` et est publié par `.github/workflows/deploy.yml` sur GitHub Pages après fusion dans `main`.
