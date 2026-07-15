@@ -21,13 +21,27 @@ export function ThemePreview({ theme, active }: ThemePreviewProps) {
       data-preview-style={theme.effects.backgroundStyle}
     >
       <div className="preview-bg">
+        <span className="theme-preview-fallback" aria-hidden="true">
+          {theme.previewEmoji}
+        </span>
         <img
           className="theme-preview-mascot"
           src={mascotSrc}
           alt=""
+          width={512}
+          height={512}
           loading="lazy"
           decoding="async"
           draggable={false}
+          onError={(event) => {
+            event.currentTarget.hidden = true;
+          }}
+        />
+        <i className="preview-frame" aria-hidden="true" />
+        <i
+          className="preview-cell"
+          data-cell-variant={theme.identity.cells.variant}
+          aria-hidden="true"
         />
       </div>
       <div className="theme-swatches">
