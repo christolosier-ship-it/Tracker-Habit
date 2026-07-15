@@ -196,20 +196,68 @@ try {
   if (await page.$(".period-controls")) {
     throw new Error("Les paramètres exposent encore des contrôles de période inutiles.");
   }
-  const themePreviewState = await page.$$eval(".theme-card", (cards) => {
+  const themePreviewState = await page.$$eval(".theme-card", async (cards) => {
+    for (const card of cards) {
+      const image = card.querySelector(".theme-preview-mascot");
+      if (!image) continue;
+      image.scrollIntoView({ block: "center" });
+      await new Promise((resolve) => setTimeout(resolve, 25));
+      try {
+        await image.decode();
+      } catch {
+        // Les dimensions naturelles contrôlées ci-dessous signaleront l’échec.
+      }
+    }
+
     const aurora = cards[3];
     const descriptions = cards.map(
       (card) => card.querySelector(".theme-card-copy span")?.textContent?.trim() ?? "",
     );
+    const mascots = cards.map((card) => {
+      const id = card.getAttribute("data-theme-id") ?? "";
+      const image = card.querySelector(".theme-preview-mascot");
+      const fallback = card.querySelector(".theme-preview-fallback");
+      const frame = card.querySelector(".preview-bg");
+      const imageRect = image?.getBoundingClientRect();
+      const frameRect = frame?.getBoundingClientRect();
+      return {
+        id,
+        src: image?.getAttribute("src") ?? "",
+        naturalWidth: image?.naturalWidth ?? 0,
+        naturalHeight: image?.naturalHeight ?? 0,
+        hasFallback: Boolean(fallback?.textContent?.trim()),
+        inside:
+          Boolean(imageRect && frameRect) &&
+          imageRect.left >= frameRect.left - 1 &&
+          imageRect.right <= frameRect.right + 1 &&
+          imageRect.top >= frameRect.top - 1 &&
+          imageRect.bottom <= frameRect.bottom + 1,
+      };
+    });
     return {
       descriptions,
+      mascots,
       auroraBackground: aurora?.style.background ?? "",
     };
   });
+  const mascotSources = new Set(
+    themePreviewState.mascots.map((mascot) => mascot.src),
+  );
   if (
     themePreviewState.descriptions.some((description) => !description) ||
     !themePreviewState.descriptions[3]?.startsWith("Verre doux") ||
-    !themePreviewState.auroraBackground
+    !themePreviewState.auroraBackground ||
+    themePreviewState.mascots.length !== 12 ||
+    mascotSources.size !== 12 ||
+    themePreviewState.mascots.some(
+      (mascot) =>
+        !mascot.id ||
+        !mascot.src.endsWith(`/mascots/previews/${mascot.id}.webp`) ||
+        mascot.naturalWidth < 256 ||
+        mascot.naturalHeight !== mascot.naturalWidth ||
+        !mascot.hasFallback ||
+        !mascot.inside,
+    )
   ) {
     throw new Error(`Aperçus de thèmes invalides : ${JSON.stringify(themePreviewState)}`);
   }
@@ -252,7 +300,7 @@ try {
   }
 
   console.log(
-    "Smoke navigateur conforme : navigation, persistance, statuts, colonnes figées, statistiques, thèmes, mascotte et mobile.",
+    "Smoke navigateur conforme : navigation, persistance, statuts, colonnes figées, statistiques, aperçus mascottes, thème, mascotte et mobile.",
   );
 } finally {
   await browser.close();

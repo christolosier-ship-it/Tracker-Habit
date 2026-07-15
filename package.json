@@ -14,10 +14,11 @@
     "test:performance": "vitest run src/analytics/tracker-performance.test.ts --coverage.enabled=false --maxWorkers=1",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check:css": "node scripts/check-css.mjs",
+    "check:mascots": "node scripts/check-theme-mascots.mjs",
     "check:cycles": "node scripts/check-cycles.mjs",
     "check:dead": "knip --production --exclude dependencies --reporter compact && knip --reporter compact",
     "check:browser": "node scripts/browser-smoke.mjs",
-    "check": "npm run check:architecture && npm run check:css && npm run check:cycles && npm run check:dead && npm run lint && npm run test:coverage && npm run test:performance && npm run build",
+    "check": "npm run check:architecture && npm run check:css && npm run check:mascots && npm run check:cycles && npm run check:dead && npm run lint && npm run test:coverage && npm run test:performance && npm run build",
     "check:bundle": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {

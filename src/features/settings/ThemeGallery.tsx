@@ -37,6 +37,7 @@ export function ThemeGallery({
           return (
             <button
               className={`theme-card ${active ? "active" : ""}`}
+              data-theme-id={theme.id}
               onClick={() => setSettings({ themeId: theme.id })}
               type="button"
               key={theme.id}
