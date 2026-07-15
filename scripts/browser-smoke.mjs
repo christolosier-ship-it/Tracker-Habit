@@ -134,6 +134,38 @@ try {
   if (await page.$(".period-controls")) {
     throw new Error("La page Aujourd’hui expose encore des contrôles de période inutiles.");
   }
+  const statusControls = await page.$$eval(".status-button", (buttons) =>
+    buttons.map((button) => {
+      const icon = button.querySelector(".status-button-icon");
+      const label = button.querySelector(".status-button-label");
+      const buttonRect = button.getBoundingClientRect();
+      const labelRect = label?.getBoundingClientRect();
+      return {
+        hasIcon: Boolean(icon),
+        hasLabel: Boolean(label),
+        labelInside:
+          Boolean(labelRect) &&
+          labelRect.left >= buttonRect.left - 1 &&
+          labelRect.right <= buttonRect.right + 1 &&
+          labelRect.bottom <= buttonRect.bottom + 1,
+        scrollFits:
+          button.scrollWidth <= button.clientWidth + 1 &&
+          button.scrollHeight <= button.clientHeight + 1,
+      };
+    }),
+  );
+  if (
+    !statusControls.length ||
+    statusControls.some(
+      (control) =>
+        !control.hasIcon ||
+        !control.hasLabel ||
+        !control.labelInside ||
+        !control.scrollFits,
+    )
+  ) {
+    throw new Error(`Contrôles de statut invalides : ${JSON.stringify(statusControls)}`);
+  }
   const initialStatus = await page.$eval(
     ".status-button",
     (button) => button.textContent?.trim(),
@@ -220,7 +252,7 @@ try {
   }
 
   console.log(
-    "Smoke navigateur conforme : navigation, persistance, colonnes figées, statistiques, thèmes, mascotte et mobile.",
+    "Smoke navigateur conforme : navigation, persistance, statuts, colonnes figées, statistiques, thèmes, mascotte et mobile.",
   );
 } finally {
   await browser.close();
