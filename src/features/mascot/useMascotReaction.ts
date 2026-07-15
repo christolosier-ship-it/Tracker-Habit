@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { MascotReactionEvent } from "./mascot.types";
+import { prefersReducedMotion } from "../../hooks/useMotionPreference";
 
 const WATCHDOG_MS = 3500;
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
 
 export function useMascotReaction(
   reaction: MascotReactionEvent | null | undefined,

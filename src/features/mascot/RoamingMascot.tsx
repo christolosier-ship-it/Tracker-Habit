@@ -9,9 +9,10 @@ import { MascotRenderer } from "./MascotRenderer";
 import type { MascotMood, MascotReactionEvent } from "./mascot.types";
 import type { ThemeId } from "../../themes/theme-types";
 import { useMotionPreference } from "../../hooks/useMotionPreference";
+import { parseCssTranslate, type MascotPoint } from "./mascot-position";
 import "./roaming-mascot.css";
 
-type Point = { x: number; y: number };
+type Point = MascotPoint;
 type Size = { width: number; height: number };
 
 type RoamingMascotProps = {
@@ -81,22 +82,36 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
   const scheduleRoamRef = useRef<() => void>(() => undefined);
   const roamTimerRef = useRef<number | null>(null);
   const resumeTimerRef = useRef<number | null>(null);
+  const movementTimerRef = useRef<number | null>(null);
   const motionPreference = useMotionPreference();
 
   const applyPosition = useCallback((next: Point, durationMs = 0) => {
     const handle = handleRef.current;
     positionRef.current = next;
     if (!handle) return;
+    if (movementTimerRef.current !== null) {
+      window.clearTimeout(movementTimerRef.current);
+      movementTimerRef.current = null;
+    }
     handle.style.transitionDuration = `${durationMs}ms`;
     handle.style.transform = `translate3d(${next.x}px, ${next.y}px, 0)`;
     handle.dataset.moving = durationMs > 0 ? "true" : "false";
+    if (durationMs > 0) {
+      movementTimerRef.current = window.setTimeout(() => {
+        movementTimerRef.current = null;
+        if (handleRef.current) handleRef.current.dataset.moving = "false";
+      }, durationMs + 50);
+    }
   }, []);
 
   const clearTimers = useCallback(() => {
     if (roamTimerRef.current !== null) window.clearTimeout(roamTimerRef.current);
     if (resumeTimerRef.current !== null) window.clearTimeout(resumeTimerRef.current);
+    if (movementTimerRef.current !== null) window.clearTimeout(movementTimerRef.current);
     roamTimerRef.current = null;
     resumeTimerRef.current = null;
+    movementTimerRef.current = null;
+    if (handleRef.current) handleRef.current.dataset.moving = "false";
   }, []);
 
   const scheduleRoam = useCallback(() => {
@@ -157,10 +172,13 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
     clearTimers();
     draggingRef.current = true;
     const handle = event.currentTarget;
+    const renderedPosition = parseCssTranslate(
+      window.getComputedStyle(handle).transform,
+    );
+    if (renderedPosition) applyPosition(renderedPosition);
     handle.dataset.dragging = "true";
     handle.dataset.suspended = "true";
     handle.dataset.moving = "true";
-    handle.style.transitionDuration = "0ms";
     dragOffsetRef.current = {
       x: event.clientX - positionRef.current.x,
       y: event.clientY - positionRef.current.y,
@@ -208,6 +226,11 @@ export function RoamingMascot({ themeId, mood, reaction, onReactionComplete }: R
         onPointerMove={moveDrag}
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
+        onTransitionEnd={(event) => {
+          if (event.propertyName === "transform") {
+            event.currentTarget.dataset.moving = "false";
+          }
+        }}
       >
         <MascotRenderer
           themeId={themeId}
