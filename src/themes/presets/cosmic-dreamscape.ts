@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const cosmicDreamscapeTheme = defineTheme({
   id: "cosmic-dreamscape",
   name: "Cosmic Dreamscape",
-  description: "Your habits, written in the stars.",
+  description: "Tes habitudes s’écrivent dans les étoiles.",
   personality: "Galaxie, rêve, indigo, violet et rose.",
   previewEmoji: "🪐",
   tokens: {
