@@ -20,6 +20,7 @@ export function StatusButton({ status, onClick, disabled = false }: StatusButton
           : status === "rest"
             ? Pause
             : Clock;
+  const label = HABIT_STATUS_DEFINITIONS[status].label;
 
   return (
     <Button
@@ -28,9 +29,13 @@ export function StatusButton({ status, onClick, disabled = false }: StatusButton
       disabled={disabled}
       type="button"
       variant="status"
+      aria-label={`Statut : ${label}. Cliquer pour changer.`}
+      title={`Statut : ${label}`}
     >
-      <Icon />
-      {HABIT_STATUS_DEFINITIONS[status].label}
+      <span className="status-button-icon" aria-hidden="true">
+        <Icon />
+      </span>
+      <span className="status-button-label">{label}</span>
     </Button>
   );
 }

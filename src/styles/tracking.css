@@ -1,0 +1,133 @@
+.habit-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  align-items: center;
+}
+
+.habit-card > div {
+  min-width: 0;
+}
+
+.status-button,
+.status-button.done,
+.status-button.partial,
+.status-button.missed,
+.status-button.rest,
+.status-button.empty {
+  display: grid;
+  width: 112px;
+  height: auto;
+  min-height: 96px;
+  padding: 8px 6px;
+  grid-template-rows: 58px auto;
+  place-items: center;
+  align-self: center;
+  gap: 7px;
+  color: var(--text-muted);
+  border: 0;
+  border-radius: var(--control-radius);
+  background: transparent;
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.status-button-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-soft);
+  transition:
+    transform 120ms ease,
+    filter 120ms ease;
+}
+
+.status-button-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.status-button-label {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.status-button.done .status-button-icon {
+  color: white;
+  border-color: var(--success);
+  background: var(--success);
+}
+
+.status-button.partial .status-button-icon {
+  color: color-mix(in srgb, var(--text) 88%, black);
+  border-color: var(--warning);
+  background: var(--warning);
+}
+
+.status-button.missed .status-button-icon {
+  color: white;
+  border-color: var(--danger);
+  background: var(--danger);
+}
+
+.status-button.rest .status-button-icon {
+  color: var(--text);
+  background: color-mix(in srgb, var(--secondary) 35%, var(--surface));
+}
+
+.status-button:hover {
+  filter: none;
+  transform: none;
+}
+
+.status-button:hover .status-button-icon {
+  filter: brightness(1.12);
+  transform: scale(1.06);
+}
+
+.status-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.status-button:disabled .status-button-icon,
+.status-button:disabled .status-button-label {
+  opacity: 0.58;
+}
+
+@media (max-width: 560px) {
+  .habit-card {
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 10px;
+  }
+
+  .status-button,
+  .status-button.done,
+  .status-button.partial,
+  .status-button.missed,
+  .status-button.rest,
+  .status-button.empty {
+    width: 92px;
+    min-height: 88px;
+    grid-template-rows: 52px auto;
+  }
+
+  .status-button-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .status-button-label {
+    font-size: 0.72rem;
+  }
+}

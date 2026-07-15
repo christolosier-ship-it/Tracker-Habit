@@ -9,6 +9,7 @@ const styleLayers = [
   "foundations.css",
   "layout.css",
   "components.css",
+  "tracking.css",
   "charts.css",
   "themes.css",
   "responsive.css",
