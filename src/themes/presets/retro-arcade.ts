@@ -3,7 +3,7 @@ import { createCharts, defineTheme } from "../define-theme";
 export const retroArcadeTheme = defineTheme({
   id: "retro-arcade",
   name: "Retro Arcade",
-  description: "Level up your habits. 8-bit your life.",
+  description: "Fais monter tes habitudes de niveau, pixel après pixel.",
   personality: "Gaming, pixel, XP, streaks et quêtes.",
   previewEmoji: "👾",
   tokens: {
